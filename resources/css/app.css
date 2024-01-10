@@ -1,0 +1,37 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer utilities {
+   .content-auto {
+     content-visibility: auto;
+   }
+ }
+
+/* Eigene Basisstile */
+@layer base {
+
+
+    body, p{
+        @apply font-normal; /* oder eine andere Schriftstärke */
+    }
+
+
+    h1, h2, h3, h4, h5, h6, p, span {
+        @apply font-medium; /* oder eine andere Schriftstärke */
+    }
+}
+
+@layer components {
+
+
+    body, p{
+        @apply font-normal; /* oder eine andere Schriftstärke */
+    }
+
+
+    h1, h2, h3, h4, h5, h6, p, span {
+        @apply font-medium; /* oder eine andere Schriftstärke */
+    }
+}
+
+
