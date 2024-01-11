@@ -36,7 +36,7 @@ return [
 
         'database' => [
             'driver' => 'database',
-            'table' => 'jobs',
+            'table' => 'mapbox_records',
             'queue' => 'default',
             'retry_after' => 90,
             'after_commit' => false,

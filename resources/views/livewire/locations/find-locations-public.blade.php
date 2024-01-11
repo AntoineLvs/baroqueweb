@@ -301,7 +301,7 @@
 
 
                         <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 leading-5 font-medium">
-                            <button id="centerMapButton" wire:click="showOnMap({{ $location->id }})">
+                            <button id="centerMapButton" wire:click.live="showOnMap({{ $location->id }})">
                                 <div class="image-container">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />

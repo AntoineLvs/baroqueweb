@@ -2,27 +2,19 @@
 
 namespace App\Jobs;
 
+use App\Models\Location;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Location;
-use App\Models\MapboxRecord;
-use AWS\CRT\Log;
-use Illuminate\Http\Request;
-use Panoscape\History\Events\ModelChanged;
 use Illuminate\Support\Facades\Http;
 
 class PushToMapbox implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-
-
     protected $location;
-
-
     /**
      * Create a new job instance.
      *
@@ -38,13 +30,13 @@ class PushToMapbox implements ShouldQueue
      *
      * @return void
      */
-    public function handle()
+    public function handle(Location $location): void
     {
         $lat = $this->location->lat;
         $lng = $this->location->lng;
 
         $username = 'elsenmedia';
-        $dataset_id = 'ckvsnxal129qg27qrclgdhekc'; 
+        $dataset_id = 'ckvsnxal129qg27qrclgdhekc';
         // default public token
         // $token = 'pk.eyJ1IjoiZWxzZW5tZWRpYSIsImEiOiJja3ZlYW9iZHQwcXJpMm9vMHp6YXl2dHFhIn0.FqjCjUzMT0v_HsVw2bSxbw';
 
@@ -96,8 +88,6 @@ class PushToMapbox implements ShouldQueue
         } else {
             dd($response->status());
         }
-
-        return back();
     }
 
     protected function publishDataset($token, $dataset_id)

@@ -126,8 +126,8 @@ class FindLocationsPublic extends Component
 
             $query->withoutGlobalScope(TenantScope::class);
 
-            // $query->where('active', 1)
-            //     ->where('status', 2);
+            $query->where('active', 1)
+                ->where('status', 2);
 
 
             // Filtering based on existing 
@@ -158,12 +158,12 @@ class FindLocationsPublic extends Component
                             });
                         });
                 });
-                // foreach ($query->get() as $location) {
-                //     $this->emit('showLocationOnMap', [
-                //         'latitude' => $location->lat,
-                //         'longitude' => $location->lng,
-                //     ]);
-                // }
+                foreach ($query->get() as $location) {
+                    $this->dispatch('showLocationOnMap', [
+                        'latitude' => $location->lat,
+                        'longitude' => $location->lng,
+                    ]);
+                }
             })->when(isset($this->filters['blend_min']) && $this->filters['blend_min'] !== '', function ($query) {
                 $productIds = Product::where('blend_percent', '>=', $this->filters['blend_min'])
                     ->pluck('id');
@@ -284,22 +284,20 @@ class FindLocationsPublic extends Component
     //     // Redirect to the file
     //     return response()->download($filePath);
     // }
-
-
-
     public function showOnMap($locationId)
     {
         $location = Location::find($locationId);
 
-        // if ($location) {
-        //     $this->emit('showLocationOnMap', [
-        //         'latitude' => $location->lat,
-        //         'longitude' => $location->lng,
-        //     ]);
-        // } else {
-        //     // Gérer le cas où l'emplacement n'est pas trouvé
-        // }
+        if ($location) {
+            $this->dispatch('showLocationOnMap', [
+                'latitude' => $location->lat,
+                'longitude' => $location->lng,
+            ]);
+        } else {
+            // Gérer le cas où l'emplacement n'est pas trouvé
+        }
     }
+
 
 
     public function render()

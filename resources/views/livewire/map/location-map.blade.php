@@ -112,10 +112,17 @@
     const centerMapButton = document.getElementById('centerMapButton');
 
     if (centerMapButton) {
+
       centerMapButton.addEventListener('click', () => {
         Livewire.on('showLocationOnMap', locationData => {
-          const latitude = locationData.latitude;
-          const longitude = locationData.longitude;
+          const firstLocation = locationData[0];
+
+          const latitude = firstLocation.latitude;
+          const longitude = firstLocation.longitude;
+
+          // Faites quelque chose avec les données
+          console.log('Latitude:', latitude);
+          console.log('Longitude:', longitude);
 
           mapboxgl.accessToken = 'pk.eyJ1IjoiZWxzZW5tZWRpYSIsImEiOiJjbHBiYXozZm0wZ21vMnFwZHE4ZWc5Z2lzIn0.dJGBO1JOfota9KceLDgGJg';
 
@@ -130,6 +137,7 @@
 
     document.addEventListener('livewire:load', () => {
       Livewire.on('showLocationOnMap', locationData => {
+        const firstLocation = locationData[0];
         const latitude = locationData.latitude;
         const longitude = locationData.longitude;
 

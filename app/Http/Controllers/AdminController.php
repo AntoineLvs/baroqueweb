@@ -114,7 +114,7 @@ class AdminController extends Controller
 
     public function queueLocation(Request $request, Location $location)
     {
-        PushToMapbox::dispatch($location)->onQueue('mapbox');
+        PushToMapbox::dispatch($location)->onQueue('mapbox_records');
 
         $message = '' . $location->name . ' has been added to the Mapbox queue successfully, please be aware that there will be some time before your location appears online';
 
