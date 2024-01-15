@@ -32,7 +32,7 @@
 
         const lat = mapElement.getAttribute('data-lat');
         const lng = mapElement.getAttribute('data-lng');
-            console.log('les valeurs sont : ', lng, lat);
+            console.log('les valeurs sont : ');
         let marker;
 
 

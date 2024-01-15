@@ -58,7 +58,7 @@
 
 
 
-  @if(!session()->has('tenant_id'))
+    @if(!session()->has('tenant_id'))
 
 
 
@@ -94,12 +94,11 @@
           </div>
           <div class="px-4 py-5 sm:p-6">
 
-            @if($products->count() == 0 )
+            @if($base_products->count() == 0 )
 
             <button type="button" onclick=window.location='{{ route("base-products.create") }}' class="relative block w-full border-2 border-gray-300 border-dashed rounded-lg p-6 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
               <svg class="mx-auto h-12 w-12 text-gray-500" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <span class="block text-sm font-medium text-gray-500">
                 You don't have any products yet. Create a product now.
@@ -144,7 +143,7 @@
                       </thead>
                       <tbody class="bg-white divide-y divide-gray-200">
 
-                        @foreach ($products as $product)
+                        @foreach ($base_products as $base_product)
                         <tr>
 
                           <td class="px-6 py-4 whitespace-nowrap">
@@ -152,30 +151,30 @@
                               <div class="flex-shrink-0 h-10 w-10">
 
 
-                             @livewire('components.image-render', ['product' => $product])
+                                <img style="background: lightgrey;" class="h-10 w-10 rounded-full ring-2 ring-green" src="{{ $base_product->image_path }}" alt="">
 
                               </div>
 
                               <div class="ml-4">
                                 <div class="text-sm font-medium text-gray-900">
-                                  {{ $product->name }}
+                                  {{ $base_product->name }}
                                 </div>
                                 <div class="text-sm text-gray-500">
-                                  PID: {{ $product->id }}
+                                  PID: {{ $base_product->id }}
                                 </div>
                               </div>
                             </div>
                           </td>
 
                           <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">{{ $product->product_type->name}}</div>
-                            <div class="text-sm text-gray-500">PTID: {{ $product->product_type_id }}</div>
+                            <div class="text-sm text-gray-900">{{ $base_product->product_type->name}}</div>
+                            <div class="text-sm text-gray-500">PTID: {{ $base_product->product_type_id }}</div>
                           </td>
 
                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
 
 
-                            <div class="text-sm text-gray-900">  {{ $product->data }}</div>
+                            <div class="text-sm text-gray-900"> {{ $base_product->data }}</div>
                             <div class="text-sm text-gray-500"></div>
 
 
@@ -198,15 +197,15 @@
 
                             @livewire('components.toggle-button',
                             [
-                            'model' => $product,
+                            'model' => $base_product,
                             'field' => 'active',
                             ])
 
                           </td>
-                          <td  class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
+                          <td class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
 
 
-                            <a href="{{ route('base-products.edit', $product) }}" data-toggle="tooltip" data-placement="bottom" title="Edit Product">
+                            <a href="{{ route('base-products.edit', $base_product) }}" data-toggle="tooltip" data-placement="bottom" title="Edit Product">
                               <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                               </svg>
@@ -218,11 +217,11 @@
 
                           </td>
 
-                          <td  class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
+                          <td class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
 
 
 
-                            <form action="{{ route('base-products.destroy', $product) }}" method="post" >
+                            <form action="{{ route('base-products.destroy', $base_product) }}" method="post">
                               @csrf
                               @method('delete')
                               <button type="button" data-toggle="tooltip" data-placement="bottom" title="Delete Product" onclick="confirm('Are you sure you want to remove this product? The records that contain it will continue to exist.') ? this.parentElement.submit() : ''">
@@ -250,7 +249,7 @@
 
             @endif
 
-            {{ $products->links() }}
+            {{ $base_products->links() }}
 
 
 
@@ -264,20 +263,20 @@
 
 
 
-@endif
+    @endif
 
 
   </div>
 </main>
 
 <script>
-function closeAlert(event){
-  let element = event.target;
-  while(element.nodeName !== "BUTTON"){
-    element = element.parentNode;
+  function closeAlert(event) {
+    let element = event.target;
+    while (element.nodeName !== "BUTTON") {
+      element = element.parentNode;
+    }
+    element.parentNode.parentNode.removeChild(element.parentNode);
   }
-  element.parentNode.parentNode.removeChild(element.parentNode);
-}
 </script>
 
 @endsection

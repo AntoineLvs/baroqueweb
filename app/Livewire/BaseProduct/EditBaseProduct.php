@@ -24,9 +24,11 @@ class EditBaseProduct extends Component
 
     public $base_product_id;
 
-    public $product;
+    public $base_product;
 
-    public function mount($product, $product_types)
+    public $blend_percent;
+
+    public function mount($base_product, $product_types)
     {
 
         //ddd($product);
@@ -34,13 +36,14 @@ class EditBaseProduct extends Component
         $this->product_types = $product_types;
         $this->product_units = ProductUnit::all();
 
-        $this->product = $product;
+        $this->base_product = $base_product;
 
-        $this->product_type_id = $product->product_type_id;
-        $this->product_unit_id = $product->product_unit_id;
+        $this->product_type_id = $base_product->product_type_id;
+        $this->product_unit_id = $base_product->product_unit_id;
 
-        $this->name = $product->name;
-        $this->data = $product->data;
+        $this->name = $base_product->name;
+        $this->data = $base_product->data;
+        $this->blend_percent = $base_product->blend_percent;
 
     }
 
@@ -49,11 +52,6 @@ class EditBaseProduct extends Component
         return view('livewire.base-product.edit-base-product', [
             'product_types' => $this->product_types,
         ]);
-    }
-
-    public function reset_file()
-    {
-        $this->file = '';
     }
 
     public function submit()
@@ -65,16 +63,16 @@ class EditBaseProduct extends Component
 
         ]);
 
-        $this->product->name = $this->name;
-        $this->product->data = $this->data;
-        $this->product->product_type_id = $this->product_type_id;
+        $this->base_product->name = $this->name;
+        $this->base_product->data = $this->data;
+        $this->base_product->product_type_id = $this->product_type_id;
         //  $this->product->product_base_id = $this->product_base_id;
 
-        $this->product->fresh();
-        $this->product->save();
+        $this->base_product->fresh();
+        $this->base_product->save();
 
         return redirect()
-            ->route('baseproducts.index')
+            ->route('base-products.index')
             ->with('message', 'Stamm-Artikel wurde aktualisiert.');
 
     }

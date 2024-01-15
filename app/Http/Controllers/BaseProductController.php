@@ -17,9 +17,9 @@ class BaseProductController extends Controller
     public function index(): View
     {
 
-        $products = BaseProduct::latest()->paginate(10);
+        $base_products = BaseProduct::latest()->paginate(10);
 
-        return view('base-products.index', compact('products'));
+        return view('base-products.index', compact('base_products'));
 
     }
 
@@ -44,7 +44,7 @@ class BaseProductController extends Controller
         $model->create($request->all());
 
         return redirect()
-            ->route('baseproducts.index')
+            ->route('base-products.index')
             ->with('message', 'Product was created successfully.');
 
     }
@@ -54,7 +54,7 @@ class BaseProductController extends Controller
      *
      * @param  int  $id
      */
-    public function show(BaseProduct $product): View
+    public function show(BaseProduct $base_product): View
     {
         return view('base-products.show', compact('product'));
     }
@@ -64,40 +64,40 @@ class BaseProductController extends Controller
      *
      * @param  int  $id
      */
-    public function edit(BaseProduct $baseproduct): View
+    public function edit(BaseProduct $base_product): View
     {
         $product_types = ProductType::all();
 
         //ddd($baseproduct);
-        return view('base-products.edit', compact('baseproduct', 'product_types'));
+        return view('base-products.edit', compact('base_product', 'product_types'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(BaseProductRequest $request, BaseProduct $product): RedirectResponse
+    public function update(BaseProductRequest $request, BaseProduct $base_product): RedirectResponse
     {
-        $product->update($request->all());
+        $base_product->update($request->all());
 
         return redirect()
-            ->route('baseproducts.index')
+            ->route('base-products.index')
             ->with('message', 'Product was updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(BaseProduct $product): RedirectResponse
+    public function destroy(BaseProduct $base_product): RedirectResponse
     {
 
-        if ($product->document_id) {
-            $this->destroyDocument($product);
+        if ($base_product->document_id) {
+            $this->destroyDocument($base_product);
         }
 
-        $product->delete();
+        $base_product->delete();
 
         return redirect()
-            ->route('baseproducts.index')
+            ->route('base-products.index')
             ->with('message', 'Product was deleted successfully.');
     }
 }

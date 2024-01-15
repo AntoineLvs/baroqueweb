@@ -213,7 +213,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('base-products', BaseProductController::class);
     Route::get('base-products', [BaseProductController::class, 'index'])->name('base-products.index');
     Route::get('base-products/create', [BaseProductController::class, 'create'])->name('base-products.create');
-    Route::get('base-products/{baseproduct}/edit', [BaseProductController::class, 'edit'])->name('base-products.edit');
+    Route::get('base-products/{base_product}/edit', [BaseProductController::class, 'edit'])->name('base-products.edit');
 
     // Product Type Routes
     Route::resource('product-types', ProductTypeController::class);

@@ -96,7 +96,7 @@ class FindLocationsPublic extends Component
     public function mount()
     {
         $this->product_types = ProductType::all();
-        $this->base_services = BaseService::all();
+        $this->base_services = BaseService::withoutGlobalScope(TenantScope::class)->get();
 
         $this->currentTime = now(config('app.timezone'))->toTimeString();
     }

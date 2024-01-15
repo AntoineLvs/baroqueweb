@@ -11,18 +11,18 @@
                         <div class="mt-1 sm:mt-0 sm:col-span-2">
                             <select wire:model="base_service_id" name="base_service_id" id="base_service_id" class="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md" required>
                                 <option value="">-- Please choose --</option>
-                                @foreach ($baseServices as $baseService)
-                                @if($baseService['id'] == old('document'))
-                                <option wire:key="{{ $baseService['id']}}" value="{{$baseService->id }}" selected>{{$baseService['name']}}</option>
+                                @foreach ($base_services as $base_service)
+                                @if($base_service['id'] == old('document'))
+                                <option wire:key="{{ $base_service['id']}}" value="{{$base_service->id }}" selected>{{$base_service['name']}}</option>
                                 @else
-                                <option wire:key="{{ $baseService['id']}}" value="{{$baseService->id }}">{{$baseService['name']}}</option>
+                                <option wire:key="{{ $base_service['id']}}" value="{{$base_service->id }}">{{$base_service['name']}}</option>
                                 @endif
                                 @endforeach
                             </select>
                         </div>
                     </div>
 
-                    @error('baseService')
+                    @error('base_service')
                     <div class="text-sm text-red-500 mt-2">
                         {{ $message }}
                     </div>

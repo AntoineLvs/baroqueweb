@@ -41,11 +41,11 @@
 
 
                 <!-- START Right side content container -->
-                    <div class="pt-2 pb-4">
+                    <div class="pb-4">
                         <div class="px-4 sm:px-2">
                             <h1 class="text-2xl font-semibold text-gray-900">@yield('title')</h1>
                         </div>
-                        <div class="px-4 sm:px-2">
+                        <div>
                             @yield('content')
                         </div>
                     </div>

@@ -141,7 +141,7 @@
 
 
 
-                               @livewire('components.image-render-location', ['location' => $location])
+                                <img style="background: lightgrey;" class="h-10 w-10 rounded-full ring-2 ring-green" src="{{ $location->image_path }}" alt="">
 
 
 
@@ -204,7 +204,7 @@
                           </td>
 
 
-                          <td  class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
+                          <td class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
 
 
                             <a href="{{ route('locations.edit', $location) }}" data-toggle="tooltip" data-placement="bottom" title="Edit Project">
@@ -215,9 +215,9 @@
 
                           </td>
 
-                          <td  class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
+                          <td class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
 
-                            <form action="{{ route('locations.destroy', $location) }}" method="post" >
+                            <form action="{{ route('locations.destroy', $location) }}" method="post">
                               @csrf
                               @method('delete')
                               <button type="button" data-toggle="tooltip" data-placement="bottom" title="Delete Product" onclick="confirm('Are you sure you want to remove this location? The records that contain it will continue to exist.') ? this.parentElement.submit() : ''">
@@ -320,13 +320,13 @@
 </main>
 
 <script>
-function closeAlert(event){
-  let element = event.target;
-  while(element.nodeName !== "BUTTON"){
-    element = element.parentNode;
+  function closeAlert(event) {
+    let element = event.target;
+    while (element.nodeName !== "BUTTON") {
+      element = element.parentNode;
+    }
+    element.parentNode.parentNode.removeChild(element.parentNode);
   }
-  element.parentNode.parentNode.removeChild(element.parentNode);
-}
 </script>
 
 @endsection

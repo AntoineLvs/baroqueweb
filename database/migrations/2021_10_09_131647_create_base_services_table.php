@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('base_services', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('tenant_id')->index();
             $table->string('name');
             $table->text('description');
             $table->timestamps();

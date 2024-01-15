@@ -13,7 +13,6 @@ class BaseService extends Model
   protected $fillable = [
     'name',
     'description',
-    'tenant_id',
     'id',
 
   ];

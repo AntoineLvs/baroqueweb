@@ -22,7 +22,6 @@ class BaseServiceSeeder extends Seeder
         DB::table('base_services')->insert([
             [
                 'id' => '1',
-                'tenant_id' => '1',
                 'name' => "Vacuum cleaner",
                 'description' => "Vacuum cleaner to get your car cleaner",
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -30,7 +29,6 @@ class BaseServiceSeeder extends Seeder
 
             [
                 'id' => '2',
-                'tenant_id' => '1',
                 'name' => "Wash station",
                 'description' => "Wash station to get your car cleaner",
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s')
@@ -38,7 +36,6 @@ class BaseServiceSeeder extends Seeder
 
             [
                 'id' => '3',
-                'tenant_id' => '1',
                 'name' => "Tire pressure",
                 'description' => "Tire pressure description ...",
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s')

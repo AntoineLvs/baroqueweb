@@ -82,7 +82,7 @@
                             <div>
 
                                 <div>
-                                    @livewire('service.create-service', ['baseServices' => $base_services])
+                                    @livewire('service.create-service', ['base_services' => $base_services])
 
                                 </div>
 

@@ -24,6 +24,8 @@ class CreateBaseProduct extends Component
 
     public $document_type = 1;
 
+    public $blend_percent;
+
     public function mount($product_types)
     {
         $this->product_types = $product_types;
@@ -36,6 +38,7 @@ class CreateBaseProduct extends Component
             'data' => 'nullable|string|max:100',
             'product_type_id' => 'required',
             'base_product_id' => 'nullable',
+            'blend_percent' => 'nullable',
 
         ]);
 
@@ -45,7 +48,7 @@ class CreateBaseProduct extends Component
         $product->save();
 
         return redirect()
-            ->route('baseproducts.index')
+            ->route('base-products.index')
             ->with('message', 'Product was created successfully.');
 
     }

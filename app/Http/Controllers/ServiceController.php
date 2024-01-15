@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Service;
 use App\Models\BaseService;
+use App\Scopes\TenantScope;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -27,7 +28,8 @@ class ServiceController extends Controller
     public function create(BaseService $base_services): view
     {
 
-        $base_services = BaseService::all();
+        $base_services = BaseService::withoutGlobalScope(TenantScope::class)->get();
+
         
         return view('services.create', compact('base_services'));
     }

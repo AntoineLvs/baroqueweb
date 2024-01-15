@@ -5,6 +5,7 @@ namespace App\Livewire\Service;
 use Livewire\Component;
 use App\Models\Service;
 use App\Models\BaseService;
+use App\Scopes\TenantScope;
 
 class CreateService extends Component
 {
@@ -13,7 +14,7 @@ class CreateService extends Component
     public $description;
     public $service;
 
-    public $baseServices;
+    public $base_services;
     public $base_service_id;
 
 
@@ -21,7 +22,7 @@ class CreateService extends Component
     public function mount()
     {
 
-      $this->baseServices = BaseService::all();
+      $this->base_services = BaseService::withoutGlobalScope(TenantScope::class)->get();
 
     }
 
