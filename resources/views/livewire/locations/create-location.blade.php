@@ -116,11 +116,11 @@
                                             <div class="col-span-6 sm:col-span-3 lg:col-span-2">
                                                 <label for="coordinates" class="block text-sm font-medium text-gray-700 mb-3">Check your Marker</label>
                                                 @if(!$toggleMapButton)
-                                                <a wire:click.live="toggleMap" class="text-gray-700 hover:bg-gray-50 bg-gray-100 disabled:opacity-50 cursor-not-allowed py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                                <a wire:click.live="openMap" class="text-gray-700 hover:bg-gray-50 bg-gray-100 disabled:opacity-50 cursor-not-allowed py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                                     Show on Map
                                                 </a>
                                                 @else
-                                                <a wire:click.live="toggleMap" class="cursor-pointer bg-indigo-600 hover:bg-indigo-700 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                                <a wire:click.live="openMap" class="cursor-pointer bg-indigo-600 hover:bg-indigo-700 py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                                                     Show on Map
                                                 </a>
                                                 @endif
@@ -135,7 +135,8 @@
                             </div>
 
                             <div class="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
-                                @livewire('map.create-map')
+                            @livewire('map.create_map')
+
                             </div>
 
                             <div class="mt-6 sm:mt-5 space-y-6 sm:space-y-5">

@@ -13,6 +13,8 @@ use Livewire\WithPagination;
 use Livewire\UI\WireUiComponent;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
+use Livewire\Attributes\On;
+
 
 class CreateLocation extends Component
 {
@@ -40,12 +42,25 @@ class CreateLocation extends Component
     public $toggleMapButton = false;
     public $getCoordinatesButton = false;
 
+    public $toggleMap = false;
+
+    protected $listeners = ['coordinatesUpdated' => 'updateCoordinates', 'mapToggled' => 'toggleMap'];
 
 
-    public function toggleMap()
+    #[On('coordinatesUpdated')]
+    public function updateCoordinates()
     {
-        $this->dispatch('mapToggled');
+        $lat = Cache::get('lat');
+        $lng = Cache::get('lng');
+
     }
+
+
+    public function openMap()
+    {
+        $this->dispatch('toggleMap');
+    }
+
     public function mount(Location $location)
     {
 
@@ -65,11 +80,11 @@ class CreateLocation extends Component
         }
     }
 
-
     public function updatedLat($lat)
     {
         if ($this->lngHasBeenUpdated()) {
             Cache::put('lat', $lat);
+            $this->dispatch('coordinatesUpdated');
             $this->toggleMapButton = true;
         }
     }
@@ -78,6 +93,7 @@ class CreateLocation extends Component
     {
         if ($this->latHasBeenUpdated()) {
             Cache::put('lng', $lng);
+            $this->dispatch('coordinatesUpdated');
             $this->toggleMapButton = true;
         }
     }
@@ -227,8 +243,6 @@ class CreateLocation extends Component
     public function render()
     {
 
-        return view('livewire.locations.create-location', [
-
-        ]);
+        return view('livewire.locations.create-location', []);
     }
 }
