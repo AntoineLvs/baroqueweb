@@ -114,7 +114,7 @@ class AdminController extends Controller
 
     public function queueLocation(Request $request, Location $location)
     {
-        PushToMapbox::dispatch($location)->onQueue('mapbox_records');
+        PushToMapbox::dispatch($location)->onQueue('mapbox_create');
 
         $message = '' . $location->name . ' has been added to the Mapbox queue successfully, please be aware that there will be some time before your location appears online';
 
@@ -127,11 +127,11 @@ class AdminController extends Controller
 
     public function disableLocation(Request $request, Location $location)
     {
-        PushToMapbox::dispatch($location)->onQueue('mapbox');
+        PushToMapbox::dispatch($location)->onQueue('mapbox_disable');
 
         $message = '' . $location->name . ' has been added to the Mapbox queue successfully, please be aware that there will be some time before your location disappears online';
 
-        $location->active = 0;
+        $location->status = 5;
 
         $location->save();
 

@@ -6,7 +6,6 @@ use App\Models\Location;
 use App\Models\LocationType;
 use App\Models\Service;
 use App\Models\Product;
-use App\Models\Tenant;
 use Illuminate\Support\Facades\Http;
 use Livewire\Component;
 use Livewire\WithPagination;

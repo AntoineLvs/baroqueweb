@@ -58,7 +58,7 @@ class Location extends Model
         return empty($query) ? static::query()
             : static::where('name', 'like', '%' . $query . '%');
     }
-    
+
     public function services()
     {
         return $this->hasMany(Service::class);
@@ -129,7 +129,10 @@ class Location extends Model
         $statusText = '';
         $statusColor = '';
 
-        if ($this->active == 0) {
+        if ($this->active == 0 && $this->verified == 1 && $this->status == 4) {
+            $statusText = 'Disable Location';
+            $statusColor = 'red';
+        } elseif ($this->active == 0) {
             $statusText = 'Not Visible';
             $statusColor = 'red';
         } else {
@@ -151,7 +154,10 @@ class Location extends Model
                     $statusText = 'Awaiting to be pushed online';
                     $statusColor = 'purple';
                     break;
-
+                case 5:
+                    $statusText = 'Not Visible';
+                    $statusColor = 'red';
+                    break;
                 default:
                     $statusText = 'Unknown';
                     break;

@@ -1,6 +1,7 @@
 <div>
 
   <div id='map' class="w-full" style='height: 75vh;'></div>
+
   <script>
     //mapboxgl.accessToken = 'sk.eyJ1IjoiZWxzZW5tZWRpYSIsImEiOiJja3ZubXMzbmgxYXE4MnJvdTRqYXR1YzM2In0.F2OJW7uFgP0WjFwTIXBPCA';
     mapboxgl.accessToken = 'pk.eyJ1IjoiZWxzZW5tZWRpYSIsImEiOiJjbHBiYXozZm0wZ21vMnFwZHE4ZWc5Z2lzIn0.dJGBO1JOfota9KceLDgGJg';
@@ -12,7 +13,6 @@
       center: [9.967627253948834, 53.573922489205195], // Starting position [lng, lat]
       zoom: 10 // Starting zoom level
     });
-
 
     map.on('load', function() {
       map.loadImage('https://cdn-icons-png.flaticon.com/512/3448/3448558.png', function(error, image) {
@@ -34,8 +34,18 @@
           },
           'source-layer': 'efuelmap_v1',
           'layout': {
-            'icon-image': 'custom-marker',
-            'icon-size': 0.1,
+            'icon-image': [
+              'case',
+              ['==', ['get', 'active'], 1],
+              'custom-marker',
+              ''
+            ],
+            'icon-size': [
+              'case',
+              ['==', ['get', 'active'], 1],
+              0.1,
+              0
+            ],
             'text-field': ['to-string', ['get', 'title']],
             'text-size': 12,
             'text-anchor': 'center',
@@ -47,60 +57,52 @@
           },
           "paint": {
             "text-color": "hsl(0, 0%, 0%)",
-            "icon-opacity": [
-              "interpolate",
-              [
-                "linear"
-              ],
-              [
-                "zoom"
-              ],
-              0,
-              1,
-              22,
-              1
+            "icon-opacity": ["interpolate", ["linear"],
+              ["zoom"], 0, 1, 22, 1
             ]
           },
         });
       });
 
+    });
+
+    const popup = new mapboxgl.Popup({
+      closeButton: false,
+      closeOnClick: false,
+      offset: [0, -20]
+
+    });
+
+    map.on('mousemove', 'points-layer', (e) => {
+      const coordinates = e.features[0].geometry.coordinates.slice();
+      const title = e.features[0].properties.name;
+      const opening_start = e.features[0].properties.opening_start;
+      const opening_end = e.features[0].properties.opening_end;
+      const active = e.features[0].properties.active;
 
 
-      const popup = new mapboxgl.Popup({
-        closeButton: false,
-        closeOnClick: false,
-        offset: [0, -20]
 
-      });
-
-      map.on('mousemove', 'points-layer', (e) => {
-        const coordinates = e.features[0].geometry.coordinates.slice();
-        const title = e.features[0].properties.name;
-        const opening_start = e.features[0].properties.opening_start;
-        const opening_end = e.features[0].properties.opening_end;
-
-
-        const htmlContent = `
+      const htmlContent = `
         <div style="font-size: 14px; text-align: center;">
           ${title}</br>
           Open from ${opening_start} to ${opening_end}</br>
-          Click on marker to show route
+          Click on marker to show route </br>
+          ${active}
        </div>
         `;
 
-        popup.setLngLat(coordinates)
-          .setHTML(htmlContent)
-          .addTo(map);
+      popup.setLngLat(coordinates)
+        .setHTML(htmlContent)
+        .addTo(map);
 
-        // Changement du curseur
-        map.getCanvas().style.cursor = 'pointer';
+      // Changement du curseur
+      map.getCanvas().style.cursor = 'pointer';
 
-      });
+    });
 
-      map.on('mouseleave', 'points-layer', () => {
-        popup.remove();
-        map.getCanvas().style.cursor = '';
-      });
+    map.on('mouseleave', 'points-layer', () => {
+      popup.remove();
+      map.getCanvas().style.cursor = '';
     });
 
     function openGoogleMaps(address) {
@@ -119,8 +121,8 @@
         const latitude = firstLocation.latitude;
         const longitude = firstLocation.longitude;
 
-        console.log('Latitude:', latitude);
-        console.log('Longitude:', longitude);
+        // console.log('Latitude:', latitude);
+        // console.log('Longitude:', longitude);
 
         mapboxgl.accessToken = 'pk.eyJ1IjoiZWxzZW5tZWRpYSIsImEiOiJjbHBiYXozZm0wZ21vMnFwZHE4ZWc5Z2lzIn0.dJGBO1JOfota9KceLDgGJg';
 

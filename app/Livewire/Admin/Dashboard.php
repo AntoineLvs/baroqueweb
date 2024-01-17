@@ -24,10 +24,19 @@ class Dashboard extends Component
     public function mount()
     {
         $this->locations = Location::withoutGlobalScope(TenantScope::class)
-            ->where('active', 1)
-            ->where('verified', 0)
-            ->whereIn('status', [0, 1])
-            ->get();
+        ->where(function ($query) {
+            // Conditions pour les locations actives, non vérifiées et avec status 0 ou 1
+            $query->where('active', 1)
+                ->where('verified', 0)
+                ->whereIn('status', [0, 1]);
+        })
+        ->orWhere(function ($query) {
+            // Conditions pour les locations inactives, vérifiées et avec status 4
+            $query->where('active', 0)
+                ->where('verified', 1)
+                ->where('status', 4);
+        })
+        ->get();
 
         $this->all_locations = Location::all();
     }

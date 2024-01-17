@@ -19,9 +19,9 @@
                 mapboxgl.accessToken = 'pk.eyJ1IjoiZWxzZW5tZWRpYSIsImEiOiJjbHBiYXozZm0wZ21vMnFwZHE4ZWc5Z2lzIn0.dJGBO1JOfota9KceLDgGJg';
 
                 const latInputElement = document.getElementById('lat');
-                const lat = parseFloat(latInputElement.value);  // Convertir en nombre
+                const lat = parseFloat(latInputElement.value); 
                 const lngInputElement = document.getElementById('lng');
-                const lng = parseFloat(lngInputElement.value);  // Convertir en nombre
+                const lng = parseFloat(lngInputElement.value);  
 
                 let marker;
                 const map = new mapboxgl.Map({

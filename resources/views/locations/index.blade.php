@@ -195,6 +195,7 @@
 
                           <td class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
 
+
                             @livewire('components.toggle-button',
                             [
                             'model' => $location,

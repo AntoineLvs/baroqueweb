@@ -176,7 +176,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Admin DashboardController
     Route::get('admin', [AdminController::class, 'index'])->name('admin.dashboard');
     Route::put('admin/{location}/insert', [MapController::class, 'insertLocation'])->name('admin.insertLocation');
-    Route::post('admin/{location}/queue', [AdminController::class, 'queueLocation'])->name('admin.queueLocation');
+    Route::post('admin/{location}/createqueue', [AdminController::class, 'queueLocation'])->name('admin.queueLocation');
+    Route::post('admin/{location}/disablequeue', [AdminController::class, 'disableLocation'])->name('admin.disableLocation');
 
     // Profile Routes
     Route::resource('profile', ProfileController::class)->except(['edit', 'update']);

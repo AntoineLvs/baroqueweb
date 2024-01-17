@@ -1,4 +1,3 @@
-
 <!-- Location List -->
 <div class="max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
     <div class="py-4">
@@ -40,7 +39,7 @@
                                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Edit
                                             </th>
-                                           
+
                                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Push Online
                                             </th>
@@ -146,6 +145,17 @@
                                             </td> -->
 
                                             <td class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
+                                                @if($location->active == 0 )
+                                                <form method="POST" action="{{ route('admin.disableLocation', ['location' => $location]) }}">
+                                                    @csrf
+                                                    <button type="submit">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                                        </svg>
+                                                    </button>
+                                                </form>
+
+                                                @else
                                                 <form method="POST" action="{{ route('admin.queueLocation', ['location' => $location]) }}">
                                                     @csrf
                                                     <button type="submit">
@@ -154,6 +164,7 @@
                                                         </svg>
                                                     </button>
                                                 </form>
+                                                @endif
                                             </td>
 
 

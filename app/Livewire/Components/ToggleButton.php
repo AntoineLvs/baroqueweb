@@ -22,11 +22,15 @@ class ToggleButton extends Component
     {
 
         return view('livewire.components.toggle-button');
-
     }
 
     public function updating($field, $value)
     {
         $this->model->setAttribute($this->field, $value)->save();
+
+        if ($this->model->getTable() == 'locations' && $value == false && $this->model->getAttribute('verified') == 1) {
+
+            $this->model->update(['status' => 4]);
+        }
     }
 }
