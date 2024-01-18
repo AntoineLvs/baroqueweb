@@ -41,7 +41,7 @@ class CreateLocation extends Component
     public $toggleMapButton = false;
     public $getCoordinatesButton = false;
 
-    public $toggleMap = false;
+    public $toggleMapValue = false;
 
     protected $listeners = ['coordinatesUpdated' => 'updateCoordinates', 'mapToggled' => 'toggleMap'];
 
@@ -57,6 +57,7 @@ class CreateLocation extends Component
 
     public function openMap()
     {
+        $this->toggleMapValue = true;
         $this->dispatch('toggleMap');
     }
 

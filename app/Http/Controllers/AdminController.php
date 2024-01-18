@@ -137,4 +137,39 @@ class AdminController extends Controller
 
         return back()->with('message', $message);
     }
+
+    public function queueAllLocations(Location $location)
+    {
+        $locations = Location::withoutGlobalScope(TenantScope::class)->get();
+
+        foreach ($locations as $location) {
+            if ($location->active == 1 && $location->verified == 0 && ($location->status == 0 || $location->status == 1)) {
+                PushToMapbox::dispatch($location)->onQueue('mapbox_create');
+        
+                $location->verified = 1;
+                $location->status = 2;
+                $location->save();
+        
+            } elseif ($location->active == 0 && $location->verified == 1 && $location->status == 4) {
+
+                PushToMapbox::dispatch($location)->onQueue('mapbox_disable');
+
+                $location->status = 5;
+        
+                $location->save();
+
+                
+            } elseif ($location->active == 1 && $location->verified == 1 && $location->status == 5) {
+
+                PushToMapbox::dispatch($location)->onQueue('mapbox_reactivate');
+        
+                $location->status = 2;
+                $location->save();
+        
+            }
+        }
+
+        $message = 'All locations have been processed successfully, please, be aware that there will be some time before modifications appears on the map ';
+        return back()->with('message', $message);
+    }
 }

@@ -6,10 +6,20 @@
         <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
 
             <!-- Locations todo list -->
-            <div class="px-4 py-5 sm:px-6">
-                <h3 class="card-title">Locations todos </h3>
-                <!-- We use less vertical padding on card headers on desktop than on body sections -->
+            <div class="flex items-center justify-between px-4 py-5 sm:px-6">
+                <h3 class="card-title">Locations todos</h3>
+                <!-- Utilisez la classe "ml-auto" pour déplacer le bouton à droite -->
+
+                <form method="POST" action="{{ route('admin.queueAllLocations') }}">
+                    @csrf
+                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Push all
+                    </button>
+                </form>
+
+
             </div>
+
 
             <!-- Locations history list -->
             <div class="px-4 py-5 sm:p-6">
@@ -135,14 +145,6 @@
 
                                             </td>
 
-                                            <!-- <td class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
-                                                <button type="button" wire:click="insertLocation({{ $location }})">
-
-                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" data-slot="icon" class="w-6 h-6">
-                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-                                                    </svg>
-                                                </button>
-                                            </td> -->
 
                                             <td class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
                                                 @if($location->active == 0 )

@@ -132,6 +132,9 @@ class Location extends Model
         if ($this->active == 0 && $this->verified == 1 && $this->status == 4) {
             $statusText = 'Disable Location';
             $statusColor = 'red';
+        } elseif ($this->active == 1 && $this->verified == 1 && $this->status == 5) {
+            $statusText = 'Reactivate Location';
+            $statusColor = 'yellow';
         } elseif ($this->active == 0) {
             $statusText = 'Not Visible';
             $statusColor = 'red';
@@ -154,8 +157,12 @@ class Location extends Model
                     $statusText = 'Awaiting to be pushed online';
                     $statusColor = 'purple';
                     break;
-                case 5:
+                case 6:
                     $statusText = 'Not Visible';
+                    $statusColor = 'red';
+                    break;
+                case 7:
+                    $statusText = 'Refused';
                     $statusColor = 'red';
                     break;
                 default:

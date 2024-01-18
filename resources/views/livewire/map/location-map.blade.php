@@ -1,6 +1,7 @@
 <div>
-
-  <div id='map' class="w-full" style='height: 75vh;'></div>
+  <div id='map' class="" style='height: 75vh;'></div>
+ 
+  
 
   <script>
     //mapboxgl.accessToken = 'sk.eyJ1IjoiZWxzZW5tZWRpYSIsImEiOiJja3ZubXMzbmgxYXE4MnJvdTRqYXR1YzM2In0.F2OJW7uFgP0WjFwTIXBPCA';
@@ -87,7 +88,6 @@
           ${title}</br>
           Open from ${opening_start} to ${opening_end}</br>
           Click on marker to show route </br>
-          ${active}
        </div>
         `;
 

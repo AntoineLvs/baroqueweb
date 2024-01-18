@@ -178,6 +178,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('admin/{location}/insert', [MapController::class, 'insertLocation'])->name('admin.insertLocation');
     Route::post('admin/{location}/createqueue', [AdminController::class, 'queueLocation'])->name('admin.queueLocation');
     Route::post('admin/{location}/disablequeue', [AdminController::class, 'disableLocation'])->name('admin.disableLocation');
+    Route::post('admin/queue-locations', [AdminController::class, 'queueAllLocations'])->name('admin.queueAllLocations');
+
 
     // Profile Routes
     Route::resource('profile', ProfileController::class)->except(['edit', 'update']);

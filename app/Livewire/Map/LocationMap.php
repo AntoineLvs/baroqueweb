@@ -3,6 +3,7 @@
 namespace App\Livewire\Map;
 
 use App\Models\Location;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class LocationMap extends Component
@@ -35,6 +36,5 @@ class LocationMap extends Component
 
     public function hydrate()
     {
-  
     }
 }

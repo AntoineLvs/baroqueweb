@@ -14,6 +14,7 @@ use App\Models\BaseService;
 use App\Models\ProductType;
 use App\Scopes\TenantScope;
 use Livewire\Attributes\On;
+use TallStackUi\Facades\TallStackUi;
 
 class FindLocationsPublic extends Component
 {
@@ -35,14 +36,13 @@ class FindLocationsPublic extends Component
 
     public $showFilters = false;
 
-    public $toggleTable = false;
-    public $toggleMap = false;
+    public $toggleTableValue = false;
+    public $toggleMapValue = false;
     public $tableDiv = 'w-full';
     public $mapDiv = 'w-full';
 
     public $justifyContent = 'justify-center';
-
-
+    
     public $filters = [
         'search' => '',
         'blend_min' => null,
@@ -55,11 +55,14 @@ class FindLocationsPublic extends Component
 
     public function toggleMap()
     {
-        $this->toggleMap = !$this->toggleMap;
 
-        if ($this->toggleMap) {
+        $this->toggleMapValue = !$this->toggleMapValue;
+
+        if ($this->toggleMapValue) {
             $this->justifyContent = 'justify-start';
             $this->tableDiv = 'w-0 hidden';
+            $this->mapDiv = 'w-full';
+
         } else {
             $this->justifyContent = 'justify-center';
             $this->tableDiv = 'w-full';
@@ -68,9 +71,10 @@ class FindLocationsPublic extends Component
 
     public function toggleTable()
     {
-        $this->toggleTable = !$this->toggleTable;
+        $this->toggleTableValue = !$this->toggleTableValue;
 
-        if ($this->toggleTable) {
+
+        if ($this->toggleTableValue) {
             $this->justifyContent = 'justify-end';
             $this->tableDiv = 'w-full';
             $this->mapDiv = 'w-0 hidden';

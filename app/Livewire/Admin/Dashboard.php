@@ -25,16 +25,22 @@ class Dashboard extends Component
     {
         $this->locations = Location::withoutGlobalScope(TenantScope::class)
         ->where(function ($query) {
-            // Conditions pour les locations actives, non vérifiées et avec status 0 ou 1
+            // Conditions to get every location that has been created/edited
             $query->where('active', 1)
                 ->where('verified', 0)
                 ->whereIn('status', [0, 1]);
         })
         ->orWhere(function ($query) {
-            // Conditions pour les locations inactives, vérifiées et avec status 4
+            // Conditions to get every location that is online, and need to be disable
             $query->where('active', 0)
                 ->where('verified', 1)
                 ->where('status', 4);
+        })
+        ->orWhere(function ($query) {
+            //  Conditions to get every location that has been disabled, and need to be reactivate
+            $query->where('active', 1)
+                ->where('verified', 1)
+                ->where('status', 5);
         })
         ->get();
 
