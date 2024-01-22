@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             EngineSeeder::class,
             VehicleSeeder::class,
             TenantTypeSeeder::class,
+            TenantSeeder::class,
             UserSeeder::class,
             ProjectTypeSeeder::class,
             ProductTypeSeeder::class,

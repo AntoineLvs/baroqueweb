@@ -303,4 +303,9 @@ class LocationController extends Controller
     {
         return view('locations.find-locations-public');
     }
+
+    public function showLocationFinderMap(): View
+    {
+        return view('locations.find-locations-map');
+    }
 }

@@ -134,9 +134,11 @@ Route::get('/check/manufacturers', function (Request $request) {
 
 // hub finder
 Route::get('mapfinder/', [HubController::class, 'showMap'])->name('hub.showMap');
-Route::get('find/{id}', [HubController::class, 'showPublicProfile'])->name('hub.showPublicProfile');
+Route::get('hub/{id}', [HubController::class, 'showPublicProfile'])->name('hub.showPublicProfile');
 
 Route::get('find/', [LocationController::class, 'showLocationFinder'])->name('locations.find-locations-public');
+Route::get('find-map/', [LocationController::class, 'showLocationFinderMap'])->name('locations.find-locations-map');
+
 Route::get('/find/locations/{id}', [LocationController::class, 'showLocationProfile'])->name('locations.profile-locations-public');
 Route::get('/find/{tenant_id}', [LocationController::class, 'showTenantProfile'])->name('locations.profile-tenants');
 Route::get('/find/products/{id}', [LocationController::class, 'showProducts'])->name('locations.show-products');

@@ -20,6 +20,10 @@
         </div>
     </div>
 </div>
+
+<!-- Here we show a div with a blank square showing 'The map should be displayed here'. if the user click the button to "ShowOnMap", it will load this script.
+this script retrieve the data of lat/lng that are in their respectiv inputs in the formulare. It will then load the map with everything, around this precise location.
+We also provide a marker that we can drag and drop at any point. It will automatically update lat/lng inputs that are above. -->
 <script>
     mapboxgl.accessToken = 'pk.eyJ1IjoiZWxzZW5tZWRpYSIsImEiOiJjbHBiYXozZm0wZ21vMnFwZHE4ZWc5Z2lzIn0.dJGBO1JOfota9KceLDgGJg';
     document.addEventListener('livewire:init', () => {

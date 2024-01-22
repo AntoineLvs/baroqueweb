@@ -8,7 +8,6 @@
             <!-- Locations todo list -->
             <div class="flex items-center justify-between px-4 py-5 sm:px-6">
                 <h3 class="card-title">Locations todos</h3>
-                <!-- Utilisez la classe "ml-auto" pour déplacer le bouton à droite -->
 
                 <form method="POST" action="{{ route('admin.queueAllLocations') }}">
                     @csrf
@@ -103,7 +102,7 @@
 
                                                 @if ($location->active && $location->verified == 1)
                                                 <span class="px-4 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-200 text-green-800">
-                                                    Public verfified
+                                                    Public verified
                                                 </span>
                                                 @elseif ($location->active == 1 && $location->verified == 0)
 
@@ -144,8 +143,10 @@
                                                 </a>
 
                                             </td>
-
-
+                        
+                                            <!-- Here we send locations either to the create Queue, or to the disable Queue. It will depends on if the location is active or not :
+                                            if it's already active, it means that we want to disable it, if it's not active, then it means that we want to put it online.
+                                            The process of push to mapbox is the same, we separate them to have the choice to only push one the two queue. -->
                                             <td class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
                                                 @if($location->active == 0 )
                                                 <form method="POST" action="{{ route('admin.disableLocation', ['location' => $location]) }}">

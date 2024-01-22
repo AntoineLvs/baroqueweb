@@ -1,3 +1,9 @@
+<!-- 
+    We have in this form some wire:model.live stuff going on. First, the three inputs for address/zip/city are under listening. If they are all three filled up, 
+    it allows the user to click the "GetCoordinates" function. It will make a call to the api with the informations (address/zip/city), and put in the lat/lng inputs the right data.
+    If the lat/lng inputs are filled up, it allows the user to click to Toggle the Map div, which will make a map appears in the "map" div.
+ -->
+
 <div class="max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
     <div class="py-4">
         <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
@@ -235,6 +241,9 @@
                                 </div>
                             </div>
 
+
+                            <!-- Here is the two selects for Services and Products, it's an TallStack UI component, where you just have to 
+                            write few lines, that will call a function by route, you can find the function in the livewire component CreateLocation -->
                             <div class="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
                                 <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                                     <label for="type" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
@@ -289,8 +298,15 @@
         </div>
     </div>
 </div>
+
+<!-- Here is the script that retrieves the data of lat/lng that are in their respectiv inputs in the form. It will then load the map with everything, around this precise location.
+We also provide a marker that we can drag and drop at any point. It will automatically update lat/lng inputs that are above. 
+That map will appears in the div "map" that is above in the form.
+we can also call it in a livewire view, with just the div and the script, but it does not want to work for now
+
+-->
 <script>
-     mapboxgl.accessToken = 'pk.eyJ1IjoiZWxzZW5tZWRpYSIsImEiOiJjbHBiYXozZm0wZ21vMnFwZHE4ZWc5Z2lzIn0.dJGBO1JOfota9KceLDgGJg';
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZWxzZW5tZWRpYSIsImEiOiJjbHBiYXozZm0wZ21vMnFwZHE4ZWc5Z2lzIn0.dJGBO1JOfota9KceLDgGJg';
     document.addEventListener('livewire:init', () => {
         Livewire.on('toggleMap', locationData => {
             setTimeout(() => {
@@ -337,8 +353,7 @@
                     lngInput.value = lng.toFixed(6);
                     latInput.value = lat.toFixed(6);
                 });
-                console.log("tout est  chargé");
-            }, 10); 
+            }, 10);
         });
     });
 </script>

@@ -43,16 +43,10 @@ class CreateLocation extends Component
 
     public $toggleMapValue = false;
 
+
     protected $listeners = ['coordinatesUpdated' => 'updateCoordinates', 'mapToggled' => 'toggleMap'];
 
 
-    #[On('coordinatesUpdated')]
-    public function updateCoordinates()
-    {
-        $lat = Cache::get('lat');
-        $lng = Cache::get('lng');
-
-    }
 
 
     public function openMap()
@@ -65,9 +59,9 @@ class CreateLocation extends Component
     {
 
         $this->location_types = LocationType::all();
-        // $this->options = $this->location_types->pluck('name', 'id')->toArray();
     }
 
+    //Here we have a bunch of function to listen if some inputs(street,zip,city) are getting some changes, to permit user to GetCoordinates
     public function updated()
     {
         $this->checkGetCoordinatesButton();
@@ -78,34 +72,6 @@ class CreateLocation extends Component
         if ($this->address && $this->zipcode && $this->city) {
             $this->getCoordinatesButton = true;
         }
-    }
-
-    public function updatedLat($lat)
-    {
-        if ($this->lngHasBeenUpdated()) {
-            Cache::put('lat', $lat);
-            $this->dispatch('coordinatesUpdated');
-            $this->toggleMapButton = true;
-        }
-    }
-
-    public function updatedLng($lng)
-    {
-        if ($this->latHasBeenUpdated()) {
-            Cache::put('lng', $lng);
-            $this->dispatch('coordinatesUpdated');
-            $this->toggleMapButton = true;
-        }
-    }
-
-    protected function latHasBeenUpdated()
-    {
-        return isset($this->lat) && $this->lat !== Cache::get('lat');
-    }
-
-    protected function lngHasBeenUpdated()
-    {
-        return isset($this->lng) && $this->lng !== Cache::get('lng');
     }
 
     public function getCoordinates(Request $request, Location $location)
@@ -141,7 +107,6 @@ class CreateLocation extends Component
                     Cache::put('lat', $lat);
                     Cache::put('lng', $lng);
 
-                    $this->dispatch('coordinatesUpdated');
                     $this->toggleMapButton = true;
                 }
             } else {
@@ -152,6 +117,33 @@ class CreateLocation extends Component
         }
 
         return back();
+    }
+
+    //Here we are listening to lat/lng's inputs changes,  to permit to ShowOnMap the location.
+    public function updatedLat($lat)
+    {
+        if ($this->lngHasBeenUpdated()) {
+            Cache::put('lat', $lat);
+            $this->toggleMapButton = true;
+        }
+    }
+
+    public function updatedLng($lng)
+    {
+        if ($this->latHasBeenUpdated()) {
+            Cache::put('lng', $lng);
+            $this->toggleMapButton = true;
+        }
+    }
+
+    protected function latHasBeenUpdated()
+    {
+        return isset($this->lat) && $this->lat !== Cache::get('lat');
+    }
+
+    protected function lngHasBeenUpdated()
+    {
+        return isset($this->lng) && $this->lng !== Cache::get('lng');
     }
 
     public function submit()
@@ -199,6 +191,8 @@ class CreateLocation extends Component
             ->with('message', 'Location wurde erstellt');
     }
 
+
+        //GetProducts and GetServices are used to provide the select's right informations
     public function getProducts(Request $request)
     {
         $selected = json_decode($request->get('selected', ''), true);

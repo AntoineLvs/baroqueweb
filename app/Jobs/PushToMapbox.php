@@ -32,6 +32,7 @@ class PushToMapbox implements ShouldQueue
      */
     public function handle(Location $location): void
     {
+        //here we retrieve the needed data, to send it to the Mapbox API, to push a location on Mapbox's dataset
         $lat = $this->location->lat;
         $lng = $this->location->lng;
 
@@ -90,6 +91,7 @@ class PushToMapbox implements ShouldQueue
         }
     }
 
+    //here is an attempt to push the dataset to the Tileset without having to do it manually on Mapbox, but it didn't work, as I don't know if it's really possible to do...
     protected function publishDataset($token, $dataset_id)
     {
         dd("https://api.mapbox.com/datasets/v1/elsenmedia/{$dataset_id}/exports?access_token={$token}");

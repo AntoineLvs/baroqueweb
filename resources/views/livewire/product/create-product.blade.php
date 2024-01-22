@@ -1,3 +1,6 @@
+<!--
+  Here we have three selects. The second and third are dependant of the first one. Based on the product types selected, it will show differents informations informations
+-->
 <div>
 
   <form wire:submit.prevent="submit">

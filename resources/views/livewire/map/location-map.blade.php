@@ -1,7 +1,13 @@
 <div>
   <div id='map' class="" style='height: 75vh;'></div>
- 
-  
+
+
+ <!-- here there is a div 'map', with a special height, then we say in the script underneath, that we push the map in there. 
+ In this script, we initialize everything that is need to work, tokens, informations... 
+ We apply a layer above the map, where we take all the locations from the Tileset of Mapbox, and put marker on their locations.
+ We also create a tooltip with some informations to show. 
+ we are above Hamburg at start. If we select a location,
+ it will zoom on it, by retrieving the lat/lng of it, to zoom on it.  -->
 
   <script>
     //mapboxgl.accessToken = 'sk.eyJ1IjoiZWxzZW5tZWRpYSIsImEiOiJja3ZubXMzbmgxYXE4MnJvdTRqYXR1YzM2In0.F2OJW7uFgP0WjFwTIXBPCA';
@@ -130,6 +136,23 @@
           center: [longitude, latitude],
           zoom: 12,
           essential: true
+        });
+      });
+    });
+
+    document.addEventListener('DOMContentLoaded', function() {
+      Livewire.on('searchResultsUpdated', locationData => {
+        const firstLocation = locationData[0];
+
+        const latitude = firstLocation.latitude;
+        const longitude = firstLocation.longitude;
+        // Utilise le SDK de Mapbox pour centrer la carte sur cette location
+        mapboxgl.accessToken = 'pk.eyJ1IjoiZWxzZW5tZWRpYSIsImEiOiJjbHBiYXozZm0wZ21vMnFwZHE4ZWc5Z2lzIn0.dJGBO1JOfota9KceLDgGJg'; // Remplace par ton propre token
+        // Code pour la mise à jour de la carte avec les nouvelles coordonnées
+        map.flyTo({
+          center: [longitude, latitude],
+          zoom: 12, // Le niveau de zoom souhaité
+          essential: true // Assure-toi que cette transition est essentielle pour que la carte se centre correctement
         });
       });
     });

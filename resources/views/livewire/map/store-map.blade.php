@@ -242,7 +242,7 @@
     style: 'mapbox://styles/elsenmedia/cl6cqmcph000n14okhsnwgs0l',
     center: [-77.034084, 38.909671],
     zoom: 13,
-    scrollZoom: true
+    scrollZoom: true,
     tolerance: 0
 });
 </script>

@@ -24,7 +24,8 @@
                 <a href="#" class="text-m font-semibold leading-6 text-white hover:underline">FAQ</a>
                 <a href="#" class="text-m font-semibold leading-6 text-white">Was ist XTL?</a>
                 <a href="#" class="text-m font-semibold leading-6 text-white">Partner werden</a>
-                <a href="/find" class="text-m font-semibold leading-6 text-white">Finder</a>
+                <a href="{{route('locations.find-locations-public')}}" class="text-m font-semibold leading-6 text-white">Finder</a>
+                <a href="{{route('locations.find-locations-map')}}" class="text-m font-semibold leading-6 text-white">Find Map</a>
 
             </div>
 
