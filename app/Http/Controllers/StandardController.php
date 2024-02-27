@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Standard;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class StandardController extends Controller
@@ -14,6 +15,8 @@ class StandardController extends Controller
      */
     public function index(): View
     {
+
+
 
         $standards = Standard::latest()->paginate(25);
 

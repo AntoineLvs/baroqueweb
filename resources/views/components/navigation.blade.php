@@ -2,10 +2,11 @@
     <header class="absolute inset-x-0 top-0 z-50">
         <nav class="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
             <div class="flex lg:flex-1">
-                <a href="#" class="-m-1.5 p-1.5">
-                    <span class="sr-only">Your Company</span>
-                    <img class="h-14 w-20" src="{{ asset('assets/img/refuelos_white.png') }}" alt="Logo"/>
+                <a href="{{ URL::route('home') }}" class="-m-1.5 p-1.5">
+                    <span class="sr-only">refuelOS</span>
+                    <img class="h-16 w-auto" src="{{ asset('assets/img/refuelos_white.png') }}" alt="Logo"/>
                 </a>
+
             </div>
             <div class="flex lg:hidden">
                 <button @click="open = true" type="button"
@@ -20,7 +21,7 @@
 
             </div>
             <div class="hidden lg:flex lg:gap-x-12">
-                <a href="{{route('check')}}" class="text-m font-semibold leading-6 text-white hover:underline">Freigabe-Check</a>
+                <a href="{{route('product-finder.index-public')}}" class="text-m font-semibold leading-6 text-white hover:underline">Product Finder</a>
                 <a href="#" class="text-m font-semibold leading-6 text-white hover:underline">FAQ</a>
                 <a href="#" class="text-m font-semibold leading-6 text-white">Was ist XTL?</a>
                 <a href="#" class="text-m font-semibold leading-6 text-white">Partner werden</a>

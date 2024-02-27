@@ -6,6 +6,35 @@
 
         <x-navigation/>
 
+        @if (session('message'))
+            <div
+                x-data="{ show: false, message: '' }"
+                x-init="
+        @if(session('message'))
+            message = '{{ session('message') }}';
+            show = true;
+            setTimeout(() => show = false, 5000);
+        @endif
+    "
+                x-show="show"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 transform scale-90"
+                x-transition:enter-end="opacity-100 transform scale-100"
+                x-transition:leave="transition ease-in duration-300"
+                x-transition:leave-start="opacity-100 transform scale-100"
+                x-transition:leave-end="opacity-0 scale-90"
+                style="display: none; position: fixed; top: 1rem; right: 1rem; z-index: 50;"
+                @click.away="show = false"
+            >
+                <div class="bg-blue-500 text-white p-4 rounded-lg shadow-lg">
+                    <div class="flex justify-between items-center">
+                        <div class="pr-4" x-text="message"></div>
+                    <button @click="show = false" class="text-lg">&times;</button>
+                </div>
+            </div>
+    </div>
+        @endif
+
         <main>
 
             <!-- Hero section -->
@@ -24,18 +53,17 @@
                         <div class="hidden sm:mb-8 sm:flex sm:justify-center">
                             <div
                                 class="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-300 ring-1 ring-white/10 hover:ring-white/20">
-                                Nutzen Sie unsere XTL-Freigabe API auf Ihrer Website! <a href="#" class="font-semibold text-white"><span
+                                Jetzt Demo anfordern! <a href="#" class="font-semibold text-white"><span
                                         class="absolute inset-0" aria-hidden="true"></span>Mehr dazu <span
                                         aria-hidden="true">&rarr;</span></a>
                             </div>
                         </div>
                         <div class="text-center">
-                            <h1 class="text-4xl font-bold tracking-tight text-white sm:text-6xl">XTL Freigabe<br>online prüfen</h1>
-                            <p class="mt-4 text-xl leading-8 text-gray-50">Sie möchten einen XTL-Kraftstoff wie HVO-Diesel tanken? Dann prüfen Sie vorab die XTL-Freigabe Ihres Fahrzeughersteller!</p>
+                            <h1 class="text-4xl font-bold tracking-tight text-white sm:text-6xl">refuelOS<br>Fuel Management Software</h1>
+                            <p class="mt-4 text-xl leading-8 text-gray-50">Kraftstoffe einfach handeln</p>
                             <div class="mt-6 flex items-center justify-center gap-x-6">
-                                <a href="#"
-                                   class="rounded-md bg-indigo-500 px-5 py-4 text-lg font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400">XTL Freigabe-Check
-                                    starten</a>
+                                <a href="/product-finder"
+                                   class="rounded-md bg-indigo-500 px-5 py-4 text-lg font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400">XTL Produkte finden</a>
 
                             </div>
                             <div class="mt-2">
@@ -66,8 +94,11 @@
 
             <!-- Feature section -->
             <div class="mt-32 sm:mt-56">
+
                 <div class="mx-auto max-w-7xl px-6 lg:px-8">
                     <div class="mx-auto max-w-2xl sm:text-center">
+
+
                         <h2 class="text-base font-semibold leading-7 text-indigo-600">Everything you need</h2>
                         <p class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">No server? No
                             problem.</p>

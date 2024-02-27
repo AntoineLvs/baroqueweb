@@ -81,6 +81,19 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->role == 'admin';
     }
 
+    public function isSuperAdmin()
+    {
+
+        if (session()->has('tenant_id')) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+
+
     public function isUser()
     {
         return $this->role == 'user';

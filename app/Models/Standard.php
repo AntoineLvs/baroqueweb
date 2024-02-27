@@ -12,7 +12,6 @@ class Standard extends Model
     protected $fillable = [
         'name',
         'description',
-
         'url',
         'product_type_id',
     ];

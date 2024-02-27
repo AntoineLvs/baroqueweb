@@ -166,13 +166,13 @@
                               <div class="ml-4">
                                 <div class="text-sm font-medium text-gray-900">
 
-                                  @if ( $product->base_product_id)
-                                  {{ $product->base_product($product->base_product_id)->name }}
-                                  @endif
+                                    {{ $product->name }}
                                 </div>
                                 <div class="text-sm text-gray-500">
-                                  {{ $product->name }}
 
+                                    @if ( $product->base_product_id)
+                                        Base Product:: {{ $product->base_product($product->base_product_id)->name }}
+                                    @endif
 
 
                                 </div>
@@ -181,8 +181,8 @@
                           </td>
 
                           <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">  A-ID: {{ $product->id }}</div>
-                            <div class="text-sm text-gray-900">PT-ID: {{ $product->product_type_id }}</div>
+                            <div class="text-sm text-gray-900">  PID: {{ $product->id }}</div>
+                            <div class="text-sm text-gray-900">TID: {{ $product->tenant->id }} {{ $product->tenant->name }}</div>
                           </td>
 
                           <td class="px-6 py-4 whitespace-nowrap">

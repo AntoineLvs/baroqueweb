@@ -24,18 +24,13 @@ class OrderController extends Controller
         return view('orders.create', compact('products'));
     }
 
-    public function createFromRequest($product_offer_request): View
-    {
-        $products = Product::all();
-
-        return view('orders.create', compact('products'));
-    }
-
-    public function createFromHub($offer): View
+    public function createProductRequest(Product $product): View
     {
 
-        $offer = PublicProductOffer::withoutGlobalScope(TenantScope::class)->find($offer);
 
-        return view('orders.create', compact('offer'));
+        return view('product-finder.public-product-request', compact('product'));
     }
+
+
+
 }

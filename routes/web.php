@@ -1,5 +1,9 @@
 <?php
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\LogoutController;
@@ -19,6 +23,7 @@ use App\Http\Controllers\MapboxRecordController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductFinderController;
 use App\Http\Controllers\ProductOfferController;
 use App\Http\Controllers\ProductOfferInquiryController;
 use App\Http\Controllers\ProductTypeController;
@@ -37,9 +42,7 @@ use App\Livewire\Auth\Verify;
 use App\Models\Engine;
 use App\Models\Manufacturer;
 use App\Models\Release;
-use Illuminate\Support\Facades\Route;
 
-use Illuminate\Http\Request;
 
 
 /*
@@ -64,10 +67,8 @@ Route::get('/email/verify', function () {
 Route::view('/', 'home')->name('home');
 Route::view('check', 'check')->name('check');
 
-
 Route::get('/get/products', [\App\Livewire\Locations\CreateLocation::class, 'getProducts'])->name('get.products');
 Route::get('/get/services', [\App\Livewire\Locations\CreateLocation::class, 'getServices'])->name('get.services');
-
 
 Route::get('/get/products', [\App\Livewire\Locations\EditLocation::class, 'getProducts'])->name('get.products');
 Route::get('/get/services', [\App\Livewire\Locations\EditLocation::class, 'getServices'])->name('get.services');
@@ -82,8 +83,7 @@ Route::get('/check/engines', function (Request $request) {
         // searching when type in the select input
         ->when(
             $search = $request->get('search'),
-            fn ($query) =>
-            $query->where('name', 'like', "%{$search}%")
+            fn($query) => $query->where('name', 'like', "%{$search}%")
         )
         ->when(!$search && $selected, function ($query) use ($selected) {
             // selecting the initial selected values
@@ -114,8 +114,7 @@ Route::get('/check/manufacturers', function (Request $request) {
         // searching when type in the select input
         ->when(
             $search = $request->get('search'),
-            fn ($query) =>
-            $query->where('name', 'like', "%{$search}%")
+            fn($query) => $query->where('name', 'like', "%{$search}%")
         )
         ->when(!$search && $selected, function ($query) use ($selected) {
             // selecting the initial selected values
@@ -129,12 +128,16 @@ Route::get('/check/manufacturers', function (Request $request) {
         ->limit(65)
         ->get()
         // mapping to the expected format
-        ->map(fn (Manufacturer $manufacturer) => $manufacturer->only('id', 'name'));
+        ->map(fn(Manufacturer $manufacturer) => $manufacturer->only('id', 'name'));
 })->name('api.manufacturers');
 
 // hub finder
 Route::get('mapfinder/', [HubController::class, 'showMap'])->name('hub.showMap');
 Route::get('hub/{id}', [HubController::class, 'showPublicProfile'])->name('hub.showPublicProfile');
+
+
+// PRODUCT FINDER
+Route::get('product-finder/', [ProductFinderController::class, 'index'])->name('product-finder.index-public');
 
 Route::get('find/', [LocationController::class, 'showLocationFinder'])->name('locations.find-locations-public');
 Route::get('find-map/', [LocationController::class, 'showLocationFinderMap'])->name('locations.find-locations-map');
@@ -166,21 +169,58 @@ Route::middleware('auth')->group(function () {
         ->name('logout');
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
 
-    // Dashboard Routes
-    Route::get('dashboard', [HomeController::class, 'index'])->name('dashboard');
+// PUBLIC Order Routes
+Route::get('request-product/{product}', [OrderController::class, 'createProductRequest'])->name('orders.public-product-request');
+
+
+// AUTH SECTION BACKEND
+Route::middleware(['auth', 'verified'])->group(function () {
 
     // Login Routes
     Route::post('logout', LogoutController::class)->name('logout');
     Route::view('password/confirm', 'auth.passwords.confirm')->name('password.confirm');
 
-    // Admin DashboardController
-    Route::get('admin', [AdminController::class, 'index'])->name('admin.dashboard');
-    Route::put('admin/{location}/insert', [MapController::class, 'insertLocation'])->name('admin.insertLocation');
-    Route::post('admin/{location}/createqueue', [AdminController::class, 'queueLocation'])->name('admin.queueLocation');
-    Route::post('admin/{location}/disablequeue', [AdminController::class, 'disableLocation'])->name('admin.disableLocation');
-    Route::post('admin/queue-locations', [AdminController::class, 'queueAllLocations'])->name('admin.queueAllLocations');
+    // Impersonation Routes
+    Route::get('/leave-impersonation', [ImpersonationController::class, 'leave'])->name('leave-impersonation');
+
+
+    Route::middleware(['restrict.tenant.access'])->group(function () {
+
+        // Admin DashboardController
+        Route::get('admin', [AdminController::class, 'index'])->name('admin.dashboard');
+        Route::put('admin/{location}/insert', [MapController::class, 'insertLocation'])->name('admin.insertLocation');
+        Route::post('admin/{location}/createqueue', [AdminController::class, 'queueLocation'])->name('admin.queueLocation');
+        Route::post('admin/{location}/disablequeue', [AdminController::class, 'disableLocation'])->name('admin.disableLocation');
+        Route::post('admin/queue-locations', [AdminController::class, 'queueAllLocations'])->name('admin.queueAllLocations');
+
+        // Standard Controller
+        Route::resource('standards', StandardController::class)->except(['show']);
+        Route::get('standards', [StandardController::class, 'index'])->name('standards.index');
+        Route::get('standards/create', [StandardController::class, 'create'])->name('standards.create');
+
+        // Base Product Routes
+        Route::resource('base-products', BaseProductController::class);
+        Route::get('base-products', [BaseProductController::class, 'index'])->name('base-products.index');
+        Route::get('base-products/create', [BaseProductController::class, 'create'])->name('base-products.create');
+        Route::get('base-products/{base_product}/edit', [BaseProductController::class, 'edit'])->name('base-products.edit');
+
+        // Base Service Routes
+        Route::resource('base-services', BaseServiceController::class);
+        Route::get('base-services', [BaseServiceController::class, 'index'])->name('base-services.index');
+        Route::get('base-services/create', [BaseServiceController::class, 'create'])->name('base-services.create');
+        Route::get('base-services/{base-services}/edit', [BaseServiceController::class, 'edit'])->name('base-services.edit');
+        Route::get('base-services/{base-service}/edit/delete-document', [BaseServiceController::class, 'destroyDocument'])->name('base-services.destroyDocument');
+
+        // Mapbox Routes
+        Route::resource('mapbox', MapboxRecordController::class);
+        Route::get('mapbox', [MapboxRecordController::class, 'index'])->name('mapbox.index');
+
+
+    });
+
+    // Dashboard Routes
+    Route::get('dashboard', [HomeController::class, 'index'])->name('dashboard');
 
 
     // Profile Routes
@@ -211,15 +251,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('/directory', 'directory.index')->name('directory.index');
     Route::get('/directory/{tenant}', [DirectoryController::class, 'show'])->name('directory.show');
 
-    // Impersonation Routes
-    Route::get('/leave-impersonation', [ImpersonationController::class, 'leave'])->name('leave-impersonation');
-
-    // Base Product Routes
-    Route::resource('base-products', BaseProductController::class);
-    Route::get('base-products', [BaseProductController::class, 'index'])->name('base-products.index');
-    Route::get('base-products/create', [BaseProductController::class, 'create'])->name('base-products.create');
-    Route::get('base-products/{base_product}/edit', [BaseProductController::class, 'edit'])->name('base-products.edit');
-
     // Product Type Routes
     Route::resource('product-types', ProductTypeController::class);
     Route::get('product-types', [ProductTypeController::class, 'index'])->name('product-types.index');
@@ -232,23 +263,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('products/create', [ProductController::class, 'create'])->name('products.create');
     Route::get('products/{product}/edit/delete-document', [ProductController::class, 'destroyDocument'])->name('products.destroyDocument');
 
-
-    // Base Service Routes
-    Route::resource('base-services', BaseServiceController::class);
-    Route::get('base-services', [BaseServiceController::class, 'index'])->name('base-services.index');
-    Route::get('base-services/create', [BaseServiceController::class, 'create'])->name('base-services.create');
-    Route::get('base-services/{base-services}/edit', [BaseServiceController::class, 'edit'])->name('base-services.edit');
-    Route::get('base-services/{base-service}/edit/delete-document', [BaseServiceController::class, 'destroyDocument'])->name('base-services.destroyDocument');
-
     // Services Routes
     Route::resource('services', ServiceController::class);
     Route::get('services', [ServiceController::class, 'index'])->name('services.index');
     Route::get('services/create', [ServiceController::class, 'create'])->name('services.create');
     Route::get('services/{service}/edit/delete-document', [ServiceController::class, 'destroyDocument'])->name('services.destroyDocument');
 
-    // Mapbox Routes
-    Route::resource('mapbox', MapboxRecordController::class);
-    Route::get('mapbox', [MapboxRecordController::class, 'index'])->name('mapbox.index');
+
 
     // Watchlist Routes
     Route::resource('bucket', BucketController::class);
@@ -272,11 +293,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('product-offer-inquiries/cancel/{product_offer_inquiry}', [ProductOfferInquiryController::class, 'cancel'])->name('product-offer-inquiries.cancel');
 
     // Order Routes
-    Route::resource('orders', OrderController::class)->except(['edit', 'update']);
+    Route::resource('orders', OrderController::class)->except(['update']);
     Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('orders/create', [OrderController::class, 'create'])->name('orders.create');
 
-    Route::get('orders/createFromHub/{offer}/', [OrderController::class, 'createFromHub'])->name('orders.createFromHub');
 
     // Project Routes
     Route::resource('projects', ProjectController::class)->except(['show']);
@@ -297,11 +317,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('vehicles', VehicleController::class)->except(['show']);
     Route::get('vehicles', [VehicleController::class, 'index'])->name('vehicles.index');
     Route::get('vehicle/create', [VehicleController::class, 'create'])->name('vehicles.create');
-
-    // Standard Routes
-    Route::resource('standards', StandardController::class)->except(['show']);
-    Route::get('standards', [StandardController::class, 'index'])->name('standards.index');
-    Route::get('standards/create', [StandardController::class, 'create'])->name('standards.create');
 
     // Realeases Routes
     Route::resource('releases', ReleaseController::class)->except(['show']);

@@ -13,8 +13,6 @@
           <div class="mt-1 sm:mt-0 sm:col-span-2">
 
 
-            {{ $customer_tenant->name }}<br>
-              {{ $customer_tenant->email }}
 
 
           </div>
@@ -48,9 +46,7 @@
 
 
 
-            @foreach ($ordered_products as $product)
-            {{ $product->product->name }} - Type: {{ $product->product->product_type->name }} (P-ID: {{$product->id}})
-              @endforeach
+           x
 
 
 
@@ -64,16 +60,7 @@
   <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
     <label for="about" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">Product Price per Unit </label>
     <div class="mt-1 sm:mt-0 sm:col-span-2">
-      <x-inputs.currency
 
-      placeholder="Product Price per Unit"
-      icon="currency-euro"
-      thousands=","
-      decimal="."
-      precision="2"
-      wire:model.defer="product_price"
-      disabled
-      />
 
     </div>
   </div>

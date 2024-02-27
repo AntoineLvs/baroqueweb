@@ -17,8 +17,5 @@ class TenantScope implements Scope
             $builder->where('tenant_id', '=', session()->get('tenant_id'));
         }
 
-        // multi tenant
-
-        // $builder->where('tenant_id', '=', 1);
     }
 }
