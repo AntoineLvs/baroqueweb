@@ -151,7 +151,7 @@
                                   {{ $location->name }}
                                 </div>
                                 <div class="text-sm text-gray-500">
-                                  ID: {{ $location->id }} @if (!auth()->user()->Tenant) {{ $location->tenant->name }} @endif
+                                  ID: {{ $location->id }} @if (!auth()->user()->Tenant) {{ $location->tenant->name ?? 'admin' }} @endif
                                 </div>
                               </div>
                             </div>

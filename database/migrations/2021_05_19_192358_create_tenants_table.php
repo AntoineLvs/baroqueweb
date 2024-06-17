@@ -17,6 +17,8 @@ return new class extends Migration
             $table->timestamps();
             $table->integer('type')->default(1);
             $table->unsignedBigInteger('tenant_type_id')->default(1);
+            $table->unsignedInteger('api_calls_count')->default(0);
+            $table->string('url_subsite', 255)->nullable();
 
             $table->integer('status')->default(0);
             $table->integer('phone')->nullable();

@@ -29,8 +29,8 @@ class Tenant extends Model
     {
 
         return empty($query) ? static::query()
-            : static::where('name', 'like', '%'.$query.'%')
-                ->orWhere('email', 'like', '%'.$query.'%');
+            : static::where('name', 'like', '%' . $query . '%')
+            ->orWhere('email', 'like', '%' . $query . '%');
     }
 
     public function users()
@@ -53,21 +53,18 @@ class Tenant extends Model
     {
 
         return $this->hasMany(Product::class);
-
     }
 
     public function offeredProducts()
     {
 
         return $this->hasMany(OfferedProduct::class);
-
     }
 
     public function productOffers()
     {
 
         return $this->hasMany(ProductOffer::class);
-
     }
 
     public function projects()
@@ -93,6 +90,10 @@ class Tenant extends Model
 
         return $this->hasMany(BucketEntry::class);
     }
+    public function sepaMandate()
+    {
+        return $this->hasOne(SepaMandate::class, 'tenant_id', 'id');
+    }
 
     public function tenant_type()
     {
@@ -106,14 +107,14 @@ class Tenant extends Model
             // return Storage::disk('local')->url($this->photo);
         }
 
-        return 'https://avatars.dicebear.com/api/initials/'.$this->name.'.svg';
+        return 'https://avatars.dicebear.com/api/initials/' . $this->name . '.svg';
     }
 
     public function photoUrl($tenant)
     {
         $filename = $tenant->photo;
 
-        $url = url('/photos/'.$tenant->id.'/'.$filename);
+        $url = url('/photos/' . $tenant->id . '/' . $filename);
 
         //$url = url('/photos/' . Auth::user()->tenant->id . '/' . $filename);
         return $url;
@@ -123,7 +124,7 @@ class Tenant extends Model
     {
         $filename = $tenant->photo_header;
 
-        $url = url('/photos/'.$tenant->id.'/'.$filename);
+        $url = url('/photos/' . $tenant->id . '/' . $filename);
 
         // $url = url('/photos/' . Auth::user()->tenant->id . '/' . $filename);
         return $url;
@@ -141,13 +142,13 @@ class Tenant extends Model
             //  return asset('storage/'. $tenant->photo );
         }
 
-        return 'https://avatars.dicebear.com/api/initials/'.$this->name.'.svg';
+        return 'https://avatars.dicebear.com/api/initials/' . $this->name . '.svg';
     }
 
     public function initials()
     {
 
-        return 'https://avatars.dicebear.com/api/initials/'.$this->name.'.svg';
+        return 'https://avatars.dicebear.com/api/initials/' . $this->name . '.svg';
     }
 
     public function getProductNumber($tenant)
@@ -174,6 +175,19 @@ class Tenant extends Model
     public function getOfferNumber(Tenant $tenant)
     {
         $count = ProductOffer::withoutGlobalScope(TenantScope::class)->where('tenant_id', '=', $tenant->id)->count();
+
+        return $count;
+    }
+
+    public function apiTokens()
+    {
+        return $this->hasMany(ApiToken::class);
+    }
+
+    public function hasApiLicense(Tenant $tenant)
+    {
+
+        $count = ApiToken::where('tenant_id', '=', $tenant->id)->count();
 
         return $count;
     }

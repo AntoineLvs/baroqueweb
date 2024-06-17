@@ -24,6 +24,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'email',
         'password',
         'tenant_id',
+        'status',
     ];
 
     /**
@@ -72,8 +73,8 @@ class User extends Authenticatable implements MustVerifyEmail
     public static function search($query)
     {
         return empty($query) ? static::query()
-            : static::where('name', 'like', '%'.$query.'%')
-                ->orWhere('email', 'like', '%'.$query.'%');
+            : static::where('name', 'like', '%' . $query . '%')
+            ->orWhere('email', 'like', '%' . $query . '%');
     }
 
     public function isAdmin()
@@ -89,7 +90,6 @@ class User extends Authenticatable implements MustVerifyEmail
         } else {
             return true;
         }
-
     }
 
 
@@ -105,16 +105,71 @@ class User extends Authenticatable implements MustVerifyEmail
             return Storage::disk('s3-public')->url($this->photo);
         }
 
-        return 'https://api.dicebear.com/7.x/initials/svg?seed='.$this->name.'';
+        return 'https://api.dicebear.com/7.x/initials/svg?seed=' . $this->name . '';
     }
 
     public function applicationUrl()
     {
         if ($this->application()) {
-            return url('/documents/'.$this->id.'/'.$this->application()->filename);
+            return url('/documents/' . $this->id . '/' . $this->application()->filename);
         }
 
         return '#';
+    }
+    
+    public function sepaMandate()
+    {
+        return $this->hasOne(SepaMandate::class, 'user_id', 'id');
+    }
+
+
+    public function apiTokens()
+    {
+        return $this->hasMany(ApiToken::class);
+    }
+
+    public function assignApiToken()
+    {
+        $token = bin2hex(random_bytes(32));
+
+        $apiToken = ApiToken::create(['token' => $token]);
+
+        $this->api_token_id = $apiToken->id;
+        $this->save();
+    }
+
+    public function hasApiToken()
+    {
+        $apiToken = $this->apiToken();
+
+        return !is_null($apiToken);
+    }
+
+
+    public function apiToken()
+    {
+        return ApiToken::where('tenant_id', $this->tenant_id)
+            ->first();
+    }
+
+    public function userStatus($userId)
+    {
+        $user = User::findOrFail($userId);
+        $tenantId = $user->tenant_id;
+        $userWithStatus = User::where('tenant_id', $tenantId)
+            ->where('status', '<>', 0)
+            ->first();
+
+        return $userWithStatus ? $userWithStatus->status : 0;
+    }
+
+
+    public function UserTokenType($user)
+    {
+        $status = $user->status;
+        $tokenType = TokenType::find($status);
+
+        return $tokenType;
     }
 
     public function application()

@@ -166,6 +166,9 @@ class CreateLocation extends Component
 
         ]);
 
+        $user = auth()->user();
+        $tenant_id = $user->tenant_id ?? 0;
+
         $this->location->name = $this->name;
         $this->location->description = $this->description;
         $this->location->city = $this->city;
@@ -177,6 +180,7 @@ class CreateLocation extends Component
 
         $this->location->lng = $this->lng;
         $this->location->lat = $this->lat;
+        $this->location->tenant_id = $tenant_id;
 
 
         $this->service_id = $this->service_id;

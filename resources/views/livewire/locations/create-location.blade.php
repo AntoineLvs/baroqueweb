@@ -75,7 +75,7 @@
                                         <div class="grid grid-cols-6 gap-6">
                                             <div class="col-span-6 sm:col-span-6 lg:col-span-2">
                                                 <label for="address" class="block text-sm font-medium text-gray-700">Street</label>
-                                                <input wire:model.live="address" type="text" name="address" id="address" autocomplete="address-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                                <input wire:model.live="address" type="text" name="address" id="address" autocomplete="street-address" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                                 @error('address') <span class="text-red-500">{{ $message }}</span> @enderror
                                             </div>
 
@@ -88,7 +88,7 @@
 
                                             <div class="col-span-6 sm:col-span-3 lg:col-span-2">
                                                 <label for="city" class="block text-sm font-medium text-gray-700">City</label>
-                                                <input wire:model.live="city" type="text" name="city" id="city" autocomplete="address-level1" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                                <input wire:model.live="city" type="text" name="city" id="city" autocomplete="address-level2" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                                 @error('city') <span class="text-red-500">{{ $message }}</span> @enderror
                                             </div>
 
@@ -108,7 +108,7 @@
                                                     </span>
                                                     @else
 
-                                                    <span class="text-indigo-600 cursor-pointer" wire:click.live="getCoordinates">
+                                                    <span class="text-indigo-600 cursor-pointer" wire:click="getCoordinates">
                                                         Get Coordinates
                                                     </span>
                                                     @endif
@@ -316,7 +316,6 @@ we can also call it in a livewire view, with just the div and the script, but it
                 const lat = parseFloat(latInputElement.value);
                 const lngInputElement = document.getElementById('lng');
                 const lng = parseFloat(lngInputElement.value);
-                console.log(lat, lng, "t'as vu ça ?");
                 let marker;
                 const map = new mapboxgl.Map({
                     container: 'map',

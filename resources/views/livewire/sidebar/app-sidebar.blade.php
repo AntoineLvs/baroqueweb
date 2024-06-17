@@ -56,6 +56,56 @@
                                     @endif
 
                                     @if($super)
+                                    <a @if (request()->routeIs('api.api-dashboard'))
+                                        class="bg-teal-700 text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                                        @endif
+
+                                        href="{{ route('api.api-dashboard') }}"
+                                        class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                        <svg class="text-gray-300 mr-3 flex-shrink-0 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 9.75 16.5 12l-2.25 2.25m-4.5 0L7.5 12l2.25-2.25M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z" />
+                                        </svg>
+                                        API Manager
+                                    </a>
+
+                                    @endif
+
+                                    @if($super)
+                                    <a @if (request()->routeIs('sepa-mandates.index'))
+                                        class="bg-teal-700 text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                                        @endif
+
+                                        href="{{ route('sepa-mandates.index') }}"
+                                        class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+
+
+                                        <svg class="text-gray-300 mr-3 flex-shrink-0 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.25 7.756a4.5 4.5 0 1 0 0 8.488M7.5 10.5h5.25m-5.25 3h5.25M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                        </svg>
+
+                                        SEPA Mandate
+                                    </a>
+
+                                    @endif
+
+
+                                    @if($super)
+                                    <a @if (request()->routeIs('api-token-types.index'))
+                                        class="bg-teal-700 text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                                        @endif
+
+                                        href="{{ route('api-token-types.index') }}"
+                                        class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+
+                                        <svg class="text-gray-300 mr-3 flex-shrink-0 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+                                        </svg>
+                                        License Type
+                                    </a>
+
+                                    @endif
+
+                                    @if($super)
                                     <a @if (request()->routeIs('product-types.index'))
                                         class="bg-teal-700 text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md"
                                         @endif
@@ -175,6 +225,20 @@
                                     Mein Mandant
                                 </a>
 
+                                <a @if (request()->routeIs('api.license-manager'))
+                                    class="bg-teal-700 text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+                                    @endif
+
+                                    href="{{ route('api.license-manager') }}"
+                                    class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                    <!-- Heroicon name: outline/users -->
+
+                                    <svg class="text-gray-400 group-hover:text-gray-300 mr-3 flex-shrink-0 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
+                                    </svg>
+                                    Lizenz Manager
+                                </a>
+
                                 <a @if (request()->routeIs('team.index'))
                                     class="bg-teal-700 text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md"
                                     @endif
@@ -232,7 +296,7 @@
                                     Fahrzeuge
                                 </a> -->
 
-                                    @if($super)
+                                @if($super)
                                 <a @if (request()->routeIs('standards.index'))
                                     class="bg-teal-700 text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md"
                                     @endif
@@ -247,7 +311,7 @@
 
                                     Standards
                                 </a>
-                                    @endif
+                                @endif
 
                                 <a @if (request()->routeIs('orders.index'))
                                     class="bg-teal-700 text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md"

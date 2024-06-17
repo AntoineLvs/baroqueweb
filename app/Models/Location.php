@@ -35,6 +35,7 @@ class Location extends Model
 
         'active',
         'verified',
+        'tenant_id',
         'status',
     ];
 

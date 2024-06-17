@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ApiTokenController;
+use App\Http\Controllers\ApiTokenTypeController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\BaseProductController;
@@ -17,6 +19,7 @@ use App\Http\Controllers\EngineController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\HubController;
 use App\Http\Controllers\ImpersonationController;
+use App\Http\Controllers\ImportExportController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\ManufacturerController;
 use App\Http\Controllers\MapboxRecordController;
@@ -30,8 +33,10 @@ use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ReleaseController;
+use App\Http\Controllers\SepaMandateController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\StandardController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\VehicleController;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Passwords\Confirm;
@@ -83,7 +88,7 @@ Route::get('/check/engines', function (Request $request) {
         // searching when type in the select input
         ->when(
             $search = $request->get('search'),
-            fn($query) => $query->where('name', 'like', "%{$search}%")
+            fn ($query) => $query->where('name', 'like', "%{$search}%")
         )
         ->when(!$search && $selected, function ($query) use ($selected) {
             // selecting the initial selected values
@@ -114,7 +119,7 @@ Route::get('/check/manufacturers', function (Request $request) {
         // searching when type in the select input
         ->when(
             $search = $request->get('search'),
-            fn($query) => $query->where('name', 'like', "%{$search}%")
+            fn ($query) => $query->where('name', 'like', "%{$search}%")
         )
         ->when(!$search && $selected, function ($query) use ($selected) {
             // selecting the initial selected values
@@ -128,7 +133,7 @@ Route::get('/check/manufacturers', function (Request $request) {
         ->limit(65)
         ->get()
         // mapping to the expected format
-        ->map(fn(Manufacturer $manufacturer) => $manufacturer->only('id', 'name'));
+        ->map(fn (Manufacturer $manufacturer) => $manufacturer->only('id', 'name'));
 })->name('api.manufacturers');
 
 // hub finder
@@ -194,6 +199,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('admin/{location}/disablequeue', [AdminController::class, 'disableLocation'])->name('admin.disableLocation');
         Route::post('admin/queue-locations', [AdminController::class, 'queueAllLocations'])->name('admin.queueAllLocations');
 
+        // API Dashboard
+        Route::resource('/api-dashboard', ApiTokenController::class)->except(['show']);
+        Route::get('/api-dashboard', [ApiTokenController::class, 'apiDashboard'])->name('api.api-dashboard');
+        Route::resource('/api-token', ApiTokenController::class);
+        Route::get('/api-token/{apiTokenId}/{userId}', [ApiTokenController::class, 'show'])->name('api-token.user.show');
+
+        // API Token Types
+        Route::resource('/api-token-types', ApiTokenTypeController::class)->except(['show']);
+        Route::get('api-token-types', [ApiTokenTypeController::class, 'index'])->name('api-token-types.index');
+        Route::get('api-token-types/create', [ApiTokenTypeController::class, 'create'])->name('api-token-types.create');
         // Standard Controller
         Route::resource('standards', StandardController::class)->except(['show']);
         Route::get('standards', [StandardController::class, 'index'])->name('standards.index');
@@ -216,12 +231,30 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('mapbox', MapboxRecordController::class);
         Route::get('mapbox', [MapboxRecordController::class, 'index'])->name('mapbox.index');
 
+        // SEPA Mandates
+        Route::resource('/sepa-mandates', SepaMandateController::class)->except(['show']);
+        Route::get('sepa-mandates', [SepaMandateController::class, 'index'])->name('sepa-mandates.index');
+        Route::get('sepa-mandates/create', [SepaMandateController::class, 'create'])->name('sepa-mandates.create');
+        Route::get('sepa-mandates/export/', [SepaMandateController::class, 'export'])->name('sepa-mandates.export');
+        Route::get('admin/import-data', [AdminController::class, 'importDataView'])->name('admin.import-data');
 
+
+        Route::controller(ImportExportController::class)->group(function () {
+            Route::get('admin/import_export', 'importExport');
+            Route::post('admin/import', 'importData')->name('data.import');
+            Route::get('admin-export/export', 'exportData')->name('data.export');
+            // Route::post('admin/{event}/import-attendees', 'importEventAttendees')->name('eventAttendees.import');
+            // Route::get('event/export-attendees', 'exportEventAttendees')->name('eventAttendees.export');
+        });
     });
 
     // Dashboard Routes
     Route::get('dashboard', [HomeController::class, 'index'])->name('dashboard');
-
+    // API Manager
+    Route::get('api-manager', [ApiTokenController::class, 'index'])->name('api.manager');
+    Route::put('/user/update', [UserController::class, 'update'])->name('user.update');
+    Route::get('/license-manager/', [ApiTokenController::class, 'licenseManager'])->name('api.license-manager');
+    Route::get('/license-legal-informations/', [ApiTokenController::class, 'legalInformations'])->name('license-legal-informations');
 
     // Profile Routes
     Route::resource('profile', ProfileController::class)->except(['edit', 'update']);

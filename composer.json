@@ -19,6 +19,7 @@
         "laravel/tinker": "^2.8",
         "league/flysystem-aws-s3-v3": "^3.0",
         "livewire/livewire": "^3.0",
+        "maatwebsite/excel": "^3.1",
         "panoscape/history": "^2.5",
         "tallstackui/tallstackui": "^1.7"
     },

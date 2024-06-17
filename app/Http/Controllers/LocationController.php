@@ -98,6 +98,10 @@ class LocationController extends Controller
         );
         $location->product_id = json_encode($cleanedArray);
 
+        $user = auth()->user();
+        $tenant_id = $user->tenant_id ?? 0;
+        $location->tenant_id = $tenant_id;
+
         //  $model->create($request->all());
 
         $location->save();

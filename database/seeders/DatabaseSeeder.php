@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\TokenType;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -32,6 +33,7 @@ class DatabaseSeeder extends Seeder
             BaseServiceSeeder::class,
             LocationSeeder::class,
             StandardSeeder::class,
+            TokenTypeSeeder::class,
         ]);
 
     }
