@@ -16,7 +16,7 @@ use App\Scopes\TenantScope;
 use Livewire\Attributes\On;
 use TallStackUi\Facades\TallStackUi;
 
-class FindLocationsMap extends Component
+class FindLocationsTest extends Component
 {
     use WithPerPagePagination, WithSorting, WithCachedRows;
 
@@ -42,27 +42,26 @@ class FindLocationsMap extends Component
     public $mapDiv = 'w-full';
 
     public $justifyContent = 'justify-center';
-    
-    public $filters = [
-        'search' => '',
-        'blend_min' => null,
-        'selected_product' => '',
-        'selected_service' => '',
+
+        public $filters = [
+            'search' => '',
+            'blend_min' => null,
+            'selected_product' => '',
+            'selected_service' => '',
 
 
-    ];
+        ];
 
 
     public function toggleMap()
     {
-
+        //change the Value of the button, to applicate tailwind class, to change the size of the Table/Map -> either big screen or not
         $this->toggleMapValue = !$this->toggleMapValue;
 
         if ($this->toggleMapValue) {
             $this->justifyContent = 'justify-start';
             $this->tableDiv = 'w-0 hidden';
             $this->mapDiv = 'w-full';
-
         } else {
             $this->justifyContent = 'justify-center';
             $this->tableDiv = 'w-full';
@@ -71,8 +70,8 @@ class FindLocationsMap extends Component
 
     public function toggleTable()
     {
+        //change the Value of the button, to applicate tailwind class, to change the size of the Table/Map -> either big screen or not
         $this->toggleTableValue = !$this->toggleTableValue;
-
 
         if ($this->toggleTableValue) {
             $this->justifyContent = 'justify-end';
@@ -99,20 +98,17 @@ class FindLocationsMap extends Component
 
     public function mount()
     {
+        //Get product_types and base_services to show on the table / currentTime because we need to compare the opnening hours from the locations, from the current time of the laptop
         $this->product_types = ProductType::withoutGlobalScope(TenantScope::class)->get();
         $this->base_services = BaseService::withoutGlobalScope(TenantScope::class)->get();
 
         $this->currentTime = now(config('app.timezone'))->toTimeString();
     }
 
-    public function updatedFilters()
-    {
-        $this->resetPage();
-    }
+
 
     public function toggleShowFilters()
     {
-        $this->useCachedRows();
 
         $this->showFilters = !$this->showFilters;
     }
@@ -123,18 +119,17 @@ class FindLocationsMap extends Component
         $this->reset('filters');
     }
 
+    // Here we take every locations that are active and online, and then, if there is a research, we apply some filter on these locations. If there is also some filters selected, 
+    // it returns locations that match. This function also dispatch an event whenever there is results, to give the map lng/lat, to be able to zoom on it if needed
     public function getRowsProperty()
     {
         return $this->cache(function () {
             $query = Location::query();
 
             $query->withoutGlobalScope(TenantScope::class);
+            $query->where('active', 1)->where('status', 2);
 
-            $query->where('active', 1)
-                ->where('status', 2);
-
-
-            // Filtering based on existing 
+            // Filtrage basé sur les filtres existants
             $query->when($this->filters['search'], function ($query, $search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('name', 'like', '%' . $search . '%')
@@ -219,23 +214,12 @@ class FindLocationsMap extends Component
                 });
             }
 
-            $sortedQuery = $query->orderBy($this->sortColumn, $this->sortDirection);
-            $filteredQuery = $this->applyPagination($this->applySorting($query));
+                $sortedQuery = $query->orderBy($this->sortColumn, $this->sortDirection);
+                $filteredQuery = $this->applyPagination($this->applySorting($sortedQuery));
 
-            $numberOfResults = $filteredQuery->count();
-
-            if ($numberOfResults === 1) {
-                $location = $filteredQuery->first();
-                $this->dispatch('searchResultsUpdated', [
-                    'latitude' => $location->lat,
-                    'longitude' => $location->lng,
-                ]);
-            }
-
-            return $filteredQuery;
-        });
-    }
-
+                return $filteredQuery;
+            });
+        }
 
     public function getServices($locationId)
     {
@@ -254,42 +238,9 @@ class FindLocationsMap extends Component
         $this->currentTime = $value;
     }
 
-
-    // public function exportLocation($locationId)
-    // {
-
-    //     $location = Location::find($locationId);
-
-    //     $data = [
-    //         'geometry' => [
-    //             'coordinates' => [$location->lng, $location->lat],
-    //             'type' => 'Point'
-    //         ],
-    //         'type' => 'Feature',
-    //         'properties' => [
-    //             'id' => $location->id,
-    //             'tenant_id' => $location->tenant_id,
-    //             'name' => $location->name,
-    //             'description' => $location->description,
-    //             'address' => $location->address,
-    //             'city' => $location->city,
-    //             'zipcode' => $location->zipcode,
-    //             'country' => $location->country,
-    //         ]
-    //     ];
-
-    //     // Convert in JSON format
-    //     $jsonData = json_encode($data, JSON_PRETTY_PRINT);
-
-    //     // Download in a file
-    //     $filePath = storage_path('app/location_data.json'); // File location
-    //     file_put_contents($filePath, $jsonData);
-
-    //     // Redirect to the file
-    //     return response()->download($filePath);
-    // }
     public function showOnMap($locationId)
     {
+        //Here we take the location's data (lng/lat), to send them to the map, to permit to zoom on it
         $location = Location::find($locationId);
 
         if ($location) {
@@ -298,7 +249,6 @@ class FindLocationsMap extends Component
                 'longitude' => $location->lng,
             ]);
         } else {
-            // Gérer le cas où l'emplacement n'est pas trouvé
         }
     }
 
@@ -308,8 +258,15 @@ class FindLocationsMap extends Component
     {
         $locations = $this->getRowsProperty();
 
-        return view('livewire.locations.find-locations-map', [
-            'locations' => $locations->items(),
+        // Vérifiez si $locations est une instance de LengthAwarePaginator
+        if ($locations instanceof \Illuminate\Pagination\LengthAwarePaginator) {
+            $items = $locations->items();
+        } else {
+            $items = $locations; // Supposons que $locations est déjà un tableau
+        }
+
+        return view('livewire.locations.find-locations-test', [
+            'locations' => $items,
         ]);
     }
 }

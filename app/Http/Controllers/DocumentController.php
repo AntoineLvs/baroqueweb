@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ApiToken;
 use App\Models\Document;
 use App\Models\DocumentType;
+use App\Models\Invoice;
 use App\Models\Product;
 use App\Models\Tenant;
+use App\Models\TokenType;
 use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -134,5 +137,45 @@ class DocumentController extends Controller
             ->route('documents.index')
             ->with('message', 'Document was deleted successfully.');
 
+    }
+
+    public function createInvoice($user)
+    {
+        $tenantId = $user->tenant_id;
+        $user_name = $user->name;
+        $apiToken = ApiToken::where('tenant_id', $tenantId)->first();
+
+        $user_api_count = $user->api_calls_count;
+
+        $tenant = Tenant::where('id', $tenantId)->first();
+        $tokenType = TokenType::where('id', $apiToken->token_type_id)->first();
+
+        $existingInvoicesCount = Invoice::where('user_id', $user->id)->count();
+
+        // $user->invoice_number_prefix ??
+
+        $invoice_number_prefix = strtoupper(substr($user->name, 0, 2)) . '-' . $user->id . '-' . (2400 + $existingInvoicesCount);
+        $invoiceNumber = $invoice_number_prefix;
+
+        $invoice = Invoice::create([
+            'tenant_id' => $tenantId,
+            'invoice_number' => $invoiceNumber,
+            'invoice_number_prefix' => $invoice_number_prefix,
+            'user_id' => $user->id,
+            'api_call_count' => $user->api_calls_count ?? 0,
+            'api_call_cost' => $tokenType->api_call_cost,
+            'monthly_cost' => $tokenType->monthly_cost,
+            'total_bill' => $tokenType->api_call_cost * (is_null($user->api_calls_count) ? 0 : $user->api_calls_count) + $tokenType->monthly_cost,
+            'tax_rate' => $tokenType->tax_rate,
+            'description' => "Description Here : blabla",
+            'created_at' => now(),
+            'status' => '1',
+        ]);
+        $user->update([
+            'invoice_number_prefix' => $invoiceNumber,
+
+        ]);
+
+        return $invoice;
     }
 }
