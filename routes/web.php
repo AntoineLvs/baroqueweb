@@ -146,6 +146,8 @@ Route::get('product-finder/', [ProductFinderController::class, 'index'])->name('
 
 Route::get('find/', [LocationController::class, 'showLocationFinder'])->name('locations.find-locations-public');
 Route::get('find-map/', [LocationController::class, 'showLocationFinderMap'])->name('locations.find-locations-map');
+Route::get('find-test/', [LocationController::class, 'showLocationFinderTest'])->name('locations.find-locations-test');
+
 
 Route::get('/find/locations/{id}', [LocationController::class, 'showLocationProfile'])->name('locations.profile-locations-public');
 Route::get('/find/{tenant_id}', [LocationController::class, 'showTenantProfile'])->name('locations.profile-tenants');

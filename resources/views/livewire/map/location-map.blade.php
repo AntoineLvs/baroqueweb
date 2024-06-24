@@ -1,5 +1,5 @@
 <div>
-  <div id='map' class="" style='height: 75vh;'></div>
+  <div id='map' class="" style='height: 90vh'></div>
 
 
  <!-- here there is a div 'map', with a special height, then we say in the script underneath, that we push the map in there. 

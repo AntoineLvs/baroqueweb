@@ -99,7 +99,7 @@ class FindLocationsPublic extends Component
     public function mount()
     {
         //Get product_types and base_services to show on the table / currentTime because we need to compare the opnening hours from the locations, from the current time of the laptop
-        $this->product_types = ProductType::all();
+        $this->product_types = ProductType::withoutGlobalScope(TenantScope::class)->get();
         $this->base_services = BaseService::withoutGlobalScope(TenantScope::class)->get();
 
         $this->currentTime = now(config('app.timezone'))->toTimeString();
