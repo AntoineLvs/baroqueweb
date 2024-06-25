@@ -15,6 +15,7 @@ use App\Models\ProductType;
 use App\Scopes\TenantScope;
 use Livewire\Attributes\On;
 use TallStackUi\Facades\TallStackUi;
+use Illuminate\Support\Collection;
 
 class FindLocationsTest extends Component
 {
@@ -42,47 +43,16 @@ class FindLocationsTest extends Component
     public $mapDiv = 'w-full';
 
     public $justifyContent = 'justify-center';
+    public $showResults = false;
 
-        public $filters = [
-            'search' => '',
-            'blend_min' => null,
-            'selected_product' => '',
-            'selected_service' => '',
-
-
-        ];
+    public $filters = [
+        'search' => '',
+        'blend_min' => null,
+        'selected_product' => '',
+        'selected_service' => '',
 
 
-    public function toggleMap()
-    {
-        //change the Value of the button, to applicate tailwind class, to change the size of the Table/Map -> either big screen or not
-        $this->toggleMapValue = !$this->toggleMapValue;
-
-        if ($this->toggleMapValue) {
-            $this->justifyContent = 'justify-start';
-            $this->tableDiv = 'w-0 hidden';
-            $this->mapDiv = 'w-full';
-        } else {
-            $this->justifyContent = 'justify-center';
-            $this->tableDiv = 'w-full';
-        }
-    }
-
-    public function toggleTable()
-    {
-        //change the Value of the button, to applicate tailwind class, to change the size of the Table/Map -> either big screen or not
-        $this->toggleTableValue = !$this->toggleTableValue;
-
-        if ($this->toggleTableValue) {
-            $this->justifyContent = 'justify-end';
-            $this->tableDiv = 'w-full';
-            $this->mapDiv = 'w-0 hidden';
-        } else {
-            $this->justifyContent = 'justify-center';
-            $this->tableDiv = 'w-full';
-            $this->mapDiv = 'w-full';
-        }
-    }
+    ];
 
     public function sortByColumn($column): void
     {
@@ -124,6 +94,15 @@ class FindLocationsTest extends Component
     public function getRowsProperty()
     {
         return $this->cache(function () {
+            if (
+                empty($this->filters['search']) &&
+                (is_null($this->filters['blend_min']) || $this->filters['blend_min'] === '') &&
+                (is_null($this->filters['selected_product']) || $this->filters['selected_product'] === '') &&
+                (is_null($this->filters['selected_service']) || $this->filters['selected_service'] === '')
+            ) {
+                // Retourner une collection vide si aucun filtre n'est appliqué
+                return new Collection();
+            }
             $query = Location::query();
 
             $query->withoutGlobalScope(TenantScope::class);
@@ -214,12 +193,50 @@ class FindLocationsTest extends Component
                 });
             }
 
-                $sortedQuery = $query->orderBy($this->sortColumn, $this->sortDirection);
-                $filteredQuery = $this->applyPagination($this->applySorting($sortedQuery));
+            $sortedQuery = $query->orderBy($this->sortColumn, $this->sortDirection);
+            $filteredQuery = $this->applyPagination($this->applySorting($sortedQuery));
+            $this->toggleResults();
 
-                return $filteredQuery;
-            });
+            $locationsData = $filteredQuery->map(function ($location) {
+                return [
+                    'latitude' => $location->lat,
+                    'longitude' => $location->lng,
+                    'name' => $location->name,
+                    'description' => $location->description,
+                    'opening_start' => $location->opening_start,
+                    'opening_end' => $location->opening_end,
+                    'active' => $location->active,
+                    'product_id' => $location->product_id,
+                ];
+            })->filter(); // Filtre les valeurs nulles
+
+            $locationsDataJson = $locationsData->toJson();
+            $this->dispatch('filterLocationOnMap', $locationsDataJson);
+
+            return $filteredQuery;
+        });
+    }
+
+
+    public function toggleResults()
+    {
+        $this->showResults = !$this->showResults;
+    }
+
+    public function showOnMap($locationId)
+    {
+        $this->toggleResults();
+        //Here we take the location's data (lng/lat), to send them to the map, to permit to zoom on it
+        $location = Location::find($locationId);
+
+        if ($location) {
+            $this->dispatch('showLocationOnMap', [
+                'latitude' => $location->lat,
+                'longitude' => $location->lng,
+            ]);
+        } else {
         }
+    }
 
     public function getServices($locationId)
     {
@@ -238,19 +255,6 @@ class FindLocationsTest extends Component
         $this->currentTime = $value;
     }
 
-    public function showOnMap($locationId)
-    {
-        //Here we take the location's data (lng/lat), to send them to the map, to permit to zoom on it
-        $location = Location::find($locationId);
-
-        if ($location) {
-            $this->dispatch('showLocationOnMap', [
-                'latitude' => $location->lat,
-                'longitude' => $location->lng,
-            ]);
-        } else {
-        }
-    }
 
 
 
