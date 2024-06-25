@@ -3,6 +3,9 @@
 namespace App\Jobs;
 
 use App\Models\Location;
+use App\Models\Product;
+use App\Models\ProductType;
+use App\Models\Service;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -49,6 +52,17 @@ class PushToMapbox implements ShouldQueue
         $opening_end = substr($this->location->opening_end, 0, 5);
         $address = "{$this->location->address}, {$this->location->zipcode} {$this->location->city}";
 
+        $product_ids = json_decode($this->location->product_id);
+        $products = Product::whereIn('id', $product_ids)->get();
+        $product_types_ids = $products->pluck('product_type_id')->unique()->sort()->values()->all();
+        $product_types_json = json_encode($product_types_ids);
+
+        $service_ids = json_decode($this->location->service_id);
+        $services = Service::whereIn('id', $service_ids)->get();
+        $service_types_ids = $services->pluck('service_type_id')->unique()->sort()->values()->all();
+        $service_types_json = json_encode($service_types_ids);
+
+
         $body = [
             'id' => $feature_id,
             'type' => "Feature",
@@ -62,6 +76,8 @@ class PushToMapbox implements ShouldQueue
                 'opening_end' => $opening_end,
                 'address' => $address,
                 'active' => $this->location->active,
+                'product_types' => $product_types_json,
+                'service_types' => $service_types_json
 
             ],
             'geometry' => [

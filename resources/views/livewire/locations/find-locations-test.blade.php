@@ -1,6 +1,6 @@
-<div class="flex flex-col xl:flex-row border border-gray-200 rounded-md overflow-y-hidden">
-    <div style="overflow-y: auto; z-index: 1; width: 20%;" class=" w-1/5 transition-all duration-2000 shadow rounded-t-md border-b border-gray-200 xl:rounded-l-md xl:border-r-0 xl:rounded-r-md xl:border-b-0 xl:border-b-0 xl:border-t-0">
-        <div class="mx-auto max-w-xl mb-6 mt-4 mr-4 ml-4">
+<div class="flex flex-col md:flex-row border border-gray-200 rounded-md overflow-y-hidden">
+    <div style="overflow-y: auto; z-index: 1; min-width: 350px" class="w-1/5 md:w-1/5 transition-all duration-2000 shadow rounded-t-md border-b border-gray-200 xl:rounded-l-md xl:border-r-0 xl:rounded-r-md xl:border-b-0 xl:border-t-0">
+        <div class="mx-auto mb-6 mt-4 mr-4 ml-4">
             <div class="flex items-center justify-start">
                 <select wire:model.live="filters.selected_product" id="filter-product-type" class="block w-full rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     <option value="">Product Type (All)</option>
@@ -10,32 +10,39 @@
                 </select>
             </div>
         </div>
-        <div class="mx-auto max-w-xl mb-6 mt-4 mr-4 ml-4">
-            <div class="w-full flex flex-col items-center  space-y-4">
+        <div class="mx-auto mb-6 mt-4 mr-4 ml-4">
+            <div class="flex items-center justify-start">
+                <button wire:click="toggleResults">Click !</button>
+            </div>
+        </div>
+        <div class="flex items-center justify-start">
+            <label for="filter-is-open" class="mb-1 mr-2 text-gray-900">Show open Locations :</label>
+            <input id="filter-is-open" wire:model.live="filters.is_open" type="checkbox" class="h-5 w-5 rounded ring-1 ring-inset ring-gray-300 text-indigo-600 focus:ring-indigo-600">
+        </div>
+        <div class="mx-auto mb-6 mt-4 mr-4 ml-4">
+            <div class="w-full flex flex-col items-center space-y-4">
                 <div class="w-full">
                     <div class="animated">
-                        <input wire:model.live="filters.search" type="text" id="searchbox" name="searchbox" placeholder="" class="block w-full rounded-md border-0 px-4 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <input wire:model.live="filters.search" wire:click="toggleResults" type="text" id="searchbox" name="searchbox" placeholder="Search..." class="block w-full rounded-md border-0 px-4 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     </div>
                 </div>
             </div>
         </div>
 
-
+        @if($showResults)
         <table class="min-w-full divide divide-gray-200">
             <thead class="bg-gray-100">
                 <tr>
-                    <th class="text-gray-600 px-4 py-4 border-b-2 border-gray-300 text-left  leading-4 tracking-wider cursor-pointer">
-                        <span class="ml-4">Aktuelle Suchergebnisse</span>
+                    <th class="text-gray-600 px-4 py-4 border-b-2 border-gray-300 text-left leading-4 tracking-wider cursor-pointer">
+                        <span class="ml-4">Current Search Results</span>
                     </th>
-                    <th class="px-4 py-4 border-b-2 border-gray-300 text-left leading-4 tracking-wider">
-
-                    </th>
+                    <th class="px-4 py-4 border-b-2 border-gray-300 text-left leading-4 tracking-wider"></th>
+                    <th class="px-4 py-4 border-b-2 border-gray-300 text-left leading-4 tracking-wider"></th>
                 </tr>
             </thead>
-            <tbody class="">
-
+            <tbody>
                 @foreach ($locations as $location)
-                <tr wire:key="{{$location->id}}" class="bg-white">
+                <tr wire:key="{{ $location->id }}" class="bg-white">
                     <td class="pr-2 py-4 whitespace-no-wrap border-b border-gray-200">
                         <div class="flex items-center justify-between">
                             <div class="ml-4">
@@ -48,19 +55,17 @@
                                         </div>
                                     </div>
                                     <div class="ml-4">
-                                        <div class=" font-medium text-gray-900">
+                                        <div class="font-medium text-gray-900">
                                             <a href="{{ route('locations.profile-locations-public', ['id' => $location->id]) }}">{{ $location->name }}</a>
                                         </div>
                                         <div class="text-gray-500">
-                                            <a href="{{ route('locations.profile-tenants', ['tenant_id' => $location->tenant->id]) }}">{{$location->tenant->name}}</a>
+                                            <a href="{{ route('locations.profile-tenants', ['tenant_id' => $location->tenant->id]) }}">{{ $location->tenant->name }}</a>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
                     </td>
-
                     <td class="whitespace-no-wrap border-b border-gray-200">
                         <div class="flex ml-auto items-center" style="display:flex; float: center;">
                             <div class="flex items-center justify-end">
@@ -76,18 +81,30 @@
                                         <span class="tooltip text-gray-500">{{ substr($location->opening_start, 0, 5) }} / {{ substr($location->opening_end, 0, 5) }}</span>
                                         @endif
                                     </div>
-
                                 </div>
                             </div>
                         </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 leading-5 font-medium">
+                        <button id="centerMapButton" wire:click="showOnMap({{ $location->id }})">
+                            <div class="image-container">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                                </svg>
+                                <span class="tooltip text-gray-500" style="transform: translateX(-70%);">Show on Map</span>
+                            </div>
+                        </button>
                     </td>
                 </tr>
                 @endforeach
             </tbody>
         </table>
+        @endif
     </div>
-    <div style=" width: 80%;" class="transition-all duration-2000 bg-white overflow-hidden shadow rounded-b-md border border-gray-200 xl:rounded-r-md xl:border-l-0 xl:border-t-0 xl:border-b xl:rounded-t-md">
-        <livewire:map.location-map />
+    <div class="w-full transition-all duration-2000 bg-white overflow-hidden shadow rounded-b-md border border-gray-200 xl:rounded-r-md xl:border-l-0 xl:border-t-0 xl:border-b xl:rounded-t-md">
+        <livewire:map.location-map  />
+
     </div>
 </div>
 
