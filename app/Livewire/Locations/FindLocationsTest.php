@@ -196,22 +196,28 @@ class FindLocationsTest extends Component
             $sortedQuery = $query->orderBy($this->sortColumn, $this->sortDirection);
             $filteredQuery = $this->applyPagination($this->applySorting($sortedQuery));
             $this->toggleResults();
-
-            $locationsData = $filteredQuery->map(function ($location) {
-                return [
-                    'latitude' => $location->lat,
-                    'longitude' => $location->lng,
-                    'name' => $location->name,
-                    'description' => $location->description,
-                    'opening_start' => $location->opening_start,
-                    'opening_end' => $location->opening_end,
-                    'active' => $location->active,
-                    'product_id' => $location->product_id,
-                ];
-            })->filter(); // Filtre les valeurs nulles
-
-            $locationsDataJson = $locationsData->toJson();
-            $this->dispatch('filterLocationOnMap', $locationsDataJson);
+            $locationsGeoJson = [
+                'type' => 'FeatureCollection',
+                'features' => $filteredQuery->map(function ($location) {
+                    return [
+                        'type' => 'Feature',
+                        'geometry' => [
+                            'type' => 'Point',
+                            'coordinates' => [$location->lng, $location->lat],
+                        ],
+                        'properties' => [
+                            'title' => $location->name,
+                            'description' => $location->description,
+                            'id' => $location->id,
+                            'opening_start' => $location->opening_start,
+                            'opening_end' => $location->opening_end,
+                            'active' => $location->active,
+                            'product_id' => $location->product_id,
+                        ]
+                    ];
+                })->toArray()
+            ];
+            $this->dispatch('filterLocationOnMap', $locationsGeoJson);
 
             return $filteredQuery;
         });
