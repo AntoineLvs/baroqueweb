@@ -70,10 +70,10 @@
                                                     </div>
                                                     <div class="ml-4">
                                                         <div class="text-sm font-medium text-gray-900">
-                                                            {{ $location->tenant->name }}
+                                                            {{ $location->tenant->name ?? 'admin' }}
                                                         </div>
                                                         <div class="text-sm text-gray-500">
-                                                            TID: {{ $location->tenant->id }} | LID: {{ $location->id }}
+                                                            TID: {{ $location->tenant->id ?? 'admin' }} | LID: {{ $location->id }}
                                                         </div>
                                                     </div>
                                                 </div>

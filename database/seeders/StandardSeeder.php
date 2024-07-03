@@ -20,19 +20,27 @@ class StandardSeeder extends Seeder
         DB::table('standards')->insert([
             [
                 'id' => '1',
-                'name' => 'DIN EN 590',
+                'name' => 'DIN EN 15940',
                 'url' => "test",
                 'product_type_id' => "1",
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
 
-            [
-                'id' => '2',
-                'name' => 'DIN EN 15940 (XTL)',
-                'url' => "test",
-                'product_type_id' => "2",
-                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            ],
+            // [
+            //     'id' => '1',
+            //     'name' => 'DIN EN 590',
+            //     'url' => "test",
+            //     'product_type_id' => "1",
+            //     'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            // ],
+
+            // [
+            //     'id' => '2',
+            //     'name' => 'DIN EN 15940 (XTL)',
+            //     'url' => "test",
+            //     'product_type_id' => "2",
+            //     'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            // ],F
 
         ]);
         Schema::enableForeignKeyConstraints();

@@ -145,7 +145,7 @@
             <table class="min-w-full divide divide-gray-200">
                 <thead class="bg-gray-100">
                     <tr>
-                        <th wire:click.live="sortByColumn('name')" class="text-gray-600 px-6 py-6 border-b-2 border-gray-300 text-left  leading-4 tracking-wider cursor-pointer">
+                        <th wire:click="sortByColumn('name')" class="text-gray-600 px-6 py-6 border-b-2 border-gray-300 text-left  leading-4 tracking-wider cursor-pointer">
                             <span class="ml-4">Name</span>
                             @if ($sortColumn == 'name')
                             <i class="fa fa-solid fa-sort-up {{ $sortDirection === 'asc' ? '' : 'fa-rotate-180' }} ml-2"></i>
@@ -158,7 +158,7 @@
                             <span class="ml-4">Opening Hours</span>
                             @endif
                         </th>
-                        <th wire:click.live="sortByColumn('zipcode')" class="text-gray-600 px-6 py-6 border-b-2 border-gray-300 text-left  leading-4 tracking-wider cursor-pointer">
+                        <th wire:click="sortByColumn('zipcode')" class="text-gray-600 px-6 py-6 border-b-2 border-gray-300 text-left  leading-4 tracking-wider cursor-pointer">
                             Address
                             @if ($sortColumn == 'zipcode')
                             <i class="fa fa-solid fa-sort-up {{ $sortDirection === 'asc' ? '' : 'fa-rotate-180' }} ml-2"></i>
@@ -300,7 +300,7 @@
 
 
                         <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 leading-5 font-medium">
-                            <button id="centerMapButton" wire:click.live="showOnMap({{ $location->id }})">
+                            <button id="centerMapButton" wire:click="showOnMap({{ $location->id }})">
                                 <div class="image-container">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />

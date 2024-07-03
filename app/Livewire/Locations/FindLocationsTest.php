@@ -217,7 +217,6 @@ class FindLocationsTest extends Component
                     ];
                 })->toArray()
             ];
-            $this->dispatch('filterLocationOnMap', $locationsGeoJson);
 
             return $filteredQuery;
         });
