@@ -196,27 +196,8 @@ class FindLocationsTest extends Component
             $sortedQuery = $query->orderBy($this->sortColumn, $this->sortDirection);
             $filteredQuery = $this->applyPagination($this->applySorting($sortedQuery));
             $this->toggleResults();
-            $locationsGeoJson = [
-                'type' => 'FeatureCollection',
-                'features' => $filteredQuery->map(function ($location) {
-                    return [
-                        'type' => 'Feature',
-                        'geometry' => [
-                            'type' => 'Point',
-                            'coordinates' => [$location->lng, $location->lat],
-                        ],
-                        'properties' => [
-                            'title' => $location->name,
-                            'description' => $location->description,
-                            'id' => $location->id,
-                            'opening_start' => $location->opening_start,
-                            'opening_end' => $location->opening_end,
-                            'active' => $location->active,
-                            'product_id' => $location->product_id,
-                        ]
-                    ];
-                })->toArray()
-            ];
+            $locationIds = $filteredQuery->pluck('id');
+            $this->dispatch('filterLocationOnMap', $locationIds);
 
             return $filteredQuery;
         });
