@@ -34,6 +34,7 @@ class FindLocationsTest extends Component
 
     public $currentTime;
 
+    public $newLocations;
 
     public $showFilters = false;
 
@@ -44,6 +45,7 @@ class FindLocationsTest extends Component
 
     public $justifyContent = 'justify-center';
     public $showResults = false;
+    public $count;
 
     public $filters = [
         'search' => '',
@@ -94,15 +96,6 @@ class FindLocationsTest extends Component
     public function getRowsProperty()
     {
         return $this->cache(function () {
-            if (
-                empty($this->filters['search']) &&
-                (is_null($this->filters['blend_min']) || $this->filters['blend_min'] === '') &&
-                (is_null($this->filters['selected_product']) || $this->filters['selected_product'] === '') &&
-                (is_null($this->filters['selected_service']) || $this->filters['selected_service'] === '')
-            ) {
-                // Retourner une collection vide si aucun filtre n'est appliqué
-                return new Collection();
-            }
             $query = Location::query();
 
             $query->withoutGlobalScope(TenantScope::class);
@@ -136,7 +129,9 @@ class FindLocationsTest extends Component
                             });
                         });
                 });
-                foreach ($query->get() as $location) {
+                $numberOfResults = $query->count();
+                if ($numberOfResults === 1) {
+                    $location = $query->first();
                     $this->dispatch('showLocationOnMap', [
                         'latitude' => $location->lat,
                         'longitude' => $location->lng,
@@ -162,8 +157,11 @@ class FindLocationsTest extends Component
                     ->pluck('id');
 
                 if ($productIds->isEmpty()) {
-                    return $query->whereRaw('1 = 0');
+                    $locationIds = [];
+                    $this->sendToMap($locationIds);
+                    return collect();
                 }
+
 
                 $query->where(function ($query) use ($productIds) {
                     foreach ($productIds as $productId) {
@@ -195,37 +193,58 @@ class FindLocationsTest extends Component
 
             $sortedQuery = $query->orderBy($this->sortColumn, $this->sortDirection);
             $filteredQuery = $this->applyPagination($this->applySorting($sortedQuery));
-            $this->toggleResults();
 
-            $locationsData = $filteredQuery->map(function ($location) {
-                return [
+            $numberOfResults = $filteredQuery->count();
+
+            if ($numberOfResults === 1) {
+                $location = $filteredQuery->first();
+                $this->dispatch('searchResultsUpdated', [
                     'latitude' => $location->lat,
                     'longitude' => $location->lng,
-                    'name' => $location->name,
-                    'description' => $location->description,
-                    'opening_start' => $location->opening_start,
-                    'opening_end' => $location->opening_end,
-                    'active' => $location->active,
-                    'product_id' => $location->product_id,
-                ];
-            })->filter(); // Filtre les valeurs nulles
+                ]);
+            }
 
-            $locationsDataJson = $locationsData->toJson();
-            $this->dispatch('filterLocationOnMap', $locationsDataJson);
+            $this->count++;
+            if ($this->count > 1) {
+                $this->toggleResults();
+
+
+                $locationIds = $filteredQuery->pluck('id');
+                $this->sendToMap($locationIds);
+            }
+
 
             return $filteredQuery;
         });
     }
 
+    public function sendToMap($locationIds)
+    {
+        $this->newLocations = Location::withoutGlobalScope(TenantScope::class)
+            ->where('active', 1)
+            ->whereIn('id', $locationIds)
+            ->get(['lng', 'lat', 'name'])
+            ->map(function ($location) {
+                return [
+                    'lng' => $location->lng,
+                    'lat' => $location->lat,
+                    'name' => $location->name,
+                ];
+            })
+            ->toArray();
+
+        $this->dispatch('geoJsonLocationOnMap', json_encode($this->newLocations));
+    }
 
     public function toggleResults()
     {
-        $this->showResults = !$this->showResults;
+        if ($this->showResults === false) {
+            $this->showResults = true;
+        }
     }
 
     public function showOnMap($locationId)
     {
-        $this->toggleResults();
         //Here we take the location's data (lng/lat), to send them to the map, to permit to zoom on it
         $location = Location::find($locationId);
 

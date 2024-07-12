@@ -50,7 +50,7 @@ class LocationFactory extends Factory
       'status' => $this->faker->boolean,
       'location_type_id' => $this->faker->numberBetween(1, 4),
       'service_id' => json_encode($this->faker->randomElements([1, 2, 3, 4], $this->faker->numberBetween(1, 3))),
-      'product_id' => json_encode($this->faker->randomElements([1, 2, 3, 4, 5, 6], $this->faker->numberBetween(1, 3))),
+      'product_id' => json_encode([1]),
       'created_at' => $this->faker->dateTimeThisMonth,
     ];
   }

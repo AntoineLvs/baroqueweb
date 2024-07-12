@@ -62,7 +62,7 @@ class PushToMapbox implements ShouldQueue
         $service_types_ids = $services->pluck('service_type_id')->unique()->sort()->values()->all();
         $service_types_json = json_encode($service_types_ids);
 
-
+        
         $body = [
             'id' => $feature_id,
             'type' => "Feature",

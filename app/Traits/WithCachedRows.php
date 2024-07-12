@@ -14,7 +14,7 @@ trait WithCachedRows
 
     public function cache($callback)
     {
-        $cacheKey = $this->id;  
+        $cacheKey = $this->id;
 
         if ($this->useCache && cache()->has($cacheKey)) {
             return cache()->get($cacheKey);
@@ -22,8 +22,20 @@ trait WithCachedRows
 
         $result = $callback();
 
-        cache()->put($cacheKey, $result);
+        if ($this->isSerializable($result)) {
+            cache()->put($cacheKey, $result);
+        }
 
         return $result;
+    }
+
+    protected function isSerializable($value)
+    {
+        try {
+            serialize($value);
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 }

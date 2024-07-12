@@ -53,7 +53,7 @@
           </div>
         </div>
       </div>
-      @if ($product_type_id == '1' && $base_product_id == '1')
+      @if ($product_type_id == '1' && $base_product_id == '2')
       <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 overflow-hidden" style="max-height: 100px; transition: max-height 0.4s ease-in-out;">
         <label for="blend_percent" class="block font-medium text-sm text-gray-700">
           Please indicate your specific blend percent (%)
@@ -85,15 +85,7 @@
         </div>
       </div>
 
-      <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-        <label for="document_id" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-          File
-        </label>
-        <div class="mt-1 sm:mt-0 sm:col-span-2">
-          <input type="file" wire:model="document_id">
-          @error('document_id') <span class="error">{{ $message }}</span> @enderror
-        </div>
-      </div>
+      
     </div>
 
 

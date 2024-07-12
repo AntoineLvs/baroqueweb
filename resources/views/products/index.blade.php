@@ -98,8 +98,7 @@
 
             <button type="button" onclick=window.location='{{ route("products.create") }}' class="relative block w-full border-2 border-gray-300 border-dashed rounded-lg p-6 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
               <svg class="mx-auto h-12 w-12 text-gray-500" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               <span class="block text-sm font-medium text-gray-500">
                 Noch keine Produkte vorhanden. Jetzt anlegen.
@@ -154,7 +153,7 @@
 
 
 
-                        <td class="px-6 py-4 whitespace-nowrap">
+                          <td class="px-6 py-4 whitespace-nowrap">
                             <div class="flex items-center">
                               <div class="flex-shrink-0 h-10 w-10">
 
@@ -166,13 +165,13 @@
                               <div class="ml-4">
                                 <div class="text-sm font-medium text-gray-900">
 
-                                    {{ $product->name }}
+                                  {{ $product->name }}
                                 </div>
                                 <div class="text-sm text-gray-500">
 
-                                    @if ( $product->base_product_id)
-                                        Base Product:: {{ $product->base_product($product->base_product_id)->name }}
-                                    @endif
+                                  @if ( $product->base_product_id)
+                                  Base Product:: {{ $product->base_product($product->base_product_id)->name }}
+                                  @endif
 
 
                                 </div>
@@ -181,8 +180,8 @@
                           </td>
 
                           <td class="px-6 py-4 whitespace-nowrap">
-                            <div class="text-sm text-gray-900">  PID: {{ $product->id }}</div>
-                            <div class="text-sm text-gray-900">TID: {{ $product->tenant->id }} {{ $product->tenant->name }}</div>
+                            <div class="text-sm text-gray-900"> PID: {{ $product->id }}</div>
+                            <div class="text-sm text-gray-900">TID: {{ $product->tenant->id ?? 'admin' }} {{ $product->tenant->name ?? 'admin' }}</div>
                           </td>
 
                           <td class="px-6 py-4 whitespace-nowrap">
@@ -193,15 +192,15 @@
                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
 
 
-                            <div class="text-sm text-gray-900">  {{ $product->data }}</div>
+                            <div class="text-sm text-gray-900"> {{ $product->data }}</div>
 
 
 
                           </td>
 
                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-
-                            {{ $product->product_unit->name }}
+                            
+                            {{ $product->product_unit->name ?? '' }}
 
 
                           </td>
@@ -222,7 +221,7 @@
                             ])
 
                           </td>
-                          <td  class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
+                          <td class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
 
 
                             <a href="{{ route('products.edit', $product) }}" data-toggle="tooltip" data-placement="bottom" title="Edit Product">
@@ -237,11 +236,11 @@
 
                           </td>
 
-                          <td  class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
+                          <td class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
 
 
 
-                            <form action="{{ route('products.destroy', $product) }}" method="post" >
+                            <form action="{{ route('products.destroy', $product) }}" method="post">
                               @csrf
                               @method('delete')
                               <button type="button" data-toggle="tooltip" data-placement="bottom" title="Delete Product" onclick="confirm('Are you sure you want to remove this product? The records that contain it will continue to exist.') ? this.parentElement.submit() : ''">
@@ -279,13 +278,13 @@
 </main>
 
 <script>
-function closeAlert(event){
-  let element = event.target;
-  while(element.nodeName !== "BUTTON"){
-    element = element.parentNode;
+  function closeAlert(event) {
+    let element = event.target;
+    while (element.nodeName !== "BUTTON") {
+      element = element.parentNode;
+    }
+    element.parentNode.parentNode.removeChild(element.parentNode);
   }
-  element.parentNode.parentNode.removeChild(element.parentNode);
-}
 </script>
 
 @endsection
