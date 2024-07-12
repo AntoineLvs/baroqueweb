@@ -43,7 +43,7 @@ class LocationTest extends Component
                 ];
             })->toArray()
         ];
-        $this->dispatch('geoJsonLocationOnMap', $this->locationsGeoJson);
+        $this->dispatch('recoistp', $this->locationsGeoJson);
     }
 
     public function render()

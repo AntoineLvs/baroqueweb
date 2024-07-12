@@ -10,11 +10,6 @@
                 </select>
             </div>
         </div>
-        <div class="mx-auto mb-6 mt-4 mr-4 ml-4">
-            <div class="flex items-center justify-start">
-                <button wire:click="toggleResults">Click !</button>
-            </div>
-        </div>
         <div class="flex items-center justify-start">
             <label for="filter-is-open" class="mb-1 mr-2 text-gray-900">Show open Locations :</label>
             <input id="filter-is-open" wire:model.live="filters.is_open" type="checkbox" class="h-5 w-5 rounded ring-1 ring-inset ring-gray-300 text-indigo-600 focus:ring-indigo-600">
@@ -58,9 +53,11 @@
                                         <div class="font-medium text-gray-900">
                                             <a href="{{ route('locations.profile-locations-public', ['id' => $location->id]) }}">{{ $location->name }}</a>
                                         </div>
+                                        @if($location->tenant)
                                         <div class="text-gray-500">
                                             <a href="{{ route('locations.profile-tenants', ['tenant_id' => $location->tenant->id]) }}">{{ $location->tenant->name }}</a>
                                         </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -86,7 +83,7 @@
                         </div>
                     </td>
                     <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 leading-5 font-medium">
-                        <button id="centerMapButton" wire:click="showOnMap({{ $location->id }})">
+                        <button type="button" id="centerMapButton" wire:click="showOnMap({{ $location->id }})">
                             <div class="image-container">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -103,7 +100,7 @@
         @endif
     </div>
     <div class="w-full transition-all duration-2000 bg-white overflow-hidden shadow rounded-b-md border border-gray-200 xl:rounded-r-md xl:border-l-0 xl:border-t-0 xl:border-b xl:rounded-t-md">
-        <livewire:map.location-map  />
+        <livewire:map.location-map />
 
     </div>
 </div>
