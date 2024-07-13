@@ -3,8 +3,16 @@
 @section('body')
 
 <div class="bg-white">
-    <style> 
-        body{
+    <style>
+        .table-container {
+            overflow-y: scroll;
+            height: 67VH;
+
+        }
+
+        body {
+            height: 100%;
+            margin: 0;
             overflow: hidden;
         }
     </style>
@@ -106,7 +114,7 @@
     </div>
 
     <main>
-        @livewire('locations.find-locations-test')
+        @livewire('locations.find-locations-test-mapbox')
     </main>
 </div>
 
