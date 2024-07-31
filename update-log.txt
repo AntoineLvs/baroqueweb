@@ -1,0 +1,26 @@
+31/07/2024
+
+News: 
+
+I worked on the behavior of the map and the table (list of locations)
+-I had trouble with sending event from my javascript, to my component, but I finally found how : use @script @endscript around <script> balise,
+I already tried this, but it cannot work if you use an addEventListener.document to see if the DOM is loaded, and I did not know that in the past 
+if you take it out, then @script works, and you can use $wire.dispatch to send event to livewire component !
+
+- I also changed the way the list works (the component was re rendering the page every time a thing was happening, for example :
+change filter -> it changes the locations displayed : re render) but it was stopping me from trying to make things work. So now,
+I just put in $locations, the new locations everytime we filter something -> no need to re render. 
+
+What does it change :
+We can close the table (was impossible before cause of the rendering) -> it permits to close the table, to see the map on mobile view -> was mandatory
+I can update my component to inform if we are on mobile or desktop device -> change some behavior-> close table when zoom on map -> to see location on map
+Now we can click on the tiles of locations to zoom on it on the map -> the button is now used to open the address in google maps
+if we click on marker, it zoom on location + show the location in the table. 
+
+
+What do need next :
+
+- When i zoom in, results should also show in the list
+possible issue -> need to see how to do that, but must have something to be informed of the position of the map -> get every location that are in 
+this position -> show them on map and table
+issue -> may ask for a lot of calcul data 

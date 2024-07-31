@@ -4,12 +4,6 @@
 
 <div class="bg-white">
     <style>
-        .table-container {
-            overflow-y: scroll;
-            height: 67VH;
-
-        }
-
         body {
             height: 100%;
             margin: 0;
