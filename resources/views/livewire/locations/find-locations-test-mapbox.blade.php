@@ -23,10 +23,22 @@
                 </div>
             </div>
         </div>
+        <div class="w-full flex flex-col items-end space-y-4 pr-4">
+            <button type="button" wire:click="toggleResults" class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white">
+                @if($showResultClasse)
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="text-gray-900 w-5 h-5" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                </svg>
+                @else
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="text-gray-900 w-5 h-5" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
+                </svg>
 
-
-        @if($showResults)
-        <div class="table-container">
+                @endif
+            </button>
+        </div>
+        @if($showResultClasse)
+        <div class="table-container" id="tableContainer" style="overflow-y: scroll; height: 67VH;">
             <table class="min-w-full divide divide-gray-200">
                 <thead class="bg-gray-100">
                     <tr>
@@ -37,9 +49,12 @@
                         <th class="px-4 py-4 border-b-2 border-gray-300 text-left leading-4 tracking-wider"></th>
                     </tr>
                 </thead>
+
+                @if($locations && count($locations) > 0)
                 <tbody>
                     @foreach ($locations as $location)
-                    <tr wire:key="{{ $location->id }}" class="bg-white">
+
+                    <tr wire:key="{{ $location->id }}" class="tile-hover bg-white cursor-pointer" wire:click="showOnMap({{ $location->id }})">
                         <td class="pr-2 py-4 whitespace-no-wrap border-b border-gray-200">
                             <div class="flex items-center justify-between">
                                 <div class="ml-4">
@@ -70,42 +85,55 @@
                                 <div class="flex items-center justify-end">
                                     <div class="image-container">
                                         <div class="flex items-center">
-                                            @if($toggleTableValue)
-                                            <div class="text-gray-900">{{ substr($location->opening_start, 0, 5) }} / {{ substr($location->opening_end, 0, 5) }}</div>
-                                            @endif
+
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="w-5 h-5 ml-2" fill="{{ $location->isOpen() ? 'rgb(0, 160, 0)' : 'red' }}">
                                                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 000-1.5h-3.25V5z" clip-rule="evenodd" />
                                             </svg>
-                                            @if(!$toggleTableValue)
-                                            <span class="tooltip text-gray-500">{{ substr($location->opening_start, 0, 5) }} / {{ substr($location->opening_end, 0, 5) }}</span>
-                                            @endif
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </td>
                         <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 leading-5 font-medium">
-                            <button type="button" class="centerMapButtonMobile" wire:click="showOnMap({{ $location->id }})">
+                            <button type="button" class="centerMapButtonMobile" wire:click="openOnMap({{ $location->id }})">
                                 <div class="image-container">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z" />
                                     </svg>
                                     <span class="tooltip text-gray-500" style="transform: translateX(-70%);">Show on Map</span>
                                 </div>
                             </button>
                         </td>
                     </tr>
+
                     @endforeach
                 </tbody>
+                @else
+                <tbody>
+                    <tr>
+                        <td colspan="3" class="px-6 py-4 text-center text-gray-500">
+                            No locations found
+                        </td>
+                    </tr>
+                </tbody>
+                @endif
             </table>
         </div>
+
+        @else
+
         @endif
     </div>
     <div class="w-full transition-all duration-2000 bg-white shadow rounded-b-md border border-gray-200 xl:rounded-r-md xl:border-l-0 xl:border-t-0 xl:border-b xl:rounded-t-md">
         <livewire:map.location-test />
 
     </div>
+    <style>
+        .tile-hover:hover {
+            background-color: #e5e7eb;
+        }
+    </style>
 </div>
 
 <script>

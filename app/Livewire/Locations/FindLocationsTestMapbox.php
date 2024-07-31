@@ -35,17 +35,11 @@ class FindLocationsTestMapbox extends Component
     public $currentTime;
 
     public $newLocations;
+    public $locations;
 
-    public $showFilters = false;
-
-    public $toggleTableValue = false;
-    public $toggleMapValue = false;
-    public $tableDiv = 'w-full';
-    public $mapDiv = 'w-full';
-
-    public $justifyContent = 'justify-center';
-    public $showResults = false;
+    public $showResultClasse = false;
     public $count;
+
 
     public $filters = [
         'search' => '',
@@ -55,6 +49,11 @@ class FindLocationsTestMapbox extends Component
 
 
     ];
+
+    public function updatedFilters()
+    {
+        $this->getRowsProperty();
+    }
 
     public function sortByColumn($column): void
     {
@@ -67,7 +66,6 @@ class FindLocationsTestMapbox extends Component
         }
     }
 
-
     public function mount()
     {
         //Get product_types and base_services to show on the table / currentTime because we need to compare the opnening hours from the locations, from the current time of the laptop
@@ -75,14 +73,6 @@ class FindLocationsTestMapbox extends Component
         $this->base_services = BaseService::withoutGlobalScope(TenantScope::class)->get();
 
         $this->currentTime = now(config('app.timezone'))->toTimeString();
-    }
-
-
-
-    public function toggleShowFilters()
-    {
-
-        $this->showFilters = !$this->showFilters;
     }
 
 
@@ -101,7 +91,6 @@ class FindLocationsTestMapbox extends Component
             $query->withoutGlobalScope(TenantScope::class);
             $query->where('active', 1)->where('status', 2);
 
-            // Filtrage basé sur les filtres existants
             $query->when($this->filters['search'], function ($query, $search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('name', 'like', '%' . $search . '%')
@@ -159,7 +148,8 @@ class FindLocationsTestMapbox extends Component
                 if ($productIds->isEmpty()) {
                     $locationIds = [];
                     $this->sendToMap($locationIds);
-                    return collect();
+                    $this->locations = [];
+                    return;
                 }
 
 
@@ -206,7 +196,6 @@ class FindLocationsTestMapbox extends Component
 
             $this->count++;
             if ($this->count > 1) {
-                $this->toggleResults();
 
 
                 $locationIds = $filteredQuery->pluck('id');
@@ -214,8 +203,26 @@ class FindLocationsTestMapbox extends Component
             }
 
 
+            $Rawlocations = $filteredQuery;
+
+            if ($Rawlocations instanceof \Illuminate\Pagination\LengthAwarePaginator) {
+                $items = $Rawlocations->items();
+            } else {
+                $items = $Rawlocations;
+            }
+
+            $this->locations = $items;
+
+            $this->showResults();
+
             return $filteredQuery;
         });
+    }
+
+    #[On('isMobile')]
+    public function hideResults()
+    {
+        $this->showResultClasse = false;
     }
 
     public function sendToMap($locationIds)
@@ -231,14 +238,22 @@ class FindLocationsTestMapbox extends Component
 
     public function toggleResults()
     {
-        if ($this->showResults === false) {
-            $this->showResults = true;
-        }
+
+        $this->showResultClasse = !$this->showResultClasse;
     }
+
+    public function showResults()
+    {
+
+        $this->showResultClasse = true;
+    }
+
 
     public function showOnMap($locationId)
     {
-        //Here we take the location's data (lng/lat), to send them to the map, to permit to zoom on it
+
+        $this->dispatch('isDesktop');
+
         $location = Location::find($locationId);
 
         if ($location) {
@@ -249,6 +264,23 @@ class FindLocationsTestMapbox extends Component
         } else {
         }
     }
+
+    public function openOnMap($locationId)
+    {
+        $location = Location::withoutGlobalScope(TenantScope::class)->findOrFail($locationId);
+        $address = $location->address . ' ' . $location->city . ' ' . $location->zipcode . ' ' . $location->country;
+        $this->dispatch('openLocationOnMap', $address);
+    }
+
+
+    #[On('highlightLocation')]
+    public function highlightLocation($locationId)
+    {
+        $this->showResults();
+        $this->locations = [Location::withoutGlobalScope(TenantScope::class)->findOrFail($locationId)];
+        $this->showOnMap($locationId);
+    }
+
 
     public function getServices($locationId)
     {
@@ -272,17 +304,6 @@ class FindLocationsTestMapbox extends Component
 
     public function render()
     {
-        $locations = $this->getRowsProperty();
-
-        // Vérifiez si $locations est une instance de LengthAwarePaginator
-        if ($locations instanceof \Illuminate\Pagination\LengthAwarePaginator) {
-            $items = $locations->items();
-        } else {
-            $items = $locations; // Supposons que $locations est déjà un tableau
-        }
-
-        return view('livewire.locations.find-locations-test-mapbox', [
-            'locations' => $items,
-        ]);
+        return view('livewire.locations.find-locations-test-mapbox');
     }
 }

@@ -11,7 +11,6 @@ class LocationTest extends Component
 {
     public $locations;
 
-
     public function mount()
     {
         $this->locations = Location::withoutGlobalScope(TenantScope::class)
