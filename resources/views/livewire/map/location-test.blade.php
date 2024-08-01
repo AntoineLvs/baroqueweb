@@ -1,5 +1,5 @@
 <div>
-    <div id='map' class="" style='height: 90vh'></div>
+    <div id='map' class="" style='position: absolute; z-index: 1;  top: 0; left: 0; width: 100%; height: 100%;'></div>
 
 
     <!-- here there is a div 'map', with a special height, then we say in the script underneath, that we push the map in there. 
@@ -22,7 +22,7 @@
         });
 
         Livewire.on('initialData', (locations) => {
-            const locationIds = JSON.parse(locations).map(String); // Convertir en chaîne de caractères
+            const locationIds = JSON.parse(locations).map(String);
             map.on('load', function() {
                 map.loadImage('https://cdn-icons-png.flaticon.com/512/3448/3448558.png', function(error, image) {
                     if (error) throw error;
@@ -164,7 +164,6 @@
                 .setHTML(htmlContent)
                 .addTo(map);
 
-            // Changement du curseur
             map.getCanvas().style.cursor = 'pointer';
 
         });
@@ -222,34 +221,48 @@
 
             const latitude = firstLocation.latitude;
             const longitude = firstLocation.longitude;
-            // Utilise le SDK de Mapbox pour centrer la carte sur cette location
             mapboxgl.accessToken = 'pk.eyJ1IjoiZWxzZW5tZWRpYSIsImEiOiJjbHBiYXozZm0wZ21vMnFwZHE4ZWc5Z2lzIn0.dJGBO1JOfota9KceLDgGJg'; // Remplace par ton propre token
-            // Code pour la mise à jour de la carte avec les nouvelles coordonnées
+
             map.flyTo({
                 center: [longitude, latitude],
-                zoom: 15, // Le niveau de zoom souhaité
-                essential: true // Assure-toi que cette transition est essentielle pour que la carte se centre correctement
+                zoom: 15, 
+                essential: true 
             });
         });
 
 
         function updateMobileSize() {
-
+            console.log("et voila");
             if (window.innerWidth < 768) {
-                $wire.dispatch('isMobile');
+                $wire.dispatch('MobileMode');
+            } else {
+                $wire.dispatch('DesktopMode');
             }
         }
-
-        Livewire.on('isDesktop', () => {
-            if (window.innerWidth < 768) {
-                $wire.dispatch('isMobile');
-            }
-        });
 
         window.addEventListener('resize', updateMobileSize);
 
         // Initial update on page load
-        document.addEventListener('DOMContentLoaded', updateMobileSize);
+        document.addEventListener('livewire:initialized', () => {
+            updateMobileSize();
+        })
+
+        Livewire.on('getVisibleLocations', () => {
+            // Retrieve the map's bounds
+            var bounds = map.getBounds();
+
+            // Get the coordinates of the current view's corners
+            var ne = bounds.getNorthEast(); // North-east corner
+            var sw = bounds.getSouthWest(); // South-west corner
+
+            // Send the coordinates to Livewire
+            $wire.dispatch('retrieveMapDatas', {
+                northEastLat: ne.lat,
+                northEastLng: ne.lng,
+                southWestLat: sw.lat,
+                southWestLng: sw.lng
+            });
+        });
     </script>
     @endscript
 
