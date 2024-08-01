@@ -46,11 +46,10 @@ class LocationFactory extends Factory
       'opening_end' => $openingEnd->format('H:i'),
       'opening_info' => $this->faker->sentence,
       'verified' => $this->faker->boolean,
-      'active' => $this->faker->boolean,
-      'status' => $this->faker->boolean,
+      'active' => rand(0, 1),
       'location_type_id' => $this->faker->numberBetween(1, 4),
       'service_id' => json_encode($this->faker->randomElements([1, 2, 3, 4], $this->faker->numberBetween(1, 3))),
-      'product_id' => json_encode([1]),
+      'product_id' => json_encode([$this->faker->numberBetween(1, 2)]),
       'created_at' => $this->faker->dateTimeThisMonth,
     ];
   }
