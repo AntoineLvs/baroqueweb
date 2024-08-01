@@ -26,6 +26,13 @@ class ProductTypeSeeder extends Seeder
         'tenant_id' => '1',
         'created_at' => Carbon::now()->format('Y-m-d H:i:s')
       ],
+      [
+        'id' => '2',
+        'name' => "HVO Blend",
+        'active' => '1',
+        'tenant_id' => '1',
+        'created_at' => Carbon::now()->format('Y-m-d H:i:s')
+      ],
 
       // [
       //   'id' => '1',
