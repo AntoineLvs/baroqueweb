@@ -25,7 +25,7 @@ class Dashboard extends Component
     {
         $this->locations = Location::withoutGlobalScope(TenantScope::class)
         ->where(function ($query) {
-            // Conditions to get every location that has been created/edited
+            // Conditions to get every location that has been created/edited and need to be pushed online
             $query->where('active', 1)
                 ->where('verified', 0)
                 ->whereIn('status', [0, 1]);

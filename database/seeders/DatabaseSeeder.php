@@ -31,7 +31,7 @@ class DatabaseSeeder extends Seeder
             ProductSeeder::class,
             ServiceSeeder::class,
             BaseServiceSeeder::class,
-            LocationSeeder::class,
+            // LocationSeeder::class,
             StandardSeeder::class,
             TokenTypeSeeder::class,
         ]);

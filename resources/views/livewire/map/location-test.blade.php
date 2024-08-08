@@ -21,19 +21,17 @@
             zoom: 10 // Starting zoom level
         });
 
+        let currentPopup = null;
+
+
         Livewire.on('initialData', (locations) => {
             const locationIds = JSON.parse(locations).map(String);
+
             map.on('load', function() {
                 map.loadImage('https://cdn-icons-png.flaticon.com/512/3448/3448558.png', function(error, image) {
                     if (error) throw error;
 
                     map.addImage('custom-marker', image);
-
-                    map.on('click', 'points-layer', (e) => {
-                        const address = e.features[0].properties.address;
-                        const id = e.features[0].properties.id;
-                        highlightLocation(id);
-                    });
 
                     map.addLayer({
                         'id': 'points-layer',
@@ -64,10 +62,7 @@
                             'text-size': 12,
                             'text-anchor': 'center',
                             'text-allow-overlap': true,
-                            "text-offset": [
-                                0,
-                                3
-                            ],
+                            "text-offset": [0, 3],
                         },
                         "paint": {
                             "text-color": "hsl(0, 0%, 0%)",
@@ -76,10 +71,41 @@
                             ]
                         },
                     });
+
+                    map.on('click', 'points-layer', (e) => {
+                        const coordinates = e.features[0].geometry.coordinates.slice();
+                        const title = e.features[0].properties.name;
+                        const opening_start = e.features[0].properties.opening_start;
+                        const opening_end = e.features[0].properties.opening_end;
+                        const active = e.features[0].properties.active;
+
+                        if (currentPopup) {
+                            currentPopup.remove();
+                        }
+
+                        const htmlContent = `
+                    <div style="font-size: 14px; text-align: center;">
+                    ${title}</br>
+                    Open from ${opening_start} to ${opening_end}</br>
+                    </div>
+                `;
+
+                        currentPopup = new mapboxgl.Popup({
+                                closeButton: false,
+                                closeOnClick: false,
+                                offset: [0, -20]
+                            }).setLngLat(coordinates)
+                            .setHTML(htmlContent)
+                            .addTo(map);
+
+                        map.getCanvas().style.cursor = 'pointer';
+
+                        const id = e.features[0].properties.id;
+                        highlightLocation(id);
+                    });
                 });
             });
         });
-
         Livewire.on('geoJsonLocationOnMap', (newLocations) => {
             const newLocationIds = JSON.parse(newLocations).map(String);
 
@@ -149,28 +175,31 @@
             const title = e.features[0].properties.name;
             const opening_start = e.features[0].properties.opening_start;
             const opening_end = e.features[0].properties.opening_end;
-            const active = e.features[0].properties.active;
-
-
 
             const htmlContent = `
-                    <div style="font-size: 14px; text-align: center;">
-                    ${title}</br>
-                    Open from ${opening_start} to ${opening_end}</br>
-                </div>
-                    `;
+        <div style="font-size: 14px; text-align: center;">
+        ${title}</br>
+        Open from ${opening_start} to ${opening_end}</br>
+        </div>
+    `;
 
             popup.setLngLat(coordinates)
                 .setHTML(htmlContent)
                 .addTo(map);
 
             map.getCanvas().style.cursor = 'pointer';
-
         });
 
         map.on('mouseleave', 'points-layer', () => {
             popup.remove();
             map.getCanvas().style.cursor = '';
+        });
+
+        map.on('click', (e) => {
+            if (currentPopup) {
+                currentPopup.remove();
+                currentPopup = null;
+            }
         });
 
         Livewire.on('openLocationOnMap', address => {
@@ -193,7 +222,6 @@
         }
 
 
-        const centerMapButton = document.getElementById('centerMapButton');
 
 
         Livewire.on('showLocationOnMap', locationData => {
@@ -225,8 +253,8 @@
 
             map.flyTo({
                 center: [longitude, latitude],
-                zoom: 15, 
-                essential: true 
+                zoom: 15,
+                essential: true
             });
         });
 
