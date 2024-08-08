@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Imports\DataImport;
 use App\Imports\EventAttendeesImport;
+use App\Imports\LocationsImport;
 use App\Exports\EventAttendeesExport;
 use App\Models\Event;
 use App\Exports\EventsExport;
 use App\Imports\EventsImport;
+use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 
 
 use Maatwebsite\Excel\Facades\Excel;
@@ -22,42 +25,22 @@ class ImportExportController extends Controller
         return view('import');
     }
 
-    public function exportData()
-    {
-        return Excel::download(new DataExport, 'export.xlsx');
-    }
 
-    public function importData()
+    public function importLocation(): RedirectResponse
     {
 
-        Excel::import(new DataImport, request()->file('file'));
+        Excel::import(new LocationsImport, request()->file('file'));
 
         return redirect()
-            ->route('admin.import-data')
-            ->with('message', 'Daten wurden importiert.');
-
+            ->route('locations.index')
+            ->with('message', 'Locations wurden importiert.');
     }
 
 
-    public function exportEventAttendees()
-    {
-        return Excel::download(new EventAttendeesExport, 'event-attendees.xlsx');
-    }
 
-    public function importEventAttendees($event)
+    public function importData(): View
     {
 
-        try {
-            Excel::import(new EventAttendeesImport, request()->file('file'), $event);
-        } catch (Exception $e) {
-            return $e;
-        }
-
-
-
-        return redirect()
-            ->route('events.index')
-            ->with('message', 'Event Teilnehmer wurden importiert.');
-
+        return view('locations.import-data');
     }
 }

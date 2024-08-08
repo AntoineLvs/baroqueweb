@@ -1,7 +1,7 @@
 @extends('layouts.base')
 
 @section('body')
-<div class="h-screen flex bg-gray-100">
+<div class="h-screen flex overflow-hidden bg-gray-100">
 
     @auth
     @livewire('sidebar.app-sidebar')
@@ -14,7 +14,7 @@
 
     <div class="flex flex-col w-0 flex-1">
         <!-- MAIN -->
-        <main class="flex-1 relative z-0 focus:outline-none" tabindex="0">
+        <main class="flex-1 relative z-0 focus:outline-none overflow-y-auto" tabindex="0">
 
             @if(session()->has('impersonate'))
             <div class="relative bg-indigo-600">
