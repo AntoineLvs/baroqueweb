@@ -114,6 +114,20 @@ class Location extends Model
         return $products;
     }
 
+    public function getProductTypes()
+    {
+        $productIds = json_decode($this->product_id);
+
+        if (!$productIds) {
+            return collect();
+        } else {
+            $products = Product::whereIn('id', $productIds)->get();
+            $productTypes = $products->pluck('product_type_id')->unique();
+            return ProductType::whereIn('id', $productTypes)->get();
+        }
+    }
+
+
     public function isOpen()
     {
         $currentTime = now(config('app.timezone'))->toTimeString();

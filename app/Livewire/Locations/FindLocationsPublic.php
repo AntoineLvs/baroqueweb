@@ -15,6 +15,7 @@ use App\Models\ProductType;
 use App\Scopes\TenantScope;
 use Livewire\Attributes\On;
 use TallStackUi\Facades\TallStackUi;
+use Illuminate\Support\Collection;
 
 class FindLocationsPublic extends Component
 {
@@ -33,15 +34,24 @@ class FindLocationsPublic extends Component
 
     public $currentTime;
 
+    public $newLocations;
+    public $locations;
 
-    public $showFilters = false;
+    public $showResultClasse = false;
+    public $count;
 
-    public $toggleTableValue = false;
-    public $toggleMapValue = false;
-    public $tableDiv = 'w-full';
-    public $mapDiv = 'w-full';
+    public $mobile;
+    public $hasResults;
 
-    public $justifyContent = 'justify-center';
+    public $northEastLat;
+    public $northEastLng;
+    public $southWestLat;
+    public $southWestLng;
+
+    public $highlighted;
+    public $isHvo100 = true;
+    public $isHvoBlend = true;
+
 
     public $filters = [
         'search' => '',
@@ -52,37 +62,34 @@ class FindLocationsPublic extends Component
 
     ];
 
-
-    public function toggleMap()
+    
+    public function toggleProduct($product)
     {
-        //change the Value of the button, to applicate tailwind class, to change the size of the Table/Map -> either big screen or not
-        $this->toggleMapValue = !$this->toggleMapValue;
-
-        if ($this->toggleMapValue) {
-            $this->justifyContent = 'justify-start';
-            $this->tableDiv = 'w-0 hidden';
-            $this->mapDiv = 'w-full';
-        } else {
-            $this->justifyContent = 'justify-center';
-            $this->tableDiv = 'w-full';
+        if ($product === 'HVO100') {
+            $this->isHvo100 = !$this->isHvo100;
+        } elseif ($product === 'HVOBlend') {
+            $this->isHvoBlend = !$this->isHvoBlend;
         }
+
+        if ($this->isHvo100 && $this->isHvoBlend) {
+            $this->filters['selected_product'] = ''; // select both (display all locations)
+        } elseif ($this->isHvo100) {
+            $this->filters['selected_product'] = ['1']; // filtre by HVO 100
+        } elseif ($this->isHvoBlend) {
+            $this->filters['selected_product'] = ['2']; // filter by HVO Blend
+        } else {
+            $this->filters['selected_product'] = []; // no selection (no results)
+        }
+
+        $this->getRowsProperty();
     }
 
-    public function toggleTable()
+    public function updatedFilters()
     {
-        //change the Value of the button, to applicate tailwind class, to change the size of the Table/Map -> either big screen or not
-        $this->toggleTableValue = !$this->toggleTableValue;
-
-        if ($this->toggleTableValue) {
-            $this->justifyContent = 'justify-end';
-            $this->tableDiv = 'w-full';
-            $this->mapDiv = 'w-0 hidden';
-        } else {
-            $this->justifyContent = 'justify-center';
-            $this->tableDiv = 'w-full';
-            $this->mapDiv = 'w-full';
-        }
+        $this->dispatch('getVisibleLocations');
     }
+
+
 
     public function sortByColumn($column): void
     {
@@ -95,7 +102,6 @@ class FindLocationsPublic extends Component
         }
     }
 
-
     public function mount()
     {
         //Get product_types and base_services to show on the table / currentTime because we need to compare the opnening hours from the locations, from the current time of the laptop
@@ -103,14 +109,7 @@ class FindLocationsPublic extends Component
         $this->base_services = BaseService::withoutGlobalScope(TenantScope::class)->get();
 
         $this->currentTime = now(config('app.timezone'))->toTimeString();
-    }
-
-
-
-    public function toggleShowFilters()
-    {
-
-        $this->showFilters = !$this->showFilters;
+        $this->getRowsProperty();
     }
 
 
@@ -127,12 +126,8 @@ class FindLocationsPublic extends Component
             $query = Location::query();
 
             $query->withoutGlobalScope(TenantScope::class);
+            $query->where('active', 1)->where('status', 2);
 
-            $query->where('active', 1)
-                ->where('status', 2);
-
-
-            // Filtering based on existing 
             $query->when($this->filters['search'], function ($query, $search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('name', 'like', '%' . $search . '%')
@@ -160,25 +155,15 @@ class FindLocationsPublic extends Component
                             });
                         });
                 });
-                foreach ($query->get() as $location) {
+
+                $numberOfResults = $query->count();
+                if ($numberOfResults === 1) {
+                    $location = $query->first();
                     $this->dispatch('showLocationOnMap', [
                         'latitude' => $location->lat,
                         'longitude' => $location->lng,
                     ]);
                 }
-            })->when(isset($this->filters['blend_min']) && $this->filters['blend_min'] !== '', function ($query) {
-                $productIds = Product::where('blend_percent', '>=', $this->filters['blend_min'])
-                    ->pluck('id');
-
-                if ($productIds->isEmpty()) {
-                    return $query->whereRaw('1 = 0');
-                }
-
-                return $query->where(function ($query) use ($productIds) {
-                    foreach ($productIds as $productId) {
-                        $query->orWhereRaw("json_contains(product_id, '$productId')");
-                    }
-                });
             });
 
             if (isset($this->filters['selected_product']) && $this->filters['selected_product'] !== '') {
@@ -186,7 +171,12 @@ class FindLocationsPublic extends Component
                     ->pluck('id');
 
                 if ($productIds->isEmpty()) {
-                    return $query->whereRaw('1 = 0');
+                    $locationIds = [];
+                    $this->sendToMap($locationIds);
+                    $this->locations = [];
+                    $this->hasResults = false;
+                    $this->showResults();
+                    return;
                 }
 
                 $query->where(function ($query) use ($productIds) {
@@ -202,23 +192,14 @@ class FindLocationsPublic extends Component
                     ->where('opening_end', '>=', $currentTime->now(config('app.timezone'))->format('H:i:s'));
             }
 
-            if (isset($this->filters['selected_service']) && $this->filters['selected_service'] !== '') {
-                $serviceIds = Service::where('base_service_id', '=', $this->filters['selected_service'])
-                    ->pluck('id');
-
-                if ($serviceIds->isEmpty()) {
-                    return $query->whereRaw('1 = 0');
-                }
-
-                $query->where(function ($query) use ($serviceIds) {
-                    foreach ($serviceIds as $serviceId) {
-                        $query->orWhereRaw("json_contains(service_id, '$serviceId')");
-                    }
-                });
+            // Add the filter for geographic boundaries
+            if ($this->northEastLat && $this->northEastLng && $this->southWestLat && $this->southWestLng) {
+                $query->whereBetween('lat', [$this->southWestLat, $this->northEastLat])
+                    ->whereBetween('lng', [$this->southWestLng, $this->northEastLng]);
             }
 
             $sortedQuery = $query->orderBy($this->sortColumn, $this->sortDirection);
-            $filteredQuery = $this->applyPagination($this->applySorting($query));
+            $filteredQuery = $this->applyPagination($this->applySorting($sortedQuery));
 
             $numberOfResults = $filteredQuery->count();
 
@@ -230,9 +211,178 @@ class FindLocationsPublic extends Component
                 ]);
             }
 
+            $locationIds = $filteredQuery->pluck('id');
+            $this->sendToMap($locationIds);
+
+
+            $Rawlocations = $filteredQuery;
+
+            if ($Rawlocations instanceof \Illuminate\Pagination\LengthAwarePaginator) {
+                $items = $Rawlocations->items();
+            } else {
+                $items = $Rawlocations;
+            }
+
+            $this->locations = $items;
+
+            $this->count++;
+            if ($this->count > 1) {
+                $this->showResults();
+            }
+
+
+            $this->hasResults = true;
+
             return $filteredQuery;
         });
     }
+
+    #[On('MobileMode')]
+    public function hideResults()
+    {
+        $this->mobile = true;
+        $this->showResultClasse = false;
+    }
+
+    #[On('DesktopMode')]
+    public function DesktopMode()
+    {
+        $this->mobile = false;
+    }
+
+    public function sendToMap($locationIds)
+    {
+        $this->newLocations = Location::withoutGlobalScope(TenantScope::class)
+            ->where('active', 1)
+            ->whereIn('id', $locationIds)
+            ->pluck('id')
+            ->toArray();
+
+        $this->dispatch('geoJsonLocationOnMap', json_encode($this->newLocations));
+    }
+
+    public function toggleResults()
+    {
+
+        $this->showResultClasse = !$this->showResultClasse;
+    }
+
+    public function showResults()
+    {
+
+        $this->showResultClasse = true;
+    }
+
+
+    public function showOnMap($locationId)
+    {
+        if ($this->mobile) {
+            $this->showResultClasse = false;
+        }
+
+        $location = Location::find($locationId);
+
+        if ($location) {
+            $this->dispatch('showLocationOnMap', [
+                'latitude' => $location->lat,
+                'longitude' => $location->lng,
+            ]);
+        } else {
+        }
+    }
+
+    public function openOnMap($locationId)
+    {
+        $location = Location::withoutGlobalScope(TenantScope::class)->findOrFail($locationId);
+        $address = $location->address . ' ' . $location->city . ' ' . $location->zipcode . ' ' . $location->country;
+        $this->dispatch('openLocationOnMap', $address);
+    }
+
+
+    #[On('highlightLocation')]
+    public function highlightLocation($locationId)
+    {
+        $this->showResults();
+        $highlightedLocation = Location::withoutGlobalScope(TenantScope::class)->findOrFail($locationId);
+
+        $this->highlighted = $highlightedLocation->id;
+
+        $query = Location::query();
+
+        $query->withoutGlobalScope(TenantScope::class);
+        $query->where('active', 1)->where('status', 2);
+
+        // Applicate the product filter if selected
+        if (isset($this->filters['selected_product']) && $this->filters['selected_product'] !== '') {
+            $productIds = Product::where('product_type_id', '=', $this->filters['selected_product'])
+                ->pluck('id');
+
+            if ($productIds->isEmpty()) {
+                // if no product matches the filter, return only the highlighted location
+                $this->locations = [$highlightedLocation];
+                $this->showOnMap($locationId);
+                return;
+            }
+
+            // Applicate the product filter when requested
+            $query->where(function ($query) use ($productIds) {
+                foreach ($productIds as $productId) {
+                    $query->orWhereRaw("json_contains(product_id, '$productId')");
+                }
+            });
+        }
+
+
+
+
+        // Get the other locations filtered, excluding the highlighted location
+        $otherLocations = $query->where('id', '<>', $locationId)->get();
+
+        // Fusion the highlighted location with the other locations
+        $this->locations = collect([$highlightedLocation])->merge($otherLocations);
+
+        // Display the highlighted location on the map
+        $this->showOnMap($locationId);
+    }
+
+    #[On('retrieveMapDatas')]
+    public function retrieveMapDatas($northEastLat, $northEastLng, $southWestLat, $southWestLng)
+    {
+        $this->northEastLat = $northEastLat;
+        $this->northEastLng = $northEastLng;
+        $this->southWestLat = $southWestLat;
+        $this->southWestLng = $southWestLng;
+
+        $this->getRowsProperty();
+    }
+
+    #[On('searchInArea')]
+    public function searchInArea()
+    {
+        $this->dispatch('getVisibleLocations');
+    }
+
+    #[On('updateLocationsInBounds')]
+    public function updateLocationsInBounds($northEastLat, $northEastLng, $southWestLat, $southWestLng)
+    {
+        $this->showResults();
+
+        $query = Location::query();
+        $query->withoutGlobalScope(TenantScope::class);
+        $query->where('active', 1)->where('status', 2);
+
+        // Add the filter for geographic boundaries
+        $query->whereBetween('lat', [$southWestLat, $northEastLat])
+            ->whereBetween('lng', [$southWestLng, $northEastLng]);
+
+        // Get the filtered locations
+        $this->locations = $query->get();
+
+        // Update the map with the filtered locations
+        $this->sendToMap($this->locations->pluck('id'));
+    }
+
+
 
 
     public function getServices($locationId)
@@ -252,28 +402,11 @@ class FindLocationsPublic extends Component
         $this->currentTime = $value;
     }
 
-    public function showOnMap($locationId)
-    {
-        //Here we take the location's data (lng/lat), to send them to the map, to permit to zoom on it
-        $location = Location::find($locationId);
-
-        if ($location) {
-            $this->dispatch('showLocationOnMap', [
-                'latitude' => $location->lat,
-                'longitude' => $location->lng,
-            ]);
-        } else {
-        }
-    }
 
 
 
     public function render()
     {
-        $locations = $this->getRowsProperty();
-
-        return view('livewire.locations.find-locations-public', [
-            'locations' => $locations->items(),
-        ]);
+        return view('livewire.locations.find-locations-public');
     }
 }

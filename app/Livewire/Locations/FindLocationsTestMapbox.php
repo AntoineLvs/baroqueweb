@@ -15,7 +15,6 @@ use App\Models\ProductType;
 use App\Scopes\TenantScope;
 use Livewire\Attributes\On;
 use TallStackUi\Facades\TallStackUi;
-use Illuminate\Support\Collection;
 
 class FindLocationsTestMapbox extends Component
 {
@@ -34,22 +33,15 @@ class FindLocationsTestMapbox extends Component
 
     public $currentTime;
 
-    public $newLocations;
-    public $locations;
 
-    public $showResultClasse = false;
-    public $count;
+    public $showFilters = false;
 
-    public $mobile;
-    public $hasResults;
+    public $toggleTableValue = false;
+    public $toggleMapValue = false;
+    public $tableDiv = 'w-full';
+    public $mapDiv = 'w-full';
 
-    public $northEastLat;
-    public $northEastLng;
-    public $southWestLat;
-    public $southWestLng;
-
-    public $highlighted;
-
+    public $justifyContent = 'justify-center';
 
     public $filters = [
         'search' => '',
@@ -60,9 +52,36 @@ class FindLocationsTestMapbox extends Component
 
     ];
 
-    public function updatedFilters()
+
+    public function toggleMap()
     {
-        $this->dispatch('getVisibleLocations');
+        //change the Value of the button, to applicate tailwind class, to change the size of the Table/Map -> either big screen or not
+        $this->toggleMapValue = !$this->toggleMapValue;
+
+        if ($this->toggleMapValue) {
+            $this->justifyContent = 'justify-start';
+            $this->tableDiv = 'w-0 hidden';
+            $this->mapDiv = 'w-full';
+        } else {
+            $this->justifyContent = 'justify-center';
+            $this->tableDiv = 'w-full';
+        }
+    }
+
+    public function toggleTable()
+    {
+        //change the Value of the button, to applicate tailwind class, to change the size of the Table/Map -> either big screen or not
+        $this->toggleTableValue = !$this->toggleTableValue;
+
+        if ($this->toggleTableValue) {
+            $this->justifyContent = 'justify-end';
+            $this->tableDiv = 'w-full';
+            $this->mapDiv = 'w-0 hidden';
+        } else {
+            $this->justifyContent = 'justify-center';
+            $this->tableDiv = 'w-full';
+            $this->mapDiv = 'w-full';
+        }
     }
 
     public function sortByColumn($column): void
@@ -76,6 +95,7 @@ class FindLocationsTestMapbox extends Component
         }
     }
 
+
     public function mount()
     {
         //Get product_types and base_services to show on the table / currentTime because we need to compare the opnening hours from the locations, from the current time of the laptop
@@ -83,7 +103,14 @@ class FindLocationsTestMapbox extends Component
         $this->base_services = BaseService::withoutGlobalScope(TenantScope::class)->get();
 
         $this->currentTime = now(config('app.timezone'))->toTimeString();
-        $this->getRowsProperty();
+    }
+
+
+
+    public function toggleShowFilters()
+    {
+
+        $this->showFilters = !$this->showFilters;
     }
 
 
@@ -100,8 +127,12 @@ class FindLocationsTestMapbox extends Component
             $query = Location::query();
 
             $query->withoutGlobalScope(TenantScope::class);
-            $query->where('active', 1)->where('status', 2);
 
+            $query->where('active', 1)
+                ->where('status', 2);
+
+
+            // Filtering based on existing 
             $query->when($this->filters['search'], function ($query, $search) {
                 $query->where(function ($query) use ($search) {
                     $query->where('name', 'like', '%' . $search . '%')
@@ -129,15 +160,25 @@ class FindLocationsTestMapbox extends Component
                             });
                         });
                 });
-
-                $numberOfResults = $query->count();
-                if ($numberOfResults === 1) {
-                    $location = $query->first();
+                foreach ($query->get() as $location) {
                     $this->dispatch('showLocationOnMap', [
                         'latitude' => $location->lat,
                         'longitude' => $location->lng,
                     ]);
                 }
+            })->when(isset($this->filters['blend_min']) && $this->filters['blend_min'] !== '', function ($query) {
+                $productIds = Product::where('blend_percent', '>=', $this->filters['blend_min'])
+                    ->pluck('id');
+
+                if ($productIds->isEmpty()) {
+                    return $query->whereRaw('1 = 0');
+                }
+
+                return $query->where(function ($query) use ($productIds) {
+                    foreach ($productIds as $productId) {
+                        $query->orWhereRaw("json_contains(product_id, '$productId')");
+                    }
+                });
             });
 
             if (isset($this->filters['selected_product']) && $this->filters['selected_product'] !== '') {
@@ -145,12 +186,7 @@ class FindLocationsTestMapbox extends Component
                     ->pluck('id');
 
                 if ($productIds->isEmpty()) {
-                    $locationIds = [];
-                    $this->sendToMap($locationIds);
-                    $this->locations = [];
-                    $this->hasResults = false;
-                    $this->showResults();
-                    return;
+                    return $query->whereRaw('1 = 0');
                 }
 
                 $query->where(function ($query) use ($productIds) {
@@ -166,14 +202,23 @@ class FindLocationsTestMapbox extends Component
                     ->where('opening_end', '>=', $currentTime->now(config('app.timezone'))->format('H:i:s'));
             }
 
-            // Add the filter for geographic boundaries
-            if ($this->northEastLat && $this->northEastLng && $this->southWestLat && $this->southWestLng) {
-                $query->whereBetween('lat', [$this->southWestLat, $this->northEastLat])
-                    ->whereBetween('lng', [$this->southWestLng, $this->northEastLng]);
+            if (isset($this->filters['selected_service']) && $this->filters['selected_service'] !== '') {
+                $serviceIds = Service::where('base_service_id', '=', $this->filters['selected_service'])
+                    ->pluck('id');
+
+                if ($serviceIds->isEmpty()) {
+                    return $query->whereRaw('1 = 0');
+                }
+
+                $query->where(function ($query) use ($serviceIds) {
+                    foreach ($serviceIds as $serviceId) {
+                        $query->orWhereRaw("json_contains(service_id, '$serviceId')");
+                    }
+                });
             }
 
             $sortedQuery = $query->orderBy($this->sortColumn, $this->sortDirection);
-            $filteredQuery = $this->applyPagination($this->applySorting($sortedQuery));
+            $filteredQuery = $this->applyPagination($this->applySorting($query));
 
             $numberOfResults = $filteredQuery->count();
 
@@ -185,178 +230,9 @@ class FindLocationsTestMapbox extends Component
                 ]);
             }
 
-            $locationIds = $filteredQuery->pluck('id');
-            $this->sendToMap($locationIds);
-
-
-            $Rawlocations = $filteredQuery;
-
-            if ($Rawlocations instanceof \Illuminate\Pagination\LengthAwarePaginator) {
-                $items = $Rawlocations->items();
-            } else {
-                $items = $Rawlocations;
-            }
-
-            $this->locations = $items;
-
-            $this->count++;
-            if ($this->count > 1) {
-                $this->showResults();
-            }
-
-
-            $this->hasResults = true;
-
             return $filteredQuery;
         });
     }
-
-    #[On('MobileMode')]
-    public function hideResults()
-    {
-        $this->mobile = true;
-        $this->showResultClasse = false;
-    }
-
-    #[On('DesktopMode')]
-    public function DesktopMode()
-    {
-        $this->mobile = false;
-    }
-
-    public function sendToMap($locationIds)
-    {
-        $this->newLocations = Location::withoutGlobalScope(TenantScope::class)
-            ->where('active', 1)
-            ->whereIn('id', $locationIds)
-            ->pluck('id')
-            ->toArray();
-
-        $this->dispatch('geoJsonLocationOnMap', json_encode($this->newLocations));
-    }
-
-    public function toggleResults()
-    {
-
-        $this->showResultClasse = !$this->showResultClasse;
-    }
-
-    public function showResults()
-    {
-
-        $this->showResultClasse = true;
-    }
-
-
-    public function showOnMap($locationId)
-    {
-        if ($this->mobile) {
-            $this->showResultClasse = false;
-        }
-
-        $location = Location::find($locationId);
-
-        if ($location) {
-            $this->dispatch('showLocationOnMap', [
-                'latitude' => $location->lat,
-                'longitude' => $location->lng,
-            ]);
-        } else {
-        }
-    }
-
-    public function openOnMap($locationId)
-    {
-        $location = Location::withoutGlobalScope(TenantScope::class)->findOrFail($locationId);
-        $address = $location->address . ' ' . $location->city . ' ' . $location->zipcode . ' ' . $location->country;
-        $this->dispatch('openLocationOnMap', $address);
-    }
-
-
-    #[On('highlightLocation')]
-    public function highlightLocation($locationId)
-    {
-        $this->showResults();
-        $highlightedLocation = Location::withoutGlobalScope(TenantScope::class)->findOrFail($locationId);
-
-        $this->highlighted = $highlightedLocation->id;
-
-        $query = Location::query();
-
-        $query->withoutGlobalScope(TenantScope::class);
-        $query->where('active', 1)->where('status', 2);
-
-        // Applicate the product filter if selected
-        if (isset($this->filters['selected_product']) && $this->filters['selected_product'] !== '') {
-            $productIds = Product::where('product_type_id', '=', $this->filters['selected_product'])
-                ->pluck('id');
-
-            if ($productIds->isEmpty()) {
-                // if no product matches the filter, return only the highlighted location
-                $this->locations = [$highlightedLocation];
-                $this->showOnMap($locationId);
-                return;
-            }
-
-            // Applicate the product filter when requested
-            $query->where(function ($query) use ($productIds) {
-                foreach ($productIds as $productId) {
-                    $query->orWhereRaw("json_contains(product_id, '$productId')");
-                }
-            });
-        }
-
-
-
-
-        // Get the other locations filtered, excluding the highlighted location
-        $otherLocations = $query->where('id', '<>', $locationId)->get();
-
-        // Fusion the highlighted location with the other locations
-        $this->locations = collect([$highlightedLocation])->merge($otherLocations);
-
-        // Display the highlighted location on the map
-        $this->showOnMap($locationId);
-    }
-
-    #[On('retrieveMapDatas')]
-    public function retrieveMapDatas($northEastLat, $northEastLng, $southWestLat, $southWestLng)
-    {
-        $this->northEastLat = $northEastLat;
-        $this->northEastLng = $northEastLng;
-        $this->southWestLat = $southWestLat;
-        $this->southWestLng = $southWestLng;
-
-        $this->getRowsProperty();
-    }
-
-    #[On('searchInArea')]
-    public function searchInArea()
-    {
-        $this->dispatch('getVisibleLocations');
-    }
-
-    #[On('updateLocationsInBounds')]
-    public function updateLocationsInBounds($northEastLat, $northEastLng, $southWestLat, $southWestLng)
-    {
-        $this->showResults();
-
-        $query = Location::query();
-        $query->withoutGlobalScope(TenantScope::class);
-        $query->where('active', 1)->where('status', 2);
-
-        // Add the filter for geographic boundaries
-        $query->whereBetween('lat', [$southWestLat, $northEastLat])
-            ->whereBetween('lng', [$southWestLng, $northEastLng]);
-
-        // Get the filtered locations
-        $this->locations = $query->get();
-
-        // Update the map with the filtered locations
-        $this->sendToMap($this->locations->pluck('id'));
-    }
-
-
 
 
     public function getServices($locationId)
@@ -376,11 +252,28 @@ class FindLocationsTestMapbox extends Component
         $this->currentTime = $value;
     }
 
+    public function showOnMap($locationId)
+    {
+        //Here we take the location's data (lng/lat), to send them to the map, to permit to zoom on it
+        $location = Location::find($locationId);
+
+        if ($location) {
+            $this->dispatch('showLocationOnMap', [
+                'latitude' => $location->lat,
+                'longitude' => $location->lng,
+            ]);
+        } else {
+        }
+    }
 
 
 
     public function render()
     {
-        return view('livewire.locations.find-locations-test-mapbox');
+        $locations = $this->getRowsProperty();
+
+        return view('livewire.locations.find-locations-test-mapbox', [
+            'locations' => $locations->items(),
+        ]);
     }
 }

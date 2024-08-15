@@ -3,43 +3,112 @@
 @section('body')
 
 <div class="bg-white">
+    <style>
+        body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
 
-    <x-navigation />
+    <div x-data="{ open: false }">
+        <header class="inset-x-0 top-0 z-50 bg-gray-800"  style="z-index: 5; position: absolute;">
+            <nav class="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
+                <div class="flex lg:flex-1">
+                    <a href="{{ URL::route('home') }}" class="-m-1.5 p-1.5">
+                        <span class="sr-only">refuelOS</span>
+                        <img class="h-16 w-auto" src="{{ asset('assets/img/refuelos_white.png') }}" alt="Logo" />
+                    </a>
+
+                </div>
+                <div class="flex lg:hidden">
+                    <button @click="open = true" type="button" class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-400">
+                        <span class="sr-only">Open main menu</span>
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+                        </svg>
+                    </button>
+
+                </div>
+                <div class="hidden lg:flex lg:gap-x-12">
+                    <a href="{{route('product-finder.index-public')}}" class="text-m font-semibold leading-6 text-white hover:underline">Product Finder</a>
+                    <a href="#" class="text-m font-semibold leading-6 text-white hover:underline">FAQ</a>
+                    <a href="#" class="text-m font-semibold leading-6 text-white">Was ist XTL?</a>
+                    <a href="#" class="text-m font-semibold leading-6 text-white">Partner werden</a>
+                    <a href="{{route('locations.find-locations-public')}}" class="text-m font-semibold leading-6 text-white">Finder</a>
+
+
+                </div>
+
+
+                <div class="hidden lg:flex lg:flex-1 lg:justify-end">
+
+                    @if (Route::has('login'))
+                    @auth
+                    <a onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="mr-4 font-bold text-red-500 hover:text-indigo-500 transition duration-150 ease-in-out">
+                        Log out
+                    </a>
+
+                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                        @csrf
+                    </form>
+
+                    <a href="{{ route('dashboard') }}" class="text-sm font-semibold leading-6 text-white">Dashboard</a>
+
+                    @else
+                    {{-- @if (Route::has('register'))
+                              <a href="{{ route('register') }}" class="pl-4 text-sm font-semibold leading-6 text-white">Register</a>
+                    @endif--}}
+
+                    <a href="{{ route('login') }}" class="text-sm font-semibold leading-6 text-white">Log in <span aria-hidden="true">&rarr;</span></a>
+                    @endauth
+                    @endif
+
+
+                </div>
+            </nav>
+
+
+            <!-- Mobile menu, show/hide based on menu open state. -->
+            <div x-show="open" x-cloak @click.away="open = false" x-transition:enter="duration-0 ease-out" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="duration-0 ease-in" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95">
+                <div class="lg:hidden" role="dialog" aria-modal="true">
+                    <!-- Background backdrop, show/hide based on slide-over state. -->
+                    <div class="fixed inset-0 z-50"></div>
+                    <div class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+                        <div class="flex items-center justify-between">
+                            <a href="#" class="-m-1.5 p-1.5">
+                                <span class="sr-only">Your Company</span>
+                                <img class="h-14 w-auto" src="{{ asset('assets/img/refuelos_dark.png') }}" alt="Logo" />
+                                <button @click="open = false" aria-label="Main menu" aria-haspopup="true" type="button" class="-m-2.5 rounded-md p-2.5 text-gray-700">
+                                    <span class="sr-only">Close menu</span>
+                                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                        </div>
+                        <div class="mt-6 flow-root">
+                            <div class="-my-6 divide-y divide-gray-500/10">
+                                <div class="space-y-2 py-6">
+                                    <a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Product</a>
+                                    <a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Features</a>
+                                    <a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Marketplace</a>
+                                    <a href="#" class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Company</a>
+                                </div>
+                                <div class="py-6">
+                                    <a href="#" class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Log
+                                        in</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </div>
 
     <main>
-
-        <div class="relative isolate overflow-hidden bg-gray-900 px-6 py-24 sm:py-32 lg:px-8">
-            <img src="https://images.unsplash.com/photo-1526626607369-f89fe1ed77a9?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&crop=focalpoint&fp-y=.8&w=2830&h=1500&q=80&blend=111827&sat=-100&exp=15&blend-mode=multiply" alt="" class="absolute inset-0 -z-10 h-full w-full object-cover">
-            <div class="hidden sm:absolute sm:-top-10 sm:right-1/2 sm:-z-10 sm:mr-10 sm:block sm:transform-gpu sm:blur-3xl" aria-hidden="true">
-                <div class="aspect-[1097/845] w-[68.5625rem] bg-gradient-to-tr from-[#ff4694] to-[#776fff] opacity-20" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
-            </div>
-            <div class="absolute -top-52 left-1/2 -z-10 -translate-x-1/2 transform-gpu blur-3xl sm:top-[-28rem] sm:ml-16 sm:translate-x-0 sm:transform-gpu" aria-hidden="true">
-                <div class="aspect-[1097/845] w-[68.5625rem] bg-gradient-to-tr from-[#ff4694] to-[#776fff] opacity-20" style="clip-path: polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)"></div>
-            </div>
-            <div class="mx-auto max-w-2xl text-center">
-                <h2 class="text-4xl font-bold tracking-tight text-white sm:text-6xl">Find fuel stations Online</h2>
-                <p class="mt-6 text-lg leading-8 text-gray-300"> Your refuel finder.</p>
-            </div>
-        </div>
-
-        <!-- This example requires Tailwind CSS v2.0+ -->
-        <div class="relative bg-gray-50 sm:py-24 lg:py-32">
-            <div class="mx-auto max-w-md px-4 text-center sm:max-w-3xl sm:px-6 lg:px-8 lg:max-w-7xl">
-                <h2 class="text-base font-semibold tracking-wider text-indigo-600 uppercase">Be faster</h2>
-                <p class="mt-2 text-3xl font-extrabold text-gray-900 tracking-tight sm:text-4xl">
-                    Fuel up.
-                </p>
-                <p class="mt-5 mb-5 max-w-prose mx-auto text-xl text-gray-500">
-                    Find Fuel Stations.
-                </p>
-            </div>
-            @livewire('locations.find-locations-public')
-        </div>
+        @livewire('locations.find-locations-public')
     </main>
 </div>
 
-@endsection
-
-@section('footer')
-<x-footer />
 @endsection
