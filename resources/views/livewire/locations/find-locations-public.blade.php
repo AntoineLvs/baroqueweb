@@ -48,7 +48,7 @@
             </div>
 
         </div>
-        <div class="table-container" id="tableContainer" style="overflow-y: scroll; height: 65%;">
+        <div class="table-container" id="tableContainer" style="overflow-y: scroll; height: 66%;">
             <table class="min-w-full divide divide-gray-200">
 
                 @if($locations && count($locations) > 0)
