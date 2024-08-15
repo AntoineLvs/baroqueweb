@@ -21,7 +21,7 @@ class ProductTypeSeeder extends Seeder
 
       [
         'id' => '1',
-        'name' => "HVO",
+        'name' => "HVO 100",
         'active' => '1',
         'tenant_id' => '1',
         'created_at' => Carbon::now()->format('Y-m-d H:i:s')

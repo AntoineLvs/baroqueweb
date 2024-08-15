@@ -115,6 +115,9 @@
                             Locations Type
                           </th>
                           <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            Product Types
+                          </th>
+                          <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                             Address
                           </th>
                           <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -166,6 +169,33 @@
                             <div class="text-sm text-gray-900"><b>{{ $location->location_type->name}}</b></div>
                             <div class="text-sm text-gray-900">{{ Str::limit($location->description, 20) }} </div>
                           </td>
+
+                          <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                  @php
+
+                                  $productTypes = $location->getProductTypes();
+                                  $isHvo100 = $productTypes->contains('id', 1);
+                                  $isHvoBlend = $productTypes->contains('id', 2);
+
+                                  @endphp
+                                  <div>
+                                    <button type="button" class="text-xs cursor-default	rounded-full {{ $isHvo100 ? 'bg-blue-600' : 'bg-gray-600' }} px-2.5 py-1 font-semibold text-white shadow-sm">
+                                      HVO 100
+                                    </button>
+
+                                  </div>
+                                  <div class="ml-2">
+                                    <button type="button" class="text-xs cursor-default	rounded-full {{ $isHvoBlend ? 'bg-blue-600' : 'bg-gray-600' }} px-2.5 py-1 font-semibold text-white shadow-sm">
+                                      HVO Blend
+                                    </button>
+                                  </div>
+                              </div>
+                            </div>
+                          </td>
+
+
 
                           <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                             {{$location->address}},<br>

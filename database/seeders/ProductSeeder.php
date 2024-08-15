@@ -22,13 +22,26 @@ class ProductSeeder extends Seeder
                 [
                     'tenant_id' => '1',
                     'id' => '1',
-                    'name' => "HVO",
+                    'name' => "TOTAL HV0 100",
                     'data' => "Lorem ipsum data description",
                     'product_type_id' => "1",
                     'base_product_id' => "1",
                     'product_unit_id' => "1",
                     'active' => '1',
                     'blend_percent' => NULL,
+                    'created_at' => Carbon::now()->format('Y-m-d H:i:s')
+                ],
+
+                [
+                    'tenant_id' => '1',
+                    'id' => '2',
+                    'name' => "TOTAL HV0 75",
+                    'data' => "Lorem ipsum data description",
+                    'product_type_id' => "2",
+                    'base_product_id' => "2",
+                    'product_unit_id' => "1",
+                    'active' => '1',
+                    'blend_percent' => '75',
                     'created_at' => Carbon::now()->format('Y-m-d H:i:s')
                 ],
 
