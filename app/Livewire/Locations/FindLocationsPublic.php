@@ -37,7 +37,7 @@ class FindLocationsPublic extends Component
     public $newLocations;
     public $locations;
 
-    public $showResultClasse = false;
+    public $showResultClass = false;
     public $count;
 
     public $mobile;
@@ -51,6 +51,7 @@ class FindLocationsPublic extends Component
     public $highlighted;
     public $isHvo100 = true;
     public $isHvoBlend = true;
+    public $detail = '';
 
 
     public $filters = [
@@ -62,7 +63,9 @@ class FindLocationsPublic extends Component
 
     ];
 
-    
+
+
+
     public function toggleProduct($product)
     {
         if ($product === 'HVO100') {
@@ -116,6 +119,14 @@ class FindLocationsPublic extends Component
     public function resetFilters()
     {
         $this->reset('filters');
+        $this->filters['selected_product'] = ''; // select both (display all locations)
+        $this->northEastLat = null;
+        $this->northEastLng = null;
+        $this->southWestLat = null;
+        $this->southWestLng = null;
+        $this->isHvo100 = true;
+        $this->isHvoBlend = true;
+        $this->getRowsProperty();
     }
 
     // Here we take every locations that are active and online, and then, if there is a research, we apply some filter on these locations. If there is also some filters selected, 
@@ -159,10 +170,7 @@ class FindLocationsPublic extends Component
                 $numberOfResults = $query->count();
                 if ($numberOfResults === 1) {
                     $location = $query->first();
-                    $this->dispatch('showLocationOnMap', [
-                        'latitude' => $location->lat,
-                        'longitude' => $location->lng,
-                    ]);
+                   $this->highlighted = $location->id;
                 }
             });
 
@@ -241,7 +249,7 @@ class FindLocationsPublic extends Component
     public function hideResults()
     {
         $this->mobile = true;
-        $this->showResultClasse = false;
+        $this->showResultClass = false;
     }
 
     #[On('DesktopMode')]
@@ -264,20 +272,20 @@ class FindLocationsPublic extends Component
     public function toggleResults()
     {
 
-        $this->showResultClasse = !$this->showResultClasse;
+        $this->showResultClass = !$this->showResultClass;
     }
 
     public function showResults()
     {
 
-        $this->showResultClasse = true;
+        $this->showResultClass = true;
     }
 
 
     public function showOnMap($locationId)
     {
         if ($this->mobile) {
-            $this->showResultClasse = false;
+            $this->showResultClass = false;
         }
 
         $location = Location::find($locationId);
@@ -289,6 +297,11 @@ class FindLocationsPublic extends Component
             ]);
         } else {
         }
+    }
+
+    public function showDetails($locationId)
+    {
+        $this->detail = $locationId;
     }
 
     public function openOnMap($locationId)
@@ -320,7 +333,6 @@ class FindLocationsPublic extends Component
             if ($productIds->isEmpty()) {
                 // if no product matches the filter, return only the highlighted location
                 $this->locations = [$highlightedLocation];
-                $this->showOnMap($locationId);
                 return;
             }
 
@@ -341,8 +353,6 @@ class FindLocationsPublic extends Component
         // Fusion the highlighted location with the other locations
         $this->locations = collect([$highlightedLocation])->merge($otherLocations);
 
-        // Display the highlighted location on the map
-        $this->showOnMap($locationId);
     }
 
     #[On('retrieveMapDatas')]
