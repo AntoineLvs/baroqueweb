@@ -170,7 +170,7 @@ class FindLocationsPublic extends Component
                 $numberOfResults = $query->count();
                 if ($numberOfResults === 1) {
                     $location = $query->first();
-                   $this->highlighted = $location->id;
+                    $this->highlighted = $location->id;
                 }
             });
 
@@ -200,14 +200,19 @@ class FindLocationsPublic extends Component
                     ->where('opening_end', '>=', $currentTime->now(config('app.timezone'))->format('H:i:s'));
             }
 
-            // Add the filter for geographic boundaries
+            // Filtrer par les limites géographiques
             if ($this->northEastLat && $this->northEastLng && $this->southWestLat && $this->southWestLng) {
                 $query->whereBetween('lat', [$this->southWestLat, $this->northEastLat])
                     ->whereBetween('lng', [$this->southWestLng, $this->northEastLng]);
             }
 
+            $query->limit(10);
+
+            // Appliquer le tri
             $sortedQuery = $query->orderBy($this->sortColumn, $this->sortDirection);
-            $filteredQuery = $this->applyPagination($this->applySorting($sortedQuery));
+
+            // Récupérer les données sans pagination
+            $filteredQuery = $sortedQuery->get();
 
             $numberOfResults = $filteredQuery->count();
 
@@ -222,22 +227,12 @@ class FindLocationsPublic extends Component
             $locationIds = $filteredQuery->pluck('id');
             $this->sendToMap($locationIds);
 
-
-            $Rawlocations = $filteredQuery;
-
-            if ($Rawlocations instanceof \Illuminate\Pagination\LengthAwarePaginator) {
-                $items = $Rawlocations->items();
-            } else {
-                $items = $Rawlocations;
-            }
-
-            $this->locations = $items;
+            $this->locations = $filteredQuery;
 
             $this->count++;
             if ($this->count > 1) {
                 $this->showResults();
             }
-
 
             $this->hasResults = true;
 
@@ -352,7 +347,6 @@ class FindLocationsPublic extends Component
 
         // Fusion the highlighted location with the other locations
         $this->locations = collect([$highlightedLocation])->merge($otherLocations);
-
     }
 
     #[On('retrieveMapDatas')]
