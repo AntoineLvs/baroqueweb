@@ -101,7 +101,7 @@
                         map.getCanvas().style.cursor = 'pointer';
 
                         const id = e.features[0].properties.id;
-                        highlightLocation(id);
+                        highlightLocation(id, coordinates);
                     });
                 });
             });
@@ -212,29 +212,15 @@
             window.open(`https://www.google.com/maps/search/?api=1&query=${formattedAddress}`, '_blank');
         }
 
-        function highlightLocation(id) {
+        function highlightLocation(id, coordinates) {
+            console.log(coordinates)
+            const longitude = coordinates[0];
+            const latitude = coordinates[1];
 
             var locationId = id;
             $wire.dispatch('highlightLocation', {
                 locationId
             });
-
-        }
-
-
-
-
-        Livewire.on('showLocationOnMap', locationData => {
-            const firstLocation = locationData[0];
-
-            const latitude = firstLocation.latitude;
-            const longitude = firstLocation.longitude;
-
-            // console.log('Latitude:', latitude);
-            // console.log('Longitude:', longitude);
-
-            mapboxgl.accessToken = 'pk.eyJ1IjoiZWxzZW5tZWRpYSIsImEiOiJjbHBiYXozZm0wZ21vMnFwZHE4ZWc5Z2lzIn0.dJGBO1JOfota9KceLDgGJg';
-
 
             map.flyTo({
                 center: [longitude, latitude],
@@ -242,6 +228,27 @@
                 essential: true
             });
 
+        }
+
+
+
+
+
+        window.addEventListener('showLocationOnMap', (event) => {
+            const {
+                latitude,
+                longitude
+            } = event.detail;
+            // Ici, vous pouvez ajouter la logique pour afficher la localisation sur la carte
+            console.log('Latitude:', latitude, 'Longitude:', longitude);
+            mapboxgl.accessToken = 'pk.eyJ1IjoiZWxzZW5tZWRpYSIsImEiOiJjbHBiYXozZm0wZ21vMnFwZHE4ZWc5Z2lzIn0.dJGBO1JOfota9KceLDgGJg';
+
+            map.flyTo({
+                center: [longitude, latitude],
+                zoom: 15,
+                essential: true
+            });
+            // Exécuter la logique de mise à jour de la carte ici
         });
 
         Livewire.on('searchResultsUpdated', locationData => {
