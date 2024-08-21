@@ -1,516 +1,413 @@
-<div class="mb-2 max-w-8xl mx-auto px-4 sm:px-6 md:px-8 rounded-md">
-
-    <!-- Search Section -->
-    <div class="mx-auto max-w-xl mb-6">
-        <div class="w-full flex flex-col items-center  space-y-4">
-            <div class="w-full">
-                <div class="mb-2">
-                    <label for="search-bar" class=" text-gray-900" style="margin-bottom:5px;">Search in Finder...</label>
-                </div>
-                <div class="animated">
-                    <input wire:model.live="filters.search" type="text" id="searchbox" name="searchbox" placeholder="" class="block w-full rounded-md border-0 px-4 py-3 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                </div>
-            </div>
-
-            <div class="w-full flex flex-col">
-                <div class="mb-4 w-full sm:w-auto">
-                    <div class="mb-2">
-                        <label for="filter-product-type" class="text-gray-900">Select your product</label>
-                    </div>
-                    <div class="flex items-center justify-start">
-                        <select wire:model.live="filters.selected_product" id="filter-product-type" class="block w-full sm:w-1/2 rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                            <option value="">Product Type (All)</option>
-                            @foreach ($product_types as $product_type)
-                            <option value="{{ $product_type->id }}">{{ $product_type->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-
-                <div class="mb-4 w-full sm:w-auto">
-                    <div class="w-1/4 mb-2">
-                        <label for="filter-product-type">Blend percent: </label>
-                    </div>
-                    <div class="flex rounded-md shadow-sm w-1/2">
-                        <input wire:model.live="filters.blend_min" type="text" id="blend-min" class="block min-w-0 w-16 flex-1 rounded-none rounded-l-md border-0 py-2 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-grey-600  sm:leading-6" placeholder="min">
-                        <span class="inline-flex items-center rounded-r-md border border-l-0 border-gray-300 px-3 text-gray-500">%</span>
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="hidden sm:flex items-center">
-                <div class="w-auto flex items-center space-x-4 ">
-                    <div class="w-1/2">
-                        <button wire:click="toggleShowFilters" type="button" class="min-w-min w-full rounded-md bg-indigo-600 px-4 py-2  font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                            @if ($showFilters) Hide @endif Advanced Search...
-                        </button>
-                    </div>
-                    <div class="w-1/2">
-                        <button wire:click="resetFilters" class="w-auto rounded-md bg-indigo-600 px-4 py-2 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Reset Filters</button>
-                    </div>
-
-                </div>
-            </div>
-
-            <div class="sm:hidden flex items-center">
-                <div class="w-full flex flex-col sm:flex">
-                    <div class="w-full mb-2 sm:w-w-1/2 ">
-                        <button wire:click="toggleShowFilters" type="button" class="w-full rounded-md bg-indigo-600 px-4 py-2  font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                            @if ($showFilters) Hide @endif Advanced Search...
-                        </button>
-                    </div>
-                    <div class="w-full sm:w-w-1/2">
-                        <button wire:click="resetFilters" class="w-full rounded-md bg-indigo-600 px-4 py-2 font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Reset Filters</button>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Advanced Search -->
-    <div class="mx-auto max-w-xl">
-        <div>
-            @if ($showFilters)
-            <div class="flex flex-col space-y-4 mb-6 border border-gray-200 bg-white rounded-md p-4">
-                <div class="w-full flex flex-col">
-                    <div class="mb-4 w-full sm:w-auto">
-                        <div class="mb-2">
-                            <label for="filter-base-service" class="mb-2 text-gray-900">Select your base service</label>
-                        </div>
-                        <div class="flex items-center justify-start">
-                            <select wire:model.live="filters.selected_service" id="filter-base-service" class="block w-full sm:w-1/2 rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                                <option value="">Services (all)</option>
-                                @foreach ($base_services as $base_service)
-                                <option value="{{ $base_service->id }}">{{ $base_service->name }}</option>
-                                @endforeach
-                            </select>
+<div class="select-menu flex flex-col md:flex-row " style="margin-top:132px; margin-left: 20px;">
+    <div style="z-index: 5; min-width: 400px;" class="w-full md:w-1/5 transition-all duration-2000 shadow rounded-t-md border-b border-gray-300 xl:rounded-l-md xl:border-r-0 xl:rounded-r-md xl:border-b-0 xl:border-t-0 bg-white">
+        <div class="mx-auto mt-4 mr-4 ml-4">
+            <div class="w-full flex flex-col items-center space-y-4">
+                <div class="w-full">
+                    <div class="animated">
+                        <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                                </svg>
+                            </div>
+                            <input id="searchBar" name="searchbox" placeholder="Search..." type="search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                            <button wire:click.prevent="resetFilters" type="button" class="text-white absolute end-2.5 bottom-2.5 bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Reset</button>
                         </div>
                     </div>
-                    <div class="flex items-center justify-start">
-                        <label for="filter-is-open" class="mb-1 mr-2 text-gray-900">Show open Locations :</label>
-                        <input id="filter-is-open" wire:model.live="filters.is_open" type="checkbox" class="h-5 w-5 rounded ring-1 ring-inset ring-gray-300 text-indigo-600 focus:ring-indigo-600">
-                    </div>
                 </div>
             </div>
-            @endif
-        </div>
-    </div>
-
-
-    <!-- Open Map big screen -->
-    <div class="flex items-center space-x-4 {{ $justifyContent }} transition-all duration-500 ease-in-out">
-        <div class="flex items-center mb-4 ">
-            @if ($toggleTableValue)
-
-            @else
-            <button wire:click="toggleMap" type="button" class="image-container transition-transform duration-2000 rounded-full bg-indigo-600 p-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transform translate-x-0">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                    @if($toggleMapValue)
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                    @else
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
-                    @endif
-                </svg>
-                <span class="tooltip text-gray-900">Open the Map</span>
-            </button>
-            @endif
-
         </div>
 
-        <!-- Open Table big screen -->
-        <div class="flex items-center mb-4 @if($toggleMapValue) justify-center @elseif($toggleTableValue) justify-end @else justify-center @endif">
-            @if ($toggleMapValue)
+        <form class="max-w-md mx-auto">
 
-            @else
-            <button wire:click="toggleTable" type="button" class="image-container transition-transform duration-2000 rounded-full bg-indigo-600 p-1.5 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 transform translate-x-0">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                    @if($toggleTableValue)
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18" />
-                    @else
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3" />
-                    @endif
-                </svg>
-                <span class="tooltip text-gray-900">Open the Map</span>
-            </button>
-            @endif
+        </form>
 
-        </div>
-    </div>
-
-    <!-- Locations Table -->
-    <div class="flex flex-col xl:flex-row border border-gray-200 rounded-md">
-        <div style="max-height: 75vh; overflow-y: auto; z-index: 1;" class="{{ $toggleMapValue ? 'hidden' : 'w-full' }} transition-all duration-2000 shadow rounded-t-md border-b border-gray-200 xl:rounded-l-md xl:border-r-0 xl:rounded-r-md xl:border-b-0 xl:border-b-0 xl:border-t-0">
-            <table class="min-w-full divide divide-gray-200">
-                <thead class="bg-gray-100">
-                    <tr>
-                        <th wire:click="sortByColumn('name')" class="text-gray-600 px-6 py-6 border-b-2 border-gray-300 text-left  leading-4 tracking-wider cursor-pointer">
-                            <span class="ml-4">Name</span>
-                            @if ($sortColumn == 'name')
-                            <i class="fa fa-solid fa-sort-up {{ $sortDirection === 'asc' ? '' : 'fa-rotate-180' }} ml-2"></i>
-                            @else
-                            <i class="fa fa-solid fa-sort ml-2"></i>
-                            @endif
-                        </th>
-                        <th class="text-gray-600 px-6 py-6 border-b-2 border-gray-300 text-left  leading-4 tracking-wider cursor-pointer">
-                            @if($toggleTableValue)
-                            <span class="ml-4">Opening Hours</span>
-                            @endif
-                        </th>
-                        <th wire:click="sortByColumn('zipcode')" class="text-gray-600 px-6 py-6 border-b-2 border-gray-300 text-left  leading-4 tracking-wider cursor-pointer">
-                            Address
-                            @if ($sortColumn == 'zipcode')
-                            <i class="fa fa-solid fa-sort-up {{ $sortDirection === 'asc' ? '' : 'fa-rotate-180' }} ml-2"></i>
-                            @else
-                            <i class="fa fa-solid fa-sort ml-2"></i>
-                            @endif
-                        </th>
-                        <th value="service" :sortable="false" :multi-column="true" class="text-gray-600 px-6 py-6 border-b-2 border-gray-300 text-left leading-4 tracking-wider">
-                            Services
-                        </th>
-                        <th value="products" :sortable="false" :multi-column="true" class="text-gray-600 px-6 py-6 border-b-2 border-gray-300 text-left leading-4 tracking-wider">
-                            ReFuels
-                        </th>
-
-                        <th class="px-6 py-6 border-b-2 border-gray-300 text-left leading-4 tracking-wider">
-
-                        </th>
-                    </tr>
-                </thead>
-                <tbody class="">
-
-                    @foreach ($locations as $location)
-                    <tr wire:key="{{$location->id}}" class="bg-white">
-                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                            <div class="flex items-center justify-between">
-                                <div class="ml-4">
-                                    <div class="flex items-center">
-                                        <div class="flex-shrink-0 h-10 w-10">
-                                            <div class="image-container">
-                                                <a href="{{ route('locations.profile-locations-public', ['id' => $location->id]) }}">
-                                                    <img style="background: lightgrey;" class="h-10 w-10 rounded-full ring-2 ring-green" src="{{ $location->image_path }}" alt="">
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div class="ml-4">
-                                            <div class=" font-medium text-gray-900">
-                                                <a href="{{ route('locations.profile-locations-public', ['id' => $location->id]) }}">{{ $location->name }}</a>
-                                            </div>
-                                            <div class="text-gray-500">
-                                                <a href="{{ route('locations.profile-tenants', ['tenant_id' => $location->tenant->id]) }}">{{$location->tenant->name}}</a>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-
-                        <td class="whitespace-no-wrap border-b border-gray-200">
-                            <div class="flex ml-auto items-center" style="display:flex; float: center;">
-                                <div class="flex items-center justify-end">
-                                    <div class="image-container">
-                                        <div class="flex items-center">
-                                            @if($toggleTableValue)
-                                            <div class="text-gray-900">{{ substr($location->opening_start, 0, 5) }} / {{ substr($location->opening_end, 0, 5) }}</div>
-                                            @endif
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="w-5 h-5 ml-2" fill="{{ $location->isOpen() ? 'rgb(0, 160, 0)' : 'red' }}">
-                                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 000-1.5h-3.25V5z" clip-rule="evenodd" />
-                                            </svg>
-                                            @if(!$toggleTableValue)
-                                            <span class="tooltip text-gray-500">{{ substr($location->opening_start, 0, 5) }} / {{ substr($location->opening_end, 0, 5) }}</span>
-                                            @endif
-                                        </div>
-
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
-
-                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                            <div class="text-gray-900" id="address_{{$location->id}}">{{$location->address}}</div>
-                            <div class="text-gray-500">{{$location->zipcode}} / {{$location->city}}</div>
-
-                            <!-- Button to copy to clipboard - Don't forget to uncomment the javascript code too  -->
-                            <!-- <button value="copy" onclick="copyToClipboard('copy_{{ $location->address }}')">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 7.5h-.75A2.25 2.25 0 004.5 9.75v7.5a2.25 2.25 0 002.25 2.25h7.5a2.25 2.25 0 002.25-2.25v-7.5a2.25 2.25 0 00-2.25-2.25h-.75m0-3l-3-3m0 0l-3 3m3-3v11.25m6-2.25h.75a2.25 2.25 0 012.25 2.25v7.5a2.25 2.25 0 01-2.25 2.25h-7.5a2.25 2.25 0 01-2.25-2.25v-.75" />
-                                </svg>
-                            </button> -->
-
-                        </td>
-
-                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 leading-5 text-gray-500">
-                            @if ($location->service_id)
-                            <div class="image-container">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
-                                </svg>
-                                <ul class="tooltip" style=" padding-left: 20px;">
-                                    @foreach($this->getServices($location->id) as $service)
-                                    <li>{{ $service->name }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                            @else
-                            <span>-</span>
-                            @endif
-                        </td>
-
-
-                        <td class="px-6 py-4 whitespace-no-wrap border-b border-gray-200 leading-5 text-gray-500">
-                            <ul style="list-style: none; padding: 0;">
-                                @if ($location->product_id)
-                                @foreach($this->getProducts($location->id) as $product)
-                                @if ($product->product_type_id == 1)
-                                <div style="display: flex; flex-direction: column;">
-                                    <div style="display: flex;">
-                                        <div style="margin-right: 10px;">
-                                            <div class="image-container">
-                                                <a href="{{ route('locations.show-products', ['id' => $location->id]) }}">
-                                                    <img style="background: lightgrey; min-width:34px; min-height:34px;" class="h-8 w-8 rounded-full ring-2 ring-green" src="{{ $product->image_path }}" alt="">
-                                                </a>
-                                                <span class="tooltip">{{ $product->name }} @if($product->blend_percent) ({{ $product->blend_percent }}%) @endif</span>
-                                            </div>
-                                        </div>
-                                        @endif
-                                        @endforeach
-                                    </div>
-                                    <div style="display: flex; ">
-                                        @foreach($this->getProducts($location->id) as $product)
-                                        @if ($product->product_type_id == 2)
-                                        <div style="margin-right: 10px; padding-top: 10px;">
-                                            <div class="image-container">
-                                                <a href="{{ route('locations.show-products', ['id' => $location->id]) }}">
-                                                    <img style="background: lightgrey; min-width:34px; min-height:34px;" class="h-8 w-8 rounded-full ring-2 ring-green" src="{{ $product->image_path }}" alt="">
-                                                </a>
-                                                <span class="tooltip">{{ $product->name }} @if($product->blend_percent) ({{ $product->blend_percent }}%) @endif</span>
-                                            </div>
-                                        </div>
-                                        @endif
-                                        @endforeach
-                                    </div>
-                                </div>
-                                @else
-                                <li>-</li>
-                                @endif
-                            </ul>
-                        </td>
-
-
-                        <td class="px-6 py-4 whitespace-no-wrap text-right border-b border-gray-200 leading-5 font-medium">
-                            <button id="centerMapButton" wire:click="showOnMap({{ $location->id }})">
-                                <div class="image-container">
-                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" />
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" />
-                                    </svg>
-                                    <span class="tooltip text-gray-500" style="transform: translateX(-70%);">Show on Map</span>
-                                </div>
+        <div class="mx-auto mb-4 mr-4 ml-6">
+            <div class="flex items-center justify-between">
+                <div class="mt-2">
+                    <div class="flex items-center">
+                        <div>
+                            <button type="button"
+                                wire:click.prevent="toggleProduct('HVO100')"
+                                class="rounded-full {{ $isHvo100 ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600' : 'bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50' }} px-2.5 py-1 text-xs font-semibold shadow-sm">
+                                HVO 100
                             </button>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                        </div>
+                        <div class="ml-2">
+                            <button type="button"
+                                wire:click.prevent="toggleProduct('HVOBlend')"
+                                class="rounded-full {{ $isHvoBlend ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600' : 'bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50' }} px-2.5 py-1 text-xs font-semibold shadow-sm">
+                                HVO Blend
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div style="max-height: 75vh;" class="{{ $toggleTableValue ? 'hidden' : 'w-full' }} transition-all duration-2000 bg-white overflow-hidden shadow rounded-b-md border border-gray-200 xl:rounded-r-md xl:border-l-0 xl:border-t-0 xl:border-b xl:rounded-t-md">
-            <livewire:map.location-map />
-        </div>
-    </div>
-</div>
+        <!-- <div class="flex items-center justify-start mr-4 ml-4">
+            <label for="filter-is-open" class="mb-1 mr-2 text-gray-900">Show open Locations :</label>
+            <input id="filter-is-open" wire:model.live="filters.is_open" type="checkbox" class="h-5 w-5 rounded ring-1 ring-inset ring-gray-300 text-indigo-600 focus:ring-indigo-600">
+        </div> -->
 
-
-<script>
-    // script for the auto text on search bar's label 
-
-    var TxtRotate = function(el, toRotate, period) {
-        this.toRotate = toRotate;
-        this.el = el;
-        this.loopNum = 0;
-        this.period = parseInt(period, 10) || 2000;
-        this.txt = '';
-        this.tick();
-        this.isDeleting = false;
-    };
-
-    TxtRotate.prototype.tick = function() {
-        var i = this.loopNum % this.toRotate.length;
-        var fullTxt = this.toRotate[i];
-
-        if (this.isDeleting) {
-            this.txt = fullTxt.substring(0, this.txt.length - 1);
+        <div x-data="{ showResultClass: @entangle('showResultClass'), openHeight: '0px' }"
+            x-init="$watch('showResultClass', value => {
+        if (value) {
+            // Delayed to ensure element is rendered before changing height
+            setTimeout(() => {
+                openHeight = '570px';
+            }, 10);
         } else {
-            this.txt = fullTxt.substring(0, this.txt.length + 1);
+            openHeight = '0px';
+        }
+     })">
+            <div x-show="showResultClass"
+                x-transition:enter="transition-all ease-out duration-500"
+                x-transition:enter-start="opacity-0"
+                x-transition:enter-end="opacity-100"
+                x-transition:leave="transition-all ease-in duration-500"
+                x-transition:leave-start="opacity-100"
+                x-transition:leave-end="opacity-0"
+                class="overflow-hidden"
+                :style="{ height: openHeight }">
+
+                <div class="mx-auto mt-4 mb-4">
+                    <div class="w-full flex flex-col items-center space-y-4 justify-center">
+                        <button id="searchAreaButton" class="mx-auto bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded" type="button">Search in that area</button>
+                    </div>
+                </div>
+                <div class="bg-gray-100">
+                    <div class="text-gray-600 px-4 py-4 border-b-2 border-gray-300 text-left leading-4 tracking-wider cursor-pointer">
+                        <span class="ml-4">Current Search Results</span>
+                    </div>
+
+                </div>
+                <div class="table-container" id="tableContainer" style="overflow-y: scroll; height: 450px;">
+                    <table id="locationsTable" class="w-full">
+                        <tbody>
+                            <!-- Les lignes seront ajoutées ici dynamiquement -->
+                        </tbody>
+                    </table>
+
+                    <template id="locationRowTemplate">
+                        <tr class="tile-hover cursor-pointer">
+                            <td class="pr-2 py-4 whitespace-no-wrap border-b border-gray-300">
+                                <div class="flex items-center justify-between">
+                                    <div class="ml-2">
+                                        <div class="flex items-center">
+                                            <div class="flex-shrink-0 h-10 w-10">
+                                                <div class="image-container">
+                                                    <a href="#" class="location-link">
+                                                    <img style="background: lightgrey;" class="h-10 w-10 rounded-full ring-2 ring-green location-img" src="/assets/img/hvo.png" alt="">
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="ml-2">
+                                                <div class="text-sm text-gray-900 location-name">
+                                                    <!-- Le nom de la location sera injecté ici -->
+                                                </div>
+                                                <div class="text-xs text-gray-500 location-tenant">
+                                                    <!-- Le nom du tenant sera injecté ici -->
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="whitespace-no-wrap border-b border-gray-300">
+                                <div class="flex items-start justify-between">
+                                    <div class="flex flex-col items-center space-y-2 location-products">
+                                        <!-- Les badges des produits seront injectés ici -->
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="whitespace-no-wrap border-b border-gray-300">
+                                <div class="flex ml-auto items-center">
+                                    <div class="flex items-center justify-end">
+                                        <div class="image-container">
+                                            <div class="flex items-center">
+
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="w-5 h-5 ml-2 location-status" fill="red">
+                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 000-1.5h-3.25V5z" clip-rule="evenodd" />
+                                                </svg>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="py-4 whitespace-no-wrap text-right border-b border-gray-300 leading-5 font-medium">
+                                <button type="button" class="details-button">
+                                    <div class="image-container">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                                        </svg>
+                                        <span class="tooltip text-gray-500">Show Details</span>
+                                    </div>
+                                </button>
+                            </td>
+                            <td class="py-4 whitespace-no-wrap text-right border-b border-gray-300 leading-5 font-medium">
+                                <button type="button" class="centerMapButtonMobile">
+                                    <div class="image-container">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z" />
+                                        </svg>
+                                        <span class="tooltip text-gray-500">Show on Map</span>
+                                    </div>
+                                </button>
+                            </td>
+                        </tr>
+                    </template>
+                </div>
+            </div>
+
+
+
+            <div>
+                <div class="w-full flex flex-col items-center justify-center">
+                    <button @click="showResultClass = !showResultClass" class="w-full mx-auto bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded flex items-center justify-between" type="button">
+                        <span>Show Results</span>
+                        @if($showResultClass)
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="text-white w-5 h-5" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
+                        </svg>
+                        @else
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="text-white w-5 h-5" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                        </svg>
+                        @endif
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="w-full transition-all duration-2000 bg-white">
+        <livewire:map.location-test />
+
+    </div>
+    <style>
+        .tile-hover:hover {
+            background-color: #e5e7eb;
         }
 
-        this.el.innerHTML = '<span class="wrap">' + this.txt + '</span>';
-
-        var that = this;
-        var delta = 300 - Math.random() * 100;
-
-        if (this.isDeleting) {
-            delta /= 2;
+        @media screen and (max-width: 768px) {
+            .select-menu {
+                margin-right: 20px;
+            }
         }
 
-        if (!this.isDeleting && this.txt === fullTxt) {
-            delta = this.period;
-            this.isDeleting = true;
-        } else if (this.isDeleting && this.txt === '') {
+        .highlight {
+            background-color: #e5e7eb;
+            /* Couleur de surbrillance */
+            transition: background-color 0.5s ease;
+        }
+    </style>
+
+    <script>
+        var TxtRotate = function(el, toRotate, period) {
+            this.toRotate = toRotate;
+            this.el = el;
+            this.loopNum = 0;
+            this.period = parseInt(period, 10) || 2000;
+            this.txt = '';
+            this.tick();
             this.isDeleting = false;
-            this.loopNum++;
-            delta = 500;
-        }
+        };
 
-        setTimeout(function() {
-            that.tick();
-        }, delta);
-    };
+        TxtRotate.prototype.tick = function() {
+            var i = this.loopNum % this.toRotate.length;
+            var fullTxt = this.toRotate[i];
 
-    window.onload = function() {
-        var elements = document.getElementsByClassName('txt-rotate');
-        for (var i = 0; i < elements.length; i++) {
-            var toRotate = elements[i].getAttribute('data-rotate');
-            var period = elements[i].getAttribute('data-period');
-            if (toRotate) {
-                new TxtRotate(elements[i], JSON.parse(toRotate), period);
-            }
-        }
-        // INJECT CSS
-        var css = document.createElement("style");
-        css.type = "text/css";
-        css.innerHTML = ".txt-rotate > .wrap { border-right: 0.08em solid #666 }";
-        document.body.appendChild(css);
-    };
-
-    const texts = ['Search for a name...', 'Search for a city...', 'Search for a product...', 'Search for a service...', 'Search for a zipcode...'];
-    const input = document.querySelector('#searchbox');
-    const animationWorker = function(input, texts) {
-        this.input = input;
-        this.defaultPlaceholder = this.input.getAttribute('placeholder');
-        this.texts = texts;
-        this.curTextNum = 0;
-        this.curPlaceholder = '';
-        this.blinkCounter = 0;
-        this.animationFrameId = 0;
-        this.animationActive = false;
-        this.input.setAttribute('placeholder', this.curPlaceholder);
-
-        this.switch = (timeout) => {
-            this.input.classList.add('imitatefocus');
-            setTimeout(
-                () => {
-                    this.input.classList.remove('imitatefocus');
-                    if (this.curTextNum == 0)
-                        this.input.setAttribute('placeholder', this.defaultPlaceholder);
-                    else
-                        this.input.setAttribute('placeholder', this.curPlaceholder);
-
-                    setTimeout(
-                        () => {
-                            this.input.setAttribute('placeholder', this.curPlaceholder);
-                            if (this.animationActive)
-                                this.animationFrameId = window.requestAnimationFrame(this.animate)
-                        },
-                        timeout);
-                },
-                timeout);
-        }
-
-        this.animate = () => {
-            if (!this.animationActive) return;
-            let curPlaceholderFullText = this.texts[this.curTextNum];
-            let timeout = 500;
-            if (this.curPlaceholder == curPlaceholderFullText + '|' && this.blinkCounter == 3) {
-                this.blinkCounter = 0;
-                this.curTextNum = (this.curTextNum >= this.texts.length - 1) ? 0 : this.curTextNum + 1;
-                this.curPlaceholder = '|';
-                this.switch(500);
-                return;
-            } else if (this.curPlaceholder == curPlaceholderFullText + '|' && this.blinkCounter < 3) {
-                this.curPlaceholder = curPlaceholderFullText;
-                this.blinkCounter++;
-            } else if (this.curPlaceholder == curPlaceholderFullText && this.blinkCounter < 3) {
-                this.curPlaceholder = this.curPlaceholder + '|';
+            if (this.isDeleting) {
+                this.txt = fullTxt.substring(0, this.txt.length - 1);
             } else {
-                this.curPlaceholder = curPlaceholderFullText
-                    .split('')
-                    .slice(0, this.curPlaceholder.length + 1)
-                    .join('') + '|';
-                timeout = 150;
+                this.txt = fullTxt.substring(0, this.txt.length + 1);
             }
-            this.input.setAttribute('placeholder', this.curPlaceholder);
-            setTimeout(
-                () => {
-                    if (this.animationActive) this.animationFrameId = window.requestAnimationFrame(this.animate)
-                },
-                timeout);
-        }
 
-        this.stop = () => {
+            this.el.innerHTML = '<span class="wrap">' + this.txt + '</span>';
+
+            var that = this;
+            var delta = 300 - Math.random() * 100;
+
+            if (this.isDeleting) {
+                delta /= 2;
+            }
+
+            if (!this.isDeleting && this.txt === fullTxt) {
+                delta = this.period;
+                this.isDeleting = true;
+            } else if (this.isDeleting && this.txt === '') {
+                this.isDeleting = false;
+                this.loopNum++;
+                delta = 500;
+            }
+
+            setTimeout(function() {
+                that.tick();
+            }, delta);
+        };
+
+        window.onload = function() {
+            var elements = document.getElementsByClassName('txt-rotate');
+            for (var i = 0; i < elements.length; i++) {
+                var toRotate = elements[i].getAttribute('data-rotate');
+                var period = elements[i].getAttribute('data-period');
+                if (toRotate) {
+                    new TxtRotate(elements[i], JSON.parse(toRotate), period);
+                }
+            }
+            // INJECT CSS
+            var css = document.createElement("style");
+            css.type = "text/css";
+            css.innerHTML = ".txt-rotate > .wrap { border-right: 0.08em solid #666 }";
+            document.body.appendChild(css);
+        };
+
+        const texts = ['Search for a name...', 'Search for a city...', 'Search for a product...', 'Search for a service...', 'Search for a zipcode...'];
+        const input = document.querySelector('#searchBar');
+        const animationWorker = function(input, texts) {
+            this.input = input;
+            this.defaultPlaceholder = this.input.getAttribute('placeholder');
+            this.texts = texts;
+            this.curTextNum = 0;
+            this.curPlaceholder = '';
+            this.blinkCounter = 0;
+            this.animationFrameId = 0;
             this.animationActive = false;
-            window.cancelAnimationFrame(this.animationFrameId);
+            this.input.setAttribute('placeholder', this.curPlaceholder);
+
+            this.switch = (timeout) => {
+                this.input.classList.add('imitatefocus');
+                setTimeout(
+                    () => {
+                        this.input.classList.remove('imitatefocus');
+                        if (this.curTextNum == 0)
+                            this.input.setAttribute('placeholder', this.defaultPlaceholder);
+                        else
+                            this.input.setAttribute('placeholder', this.curPlaceholder);
+
+                        setTimeout(
+                            () => {
+                                this.input.setAttribute('placeholder', this.curPlaceholder);
+                                if (this.animationActive)
+                                    this.animationFrameId = window.requestAnimationFrame(this.animate)
+                            },
+                            timeout);
+                    },
+                    timeout);
+            }
+
+            this.animate = () => {
+                if (!this.animationActive) return;
+                let curPlaceholderFullText = this.texts[this.curTextNum];
+                let timeout = 500;
+                if (this.curPlaceholder == curPlaceholderFullText + '|' && this.blinkCounter == 3) {
+                    this.blinkCounter = 0;
+                    this.curTextNum = (this.curTextNum >= this.texts.length - 1) ? 0 : this.curTextNum + 1;
+                    this.curPlaceholder = '|';
+                    this.switch(500);
+                    return;
+                } else if (this.curPlaceholder == curPlaceholderFullText + '|' && this.blinkCounter < 3) {
+                    this.curPlaceholder = curPlaceholderFullText;
+                    this.blinkCounter++;
+                } else if (this.curPlaceholder == curPlaceholderFullText && this.blinkCounter < 3) {
+                    this.curPlaceholder = this.curPlaceholder + '|';
+                } else {
+                    this.curPlaceholder = curPlaceholderFullText
+                        .split('')
+                        .slice(0, this.curPlaceholder.length + 1)
+                        .join('') + '|';
+                    timeout = 150;
+                }
+                this.input.setAttribute('placeholder', this.curPlaceholder);
+                setTimeout(
+                    () => {
+                        if (this.animationActive) this.animationFrameId = window.requestAnimationFrame(this.animate)
+                    },
+                    timeout);
+            }
+
+            this.stop = () => {
+                this.animationActive = false;
+                window.cancelAnimationFrame(this.animationFrameId);
+            }
+
+            this.start = () => {
+                this.animationActive = true;
+                this.animationFrameId = window.requestAnimationFrame(this.animate);
+                return this;
+            }
         }
 
-        this.start = () => {
-            this.animationActive = true;
-            this.animationFrameId = window.requestAnimationFrame(this.animate);
-            return this;
-        }
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
         let aw = new animationWorker(input, texts).start();
         input.addEventListener("focus", (e) => aw.stop());
         input.addEventListener("blur", (e) => {
             aw = new animationWorker(input, texts);
             if (e.target.value == '') setTimeout(aw.start, 1000);
         });
-    });
 
-    // Javascript to copy to clipBoard 
-    // function copyToClipboard(address) {
-    //     document.getElementById(address).select();
-    //     document.execCommand('copy');
-    // }
+        // Javascript to copy to clipBoard 
+        // function copyToClipboard(address) {
+        //     document.getElementById(address).select();
+        //     document.execCommand('copy');
+        // }
 
-    // POST Request for MapBox API
-    // document.addEventListener('livewire:load', function() {
-    //     Livewire.on('exportLocationData', data => {
-    //         // Envoyer les données JSON à votre API
-    //         fetch('votre_url_api', {
-    //                 method: 'POST',
-    //                 headers: {
-    //                     'Content-Type': 'application/json',
-    //                     // Ajoutez d'autres en-têtes si nécessaire
-    //                 },
-    //                 body: JSON.stringify(data)
-    //             })
-    //             .then(response => {
-    //                 // Gérer la réponse de l'API
-    //                 console.log('Données exportées avec succès :', response);
-    //             })
-    //             .catch(error => {
-    //                 // Gérer les erreurs
-    //                 console.error('Erreur lors de l\'exportation des données :', error);
-    //             });
-    //     });
-    // });
+        // POST Request for MapBox API
+        // document.addEventListener('livewire:load', function() {
+        //     Livewire.on('exportLocationData', data => {
+        //         // Envoyer les données JSON à votre API
+        //         fetch('votre_url_api', {
+        //                 method: 'POST',
+        //                 headers: {
+        //                     'Content-Type': 'application/json',
+        //                     // Ajoutez d'autres en-têtes si nécessaire
+        //                 },
+        //                 body: JSON.stringify(data)
+        //             })
+        //             .then(response => {
+        //                 // Gérer la réponse de l'API
+        //                 console.log('Données exportées avec succès :', response);
+        //             })
+        //             .catch(error => {
+        //                 // Gérer les erreurs
+        //                 console.error('Erreur lors de l\'exportation des données :', error);
+        //             });
+        //     });
+        // });
 
-    // Download a Json file with every data of a location
-    // document.addEventListener('livewire:load', function() {
-    //     Livewire.on('exportLocationData', data => {
-    //         const jsonContent = JSON.stringify(data, null, 2);
-    //         const blob = new Blob([jsonContent], {
-    //             type: 'application/json'
-    //         });
+        // Download a Json file with every data of a location
+        // document.addEventListener('livewire:load', function() {
+        //     Livewire.on('exportLocationData', data => {
+        //         const jsonContent = JSON.stringify(data, null, 2);
+        //         const blob = new Blob([jsonContent], {
+        //             type: 'application/json'
+        //         });
 
-    //         const url = URL.createObjectURL(blob);
-    //         const a = document.createElement('a');
-    //         a.href = url;
-    //         a.download = 'location_data.json';
-    //         a.click();
-    //     });
-    // });
-</script>
+        //         const url = URL.createObjectURL(blob);
+        //         const a = document.createElement('a');
+        //         a.href = url;
+        //         a.download = 'location_data.json';
+        //         a.click();
+        //     });
+        // });
+
+        document.addEventListener('alpine:init', () => {
+            console.log('Alpine initialized');
+            Alpine.data('locationMap', () => ({
+                init() {
+                    // Ecouter les événements showLocationOnMap
+                },
+                showLocationOnMap(locationId, lat, lng) {
+                    console.log('showLocationOnMap', locationId, lat, lng);
+                    // Déclencher l'événement personnalisé avec les détails
+                    window.dispatchEvent(new CustomEvent('showLocationOnMap', {
+                        detail: {
+                            latitude: lat,
+                            longitude: lng
+                        }
+                    }));
+                }
+            }));
+        });
+    </script>
+</div>
