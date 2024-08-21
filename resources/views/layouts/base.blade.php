@@ -39,6 +39,8 @@
     @stack('scripts')
     @livewireScripts
     <script src="{{ mix('js/app.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@turf/turf@6/turf.min.js"></script>
+
 </body>
 
 @yield('footer')

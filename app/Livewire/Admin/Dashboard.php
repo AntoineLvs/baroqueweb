@@ -42,8 +42,7 @@ class Dashboard extends Component
                 ->where('verified', 1)
                 ->where('status', 5);
         })
-        ->get();
-
+        ->limit(25)->get();
         $this->all_locations = Location::all();
     }
 

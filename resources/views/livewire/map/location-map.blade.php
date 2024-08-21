@@ -26,7 +26,7 @@
 
         Livewire.on('initialData', (locations) => {
             const locationIds = JSON.parse(locations).map(String);
-
+            console.log('locationIds', locationIds);
             map.on('load', function() {
                 map.loadImage('https://cdn-icons-png.flaticon.com/512/3448/3448558.png', function(error, image) {
                     if (error) throw error;
@@ -51,12 +51,16 @@
                                 ''
                             ],
                             'icon-size': [
-                                'case',
-                                ['in', ['to-string', ['get', 'id']],
-                                    ['literal', locationIds]
-                                ],
-                                0.1,
-                                0
+                                'interpolate', ['linear'],
+                                ['zoom'],
+                                0, 0.1, // Size stays consistent across zoom levels
+                                22, 0.1
+                            ],
+                            'icon-opacity': [
+                                'interpolate', ['linear'],
+                                ['zoom'],
+                                0, 1,
+                                22, 1
                             ],
                             'text-field': ['to-string', ['get', 'title']],
                             'text-size': 12,
@@ -65,10 +69,7 @@
                             "text-offset": [0, 3],
                         },
                         "paint": {
-                            "text-color": "hsl(0, 0%, 0%)",
-                            "icon-opacity": ["interpolate", ["linear"],
-                                ["zoom"], 0, 1, 22, 1
-                            ]
+                            "text-color": "hsl(0, 0%, 0%)"
                         },
                     });
 

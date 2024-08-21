@@ -107,7 +107,7 @@
     </div>
 
     <main>
-        @livewire('locations.find-locations-public')
+        @livewire('locations.find-locations-test-mapbox')
     </main>
 </div>
 
