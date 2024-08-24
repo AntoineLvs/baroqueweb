@@ -59,7 +59,7 @@ class PushToMapbox implements ShouldQueue
 
         $service_ids = json_decode($this->location->service_id);
         $services = Service::whereIn('id', $service_ids)->get();
-        $service_types_ids = $services->pluck('service_type_id')->unique()->sort()->values()->all();
+        $service_types_ids = $services->pluck('base_service_id')->unique()->sort()->values()->all();
         $service_types_json = json_encode($service_types_ids);
 
         
