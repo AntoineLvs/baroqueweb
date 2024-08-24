@@ -1,18 +1,32 @@
 <div class="select-menu flex flex-col md:flex-row " style="margin-top:132px; margin-left: 20px;">
-    <div style="z-index: 5; min-width: 400px;" class="w-full md:w-1/5 transition-all duration-2000 shadow rounded-t-md border-b border-gray-300 xl:rounded-l-md xl:border-r-0 xl:rounded-r-md xl:border-b-0 xl:border-t-0 bg-white">
+
+    <div x-data="{
+                   isHvo100: true,
+                   isHvoBlend: false,       
+                   test() {
+                        setTimeout(() => {
+                            $dispatch('filterChanged');
+                        }, 100);
+                    }
+                }" style="z-index: 5; min-width: 400px;" class="w-full md:w-1/5 transition-all duration-2000 shadow rounded-t-md border-b border-gray-300 xl:rounded-l-md xl:border-r-0 xl:rounded-r-md xl:border-b-0 xl:border-t-0 bg-white">
         <div class="mx-auto mt-4 mr-4 ml-4">
             <div class="w-full flex flex-col items-center space-y-4">
                 <div class="w-full">
                     <div class="animated">
                         <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                         <div class="relative">
-                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                            <div id="searchAreaButton" class="cursor-pointer absolute inset-y-0 start-0 flex items-center ps-3">
+                                <svg class="searchAreaButton w-4 h-4 text-indigo-500 dark:text-indigo-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                                 </svg>
                             </div>
                             <input id="searchBar" name="searchbox" placeholder="Search..." type="search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                            <button wire:click.prevent="resetFilters" type="button" class="text-white absolute end-2.5 bottom-2.5 bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Reset</button>
+                            <button @click="isHvoBlend = false; isHvo100 = false" id="resetButton" type="button" class="text-white absolute end-2.5 bottom-2.5 bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                <svg class="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                </svg>
+
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -29,18 +43,22 @@
                     <div class="flex items-center">
                         <div>
                             <button type="button"
-                                wire:click.prevent="toggleProduct('HVO100')"
-                                class="rounded-full {{ $isHvo100 ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600' : 'bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50' }} px-2.5 py-1 text-xs font-semibold shadow-sm">
+                                :class="isHvo100 ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600' : 'bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50'"
+                                @click="isHvo100 = !isHvo100; test()"
+                                class="rounded-full px-2.5 py-1 text-xs font-semibold shadow-sm">
                                 HVO 100
                             </button>
                         </div>
                         <div class="ml-2">
                             <button type="button"
-                                wire:click.prevent="toggleProduct('HVOBlend')"
-                                class="rounded-full {{ $isHvoBlend ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600' : 'bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50' }} px-2.5 py-1 text-xs font-semibold shadow-sm">
+                                :class="isHvoBlend ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600' : 'bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50'"
+                                @click="isHvoBlend = !isHvoBlend; test()"
+                                class="rounded-full px-2.5 py-1 text-xs font-semibold shadow-sm">
                                 HVO Blend
                             </button>
                         </div>
+                        <div id="isHvo100" x-text="isHvo100" hidden></div>
+                        <div id="isHvoBlend" x-text="isHvoBlend" hidden></div>
                     </div>
                 </div>
             </div>
@@ -70,19 +88,19 @@
                 x-transition:leave-end="opacity-0"
                 class="overflow-hidden"
                 :style="{ height: openHeight }">
-
+                <!-- 
                 <div class="mx-auto mt-4 mb-4">
                     <div class="w-full flex flex-col items-center space-y-4 justify-center">
                         <button id="searchAreaButton" class="mx-auto bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded" type="button">Search in that area</button>
                     </div>
-                </div>
+                </div> -->
                 <div class="bg-gray-100">
-                    <div class="text-gray-600 px-4 py-4 border-b-2 border-gray-300 text-left leading-4 tracking-wider cursor-pointer">
+                    <div class="text-gray-600 text-sm  px-4 py-4 border-b-2 border-gray-300 text-left leading-4 tracking-wider cursor-pointer">
                         <span class="ml-4">Current Search Results</span>
                     </div>
 
                 </div>
-                <div class="table-container" id="tableContainer" style="overflow-y: scroll; height: 450px;">
+                <div class="table-container" id="tableContainer" style="overflow-y: scroll; height: 520px;">
                     <table id="locationsTable" class="w-full">
                         <tbody>
                             <!-- Les lignes seront ajoutées ici dynamiquement -->
@@ -98,7 +116,7 @@
                                             <div class="flex-shrink-0 h-10 w-10">
                                                 <div class="image-container">
                                                     <a href="#" class="location-link">
-                                                    <img style="background: lightgrey;" class="h-10 w-10 rounded-full ring-2 ring-green location-img" src="/assets/img/hvo.png" alt="">
+                                                        <img style="background: lightgrey;" class="h-10 w-10 rounded-full ring-2 ring-green location-img" src="/assets/img/hvo.png" alt="">
                                                     </a>
                                                 </div>
                                             </div>
@@ -126,7 +144,6 @@
                                     <div class="flex items-center justify-end">
                                         <div class="image-container">
                                             <div class="flex items-center">
-
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="w-5 h-5 ml-2 location-status" fill="red">
                                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 000-1.5h-3.25V5z" clip-rule="evenodd" />
                                                 </svg>
@@ -141,19 +158,26 @@
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
                                         </svg>
-                                        <span class="tooltip text-gray-500">Show Details</span>
+                                        <span class="tooltip text-gray-500" style="z-index: 10; transform: translateX(-70%);">Show Details</span>
                                     </div>
                                 </button>
                             </td>
                             <td class="py-4 whitespace-no-wrap text-right border-b border-gray-300 leading-5 font-medium">
-                                <button type="button" class="centerMapButtonMobile">
+                                <button type="button" class="open-google-map">
                                     <div class="image-container">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M9 6.75V15m6-6v8.25m.503 3.498 4.875-2.437c.381-.19.622-.58.622-1.006V4.82c0-.836-.88-1.38-1.628-1.006l-3.869 1.934c-.317.159-.69.159-1.006 0L9.503 3.252a1.125 1.125 0 0 0-1.006 0L3.622 5.689C3.24 5.88 3 6.27 3 6.695V19.18c0 .836.88 1.38 1.628 1.006l3.869-1.934c.317-.159.69-.159 1.006 0l4.994 2.497c.317.158.69.158 1.006 0Z" />
                                         </svg>
-                                        <span class="tooltip text-gray-500">Show on Map</span>
+                                        <span class="tooltip text-gray-500" style="z-index: 10; transform: translateX(-90%);">Show on Map</span>
                                     </div>
                                 </button>
+                            </td>
+                        </tr>
+                        <tr class="details-row hidden">
+                            <td colspan="5" class="pr-2 py-4 whitespace-no-wrap border-b border-gray-300">
+                                <div class="details-content p-4">
+                                    <span class="details-location-info"></span>
+                                </div>
                             </td>
                         </tr>
                     </template>
@@ -182,12 +206,23 @@
 
     </div>
     <div class="w-full transition-all duration-2000 bg-white">
-        <livewire:map.location-test />
+        <div id='map' style='position: absolute; z-index: 1; top: 0; left: 0; width: 100%; height: 100%;'></div>
 
     </div>
     <style>
         .tile-hover:hover {
             background-color: #e5e7eb;
+        }
+
+        .searchAreaButton:hover {
+            color: #4f46e5;
+            transform: rotate(90deg);
+            transition: transform 0.2s ease-out;
+        }
+
+        .searchAreaButton {
+            transform: rotate(0deg);
+            transition: transform 0.2s ease-in;
         }
 
         @media screen and (max-width: 768px) {
@@ -203,7 +238,529 @@
         }
     </style>
 
+
+    @script
     <script>
+        mapboxgl.accessToken = 'pk.eyJ1IjoiZWxzZW5tZWRpYSIsImEiOiJjbHBiYXozZm0wZ21vMnFwZHE4ZWc5Z2lzIn0.dJGBO1JOfota9KceLDgGJg';
+        const map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/elsenmedia/ckvso4s5p189k14pltjqo1rqo',
+            center: [9.967627253948834, 53.573922489205195],
+            zoom: 10
+        });
+
+        let activePopup = null; // Pour gérer le popup actif
+        let lastCenter = map.getCenter(); // Stocke le centre initial de la carte
+        const updateThreshold = 50; // Distance minimale pour considérer que la carte a "bougé"
+        let currentCenter = map.getCenter(); // Stocke le centre courant de la carte
+
+        map.on('load', function() {
+            map.addSource('your-tileset-source', {
+                'type': 'vector',
+                'url': 'mapbox://elsenmedia.ckvsnxal129qg27qrclgdhekc-330dh'
+            });
+
+            map.loadImage('https://cdn-icons-png.flaticon.com/512/3448/3448558.png', function(error, image) {
+                if (error) throw error;
+                map.addImage('custom-marker', image);
+
+                // Initialement, ajoutez toutes les features du tileset
+                map.addLayer({
+                    'id': 'initial-locations-layer',
+                    'type': 'symbol',
+                    'source': 'your-tileset-source',
+                    'source-layer': 'efuelmap_v1',
+                    'layout': {
+                        'icon-image': 'custom-marker',
+                        'text-field': ['get', 'name'],
+                        'text-size': 0,
+                        'icon-size': 0,
+                    }
+                });
+                setTimeout(updateMarkersAndTable, 500);
+
+
+
+
+
+
+                function updateMarkersAndTable() {
+                    currentCenter = map.getCenter(); // Obtenez le centre actuel de la carte
+                    lastCenter = currentCenter; // Met à jour le dernier centre de la carte
+
+                    // Récupérer les features de la source vectorielle
+                    const features = map.querySourceFeatures('your-tileset-source', {
+                        sourceLayer: 'efuelmap_v1'
+                    });
+
+                    // Vérifier s'il y a un texte dans la barre de recherche
+                    const searchBar = document.getElementById('searchBar');
+                    const isHvo100 = document.getElementById('isHvo100').textContent === 'true'; // Convertir en booléen
+                    const isHvoBlend = document.getElementById('isHvoBlend').textContent === 'true'; // Convertir en booléen
+                    const query = searchBar.value.trim(); // Obtenir et trim la valeur de la barre de recherche
+
+                    let filteredFeatures = features;
+
+                    if (query.length > 0) {
+                        // Si une requête de recherche est présente, filtrer les features
+                        const lowerCaseQuery = query.toLowerCase();
+                        filteredFeatures = features.filter(feature => {
+                            const name = feature.properties.name || "";
+                            const tenantName = feature.properties.tenant || "";
+                            const address = feature.properties.address || "";
+
+                            return (
+                                name.toLowerCase().includes(lowerCaseQuery) ||
+                                tenantName.toLowerCase().includes(lowerCaseQuery) ||
+                                address.toLowerCase().includes(lowerCaseQuery)
+                            );
+                        });
+
+                        // Si aucun résultat de recherche n'est trouvé, met à jour les marqueurs et le tableau
+                        if (filteredFeatures.length === 0) {
+                            updateMarkers([]);
+                            updateTable([]);
+                            return; // Sortir de la fonction car il n'y a pas de résultats à afficher
+                        }
+                    }
+
+                    // Appliquer les filtres HVO 100 et HVO Blend
+                    filteredFeatures = filteredFeatures.filter(feature => {
+                        const productTypes = feature.properties.product_types || [];
+
+                        // Conditions pour filtrer selon les valeurs de isHvo100 et isHvoBlend
+                        if (isHvo100 && isHvoBlend) {
+                            // Les deux filtres sont activés, donc on recherche [1, 2]
+                            return productTypes.includes(1) && productTypes.includes(2);
+                        } else if (isHvo100) {
+                            // Seulement HVO 100 est activé
+                            return productTypes.includes(1);
+                        } else if (isHvoBlend) {
+                            // Seulement HVO Blend est activé
+                            return productTypes.includes(2);
+                        } else {
+                            // Aucun filtre activé, on accepte tout
+                            return true;
+                        }
+                    });
+
+                    // Calculer la distance de chaque feature par rapport au centre de la carte
+                    filteredFeatures.forEach(feature => {
+                        const coordinates = feature.geometry.coordinates;
+                        feature.properties.distance = calculateDistance(currentCenter, coordinates);
+                    });
+
+                    // Trier les features par distance croissante
+                    filteredFeatures.sort((a, b) => a.properties.distance - b.properties.distance);
+
+                    // Ne prendre que les 20 premières features les plus proches
+                    const closestFeatures = filteredFeatures.slice(0, 20);
+
+                    // Logique pour la mise à jour des marqueurs et de la carte en fonction du nombre de résultats
+                    if (closestFeatures.length === 0) {
+                        // Aucun résultat trouvé après application des filtres
+                        updateMarkers([]);
+                        updateTable([]);
+                        return; // Sortir de la fonction car il n'y a pas de résultats à afficher
+                    } else if (closestFeatures.length === 1) {
+                        // Si un seul résultat est trouvé, zoomer sur cet emplacement
+                        const coordinates = closestFeatures[0].geometry.coordinates;
+                        const name = closestFeatures[0].properties.name;
+                        const opening_start = closestFeatures[0].properties.opening_start || "00:00";
+                        const opening_end = closestFeatures[0].properties.opening_end || "23:59";
+                        flyToLocation(coordinates, name, opening_start, opening_end);
+                        moveRowToTop(name);
+                    } else {
+                        // Vérifier si la location la plus proche est visible
+                        const closestFeatureCoordinates = closestFeatures[0].geometry.coordinates;
+                        if (!map.getBounds().contains(closestFeatureCoordinates)) {
+                            // Dézoomer jusqu'à ce que la location la plus proche soit visible
+                            const currentBounds = map.getBounds();
+                            const newBounds = currentBounds.extend(closestFeatureCoordinates);
+                            map.fitBounds(newBounds, {
+                                padding: 50,
+                                maxZoom: map.getZoom() // Limiter le zoom pour éviter de trop dézoomer
+                            });
+                        }
+                    }
+
+                    // Mettre à jour les marqueurs sur la carte
+                    updateMarkers(closestFeatures);
+
+                    // Mettre à jour le tableau HTML
+                    updateTable(closestFeatures);
+                }
+
+                function updateTable(closestFeatures) {
+                    if (!closestFeatures || closestFeatures.length === 0) {
+                        const tableBody = document.querySelector("#locationsTable tbody");
+                        tableBody.innerHTML = '';
+                        const tr = document.createElement('tr');
+                        const td = document.createElement('td');
+                        td.textContent = 'No locations found';
+                        td.colSpan = 4;
+                        td.style.textAlign = 'center';
+                        td.style.paddingTop = '20px';
+                        tr.appendChild(td);
+                        tableBody.appendChild(tr);
+                        return;
+                    }
+
+                    const tableBody = document.querySelector("#locationsTable tbody");
+                    tableBody.innerHTML = ''; // Réinitialiser le tableau
+                    const template = document.getElementById('locationRowTemplate');
+
+                    closestFeatures.forEach(feature => {
+                        const clone = document.importNode(template.content, true);
+
+                        // Récupérer les données spécifiques
+                        const name = feature.properties.name || "N/A";
+                        const tenant = feature.properties.tenant || "N/A";
+                        const opening_start = feature.properties.opening_start || "00:00";
+                        const opening_end = feature.properties.opening_end || "23:59";
+                        const address = feature.properties.address || "N/A";
+
+                        const product_types = feature.properties.product_types || [];
+                        const isHvo100 = product_types.includes(1);
+                        const isHvoBlend = product_types.includes(2);
+
+                        // Injecter le nom
+                        clone.querySelector('.location-name').textContent = name;
+                        clone.querySelector('.location-tenant').textContent = tenant;
+
+                        // Vérifier si le lieu est ouvert
+                        const isOpen = isLocationOpen(opening_start, opening_end);
+
+                        // Injecter le statut d'ouverture
+                        const statusSvg = clone.querySelector('.location-status');
+                        statusSvg.setAttribute('fill', isOpen ? 'rgb(0, 160, 0)' : 'red');
+
+                        // Ajouter les badges de produit
+                        const productsContainer = clone.querySelector('.location-products');
+
+                        if (isHvo100) {
+                            const hvo100Badge = document.createElement('div');
+                            hvo100Badge.className = 'w-full';
+                            hvo100Badge.innerHTML = `
+                                                        <button type="button" style="min-width: 80px;" class="w-full text-xs cursor-default rounded-full bg-indigo-600 px-2.5 py-1 text-white shadow-sm">
+                                                            HVO100
+                                                        </button>
+                                                    `;
+                            productsContainer.appendChild(hvo100Badge);
+                        }
+
+                        if (isHvoBlend) {
+                            const hvoBlendBadge = document.createElement('div');
+                            hvoBlendBadge.className = 'w-full';
+                            hvoBlendBadge.innerHTML = `
+                                                            <button type="button" style="min-width: 80px;" class="w-full text-xs cursor-default rounded-full bg-indigo-600 px-2.5 py-1 text-white shadow-sm">
+                                                                HVO Blend
+                                                            </button>
+                                                        `;
+                            productsContainer.appendChild(hvoBlendBadge);
+                        }
+
+                        // Ajouter un événement pour zoomer et afficher un popup lors du clic sur la ligne
+                        clone.querySelector('tr').addEventListener('click', function() {
+                            const coordinates = feature.geometry.coordinates;
+                            flyToLocation(coordinates, name, opening_start, opening_end);
+
+                            const tableBody = document.querySelector("#locationsTable tbody");
+                            const rows = Array.from(tableBody.querySelectorAll('tr'));
+
+                            // Trouver la ligne qui correspond au nom de la location cliquée
+                            const targetRow = rows.find(row => row.querySelector('.location-name').textContent === name);
+                            // Enlever la classe 'highlight' de toutes les autres lignes
+                            rows.forEach(row => row.classList.remove('highlight'));
+
+                            // Ajouter la classe 'highlight' pour mettre en surbrillance la ligne
+                            targetRow.classList.add('highlight');
+
+                            // Déplacer la ligne correspondante en haut du tableau
+                        });
+
+                        // Ajouter un gestionnaire d'événement pour le bouton "Show Details"
+                        clone.querySelector('.details-button').addEventListener('click', function(event) {
+                            event.stopPropagation(); // Empêcher l'événement de clic de se propager à la ligne
+                            const detailsRow = this.closest('tr').nextElementSibling;
+                            const detailsContent = detailsRow.querySelector('.details-content');
+                            const locationInfoSpan = detailsRow.querySelector('.details-location-info');
+
+                            // Mettre à jour le contenu de la div des détails
+
+                            locationInfoSpan.innerHTML = `<div class="text-sm text-gray-800">
+                                Open hours : ${opening_start} - ${opening_end}<br />
+                                Address : ${address}
+                            </div>
+                            `;
+
+                            // Basculer l'affichage de la div des détails
+                            detailsRow.classList.toggle('hidden');
+                        });
+                        // Ajouter la ligne clonée au tableau
+                        tableBody.appendChild(clone);
+                    });
+                }
+
+                // Fonction pour mettre à jour les marqueurs sur la carte
+                function updateMarkers(closestFeatures) {
+
+                    if (closestFeatures.length === 0) {
+                        return;
+                    }
+                    // Supprimer la couche existante si elle existe déjà
+                    if (map.getLayer('locations-layer')) {
+                        map.removeLayer('locations-layer');
+                        map.removeSource('closest-features');
+                    }
+
+                    // Créer une nouvelle source avec les 20 features les plus proches
+                    map.addSource('closest-features', {
+                        'type': 'geojson',
+                        'data': {
+                            'type': 'FeatureCollection',
+                            'features': closestFeatures
+                        }
+                    });
+
+                    // Ajouter une nouvelle couche pour ces features
+                    map.addLayer({
+                        'id': 'locations-layer',
+                        'type': 'symbol',
+                        'source': 'closest-features',
+                        'layout': {
+                            'icon-image': 'custom-marker',
+                            'text-field': ['get', 'name'],
+                            'text-size': 0.4,
+                            'icon-size': [
+                                'interpolate', ['linear'],
+                                ['zoom'],
+                                0, 0.1,
+                                22, 0.1
+                            ],
+                        }
+                    });
+                }
+
+                // Ajouter un popup lorsqu'on passe la souris sur un marqueur
+                map.on('mouseenter', 'locations-layer', function(e) {
+                    if (activePopup) activePopup.remove(); // Supprimer le popup actif
+
+                    const coordinates = e.features[0].geometry.coordinates.slice();
+                    const name = e.features[0].properties.name;
+                    const opening_start = e.features[0].properties.opening_start || "00:00";
+                    const opening_end = e.features[0].properties.opening_end || "23:59";
+
+                    // Créer le contenu HTML du popup
+                    const popupContent = `
+              <div style="text-align: center;">
+                  <div style="font-size: 14px; font-weight: bold;">${name}</div>
+                  <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
+              </div>
+          `;
+
+                    // Afficher un popup au survol avec le contenu personnalisé
+                    activePopup = new mapboxgl.Popup({
+                            closeButton: false,
+                            closeOnClick: false
+                        })
+                        .setLngLat(coordinates)
+                        .setHTML(popupContent) // Utiliser setHTML au lieu de setText pour permettre le HTML
+                        .addTo(map);
+
+                    map.getCanvas().style.cursor = 'pointer';
+                });
+                // Supprimer le popup lorsque la souris quitte le marqueur
+                map.on('mouseleave', 'locations-layer', function() {
+                    if (activePopup) {
+                        activePopup.remove();
+                        activePopup = null;
+                        map.getCanvas().style.cursor = '';
+                    }
+                });
+
+                // Afficher un popup et zoomer sur une location spécifique
+                function flyToLocation(coordinates, name, opening_start, opening_end) {
+
+                    map.flyTo({
+                        center: coordinates,
+                        zoom: 14
+                    });
+
+                    if (activePopup) activePopup.remove();
+
+                    // Créer le contenu du popup
+                    const popupContent = `
+           <div style="text-align: center;">
+                  <div style="font-size: 14px; font-weight: bold;">${name}</div>
+                  <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
+              </div>
+            `;
+
+                    activePopup = new mapboxgl.Popup({
+                            closeButton: true,
+                            closeOnClick: false
+                        })
+                        .setLngLat(coordinates)
+                        .setHTML(popupContent)
+                        .addTo(map);
+                }
+                // Masquer le popup si on clique ailleurs sur la carte
+                map.on('click', function(e) {
+                    if (activePopup) {
+                        const features = map.queryRenderedFeatures(e.point, {
+                            layers: ['locations-layer']
+                        });
+
+                        if (!features.length) {
+                            activePopup.remove();
+                            activePopup = null;
+                        }
+                    }
+                });
+
+                map.on('click', 'locations-layer', function(e) {
+                    const clickedFeature = e.features[0]; // Récupérer la feature cliquée
+                    const coordinates = clickedFeature.geometry.coordinates;
+                    const name = clickedFeature.properties.name;
+                    const opening_start = e.features[0].properties.opening_start || "00:00";
+                    const opening_end = e.features[0].properties.opening_end || "23:59";
+
+
+                    // Zoomer sur l'emplacement et afficher un popup
+                    flyToLocation(coordinates, name, opening_start, opening_end);
+
+                    // Faire remonter la ligne correspondante en haut du tableau
+                    moveRowToTop(clickedFeature.properties.name);
+                });
+
+                function searchInTileset(query) {
+                    // Convertir la requête de recherche en minuscules pour la rendre insensible à la casse
+                    const lowerCaseQuery = query.toLowerCase();
+
+                    // Récupérer les features de la source vectorielle
+                    const features = map.querySourceFeatures('your-tileset-source', {
+                        sourceLayer: 'efuelmap_v1'
+                    });
+
+                    // Filtrer les features qui correspondent à la recherche dans le name, tenant_name ou address
+                    const filteredFeatures = features.filter(feature => {
+                        const name = feature.properties.name || "";
+                        const tenantName = feature.properties.tenant || "";
+                        const address = feature.properties.address || "";
+
+                        return (
+                            name.toLowerCase().includes(lowerCaseQuery) ||
+                            tenantName.toLowerCase().includes(lowerCaseQuery) ||
+                            address.toLowerCase().includes(lowerCaseQuery)
+                        );
+                    });
+
+                    if (filteredFeatures.length === 1) {
+                        // Si un seul résultat est trouvé, zoomer sur cet emplacement
+                        const coordinates = filteredFeatures[0].geometry.coordinates;
+                        const name = filteredFeatures[0].properties.name;
+                        const opening_start = filteredFeatures[0].properties.opening_start || "00:00";
+                        const opening_end = filteredFeatures[0].properties.opening_end || "23:59";
+                        flyToLocation(coordinates, name, opening_start, opening_end);
+                        moveRowToTop(name);
+                        console.log(name);
+                    } else if (filteredFeatures.length > 1) {
+                        // Si plusieurs résultats sont trouvés, centrer la carte pour inclure tous les emplacements
+
+
+                        // Mettre en évidence les lignes correspondantes dans le tableau
+
+                    } else {
+                        updateMarkers([]);
+                        updateTable([]);
+                    }
+
+                    // Mettre à jour les marqueurs et le tableau avec les résultats filtrés
+                    updateMarkers(filteredFeatures);
+                    updateTable(filteredFeatures);
+                }
+
+                // Écouter l'événement 'keypress' sur la barre de recherche
+                document.getElementById('searchBar').addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        updateMarkersAndTable();
+                    }
+                });
+                document.getElementById('resetButton').addEventListener('click', function(e) {
+                    reset();
+                });
+                document.getElementById('searchAreaButton').addEventListener('click', function(e) {
+                    updateMarkersAndTable();
+                });
+
+                function reset() {
+                    document.getElementById('searchBar').value = '';
+                    updateMarkersAndTable();
+                }
+                document.addEventListener('filterChanged', () => {
+                    updateMarkersAndTable();
+                });
+
+               
+            });
+
+        });
+
+        // Fonction pour calculer la distance entre deux points
+        function calculateDistance(center, coordinates) {
+            return turf.distance(
+                turf.point([center.lng, center.lat]),
+                turf.point(coordinates)
+            );
+        }
+
+        // Fonction pour obtenir les limites (bounds) d'un ensemble de features
+        function getBounds(features) {
+            const bounds = new mapboxgl.LngLatBounds();
+            features.forEach(feature => {
+                bounds.extend(feature.geometry.coordinates);
+            });
+            return bounds;
+        }
+
+
+
+        function isLocationOpen(opening_start, opening_end) {
+            const currentTime = new Date(); // Obtenir l'heure actuelle
+            const currentHours = currentTime.getHours().toString().padStart(2, '0'); // Heures actuelles avec zéro-padding
+            const currentMinutes = currentTime.getMinutes().toString().padStart(2, '0'); // Minutes actuelles avec zéro-padding
+
+            const currentTimeString = `${currentHours}:${currentMinutes}`;
+
+            return currentTimeString >= opening_start && currentTimeString <= opening_end;
+        }
+
+
+        function moveRowToTop(locationName) {
+            const tableBody = document.querySelector("#locationsTable tbody");
+            const rows = Array.from(tableBody.querySelectorAll('tr'));
+
+            // Trouver la ligne qui correspond au nom de la location cliquée
+            const targetRow = rows.find(row => row.querySelector('.location-name').textContent === locationName);
+
+            if (targetRow) {
+                // Enlever la classe 'highlight' de toutes les autres lignes
+                rows.forEach(row => row.classList.remove('highlight'));
+
+                // Ajouter la classe 'highlight' pour mettre en surbrillance la ligne
+                targetRow.classList.add('highlight');
+
+                // Déplacer la ligne correspondante en haut du tableau
+                tableBody.insertBefore(targetRow, tableBody.firstChild);
+
+
+            }
+        }
+
+
+
+
         var TxtRotate = function(el, toRotate, period) {
             this.toRotate = toRotate;
             this.el = el;
@@ -345,69 +902,7 @@
             aw = new animationWorker(input, texts);
             if (e.target.value == '') setTimeout(aw.start, 1000);
         });
-
-        // Javascript to copy to clipBoard 
-        // function copyToClipboard(address) {
-        //     document.getElementById(address).select();
-        //     document.execCommand('copy');
-        // }
-
-        // POST Request for MapBox API
-        // document.addEventListener('livewire:load', function() {
-        //     Livewire.on('exportLocationData', data => {
-        //         // Envoyer les données JSON à votre API
-        //         fetch('votre_url_api', {
-        //                 method: 'POST',
-        //                 headers: {
-        //                     'Content-Type': 'application/json',
-        //                     // Ajoutez d'autres en-têtes si nécessaire
-        //                 },
-        //                 body: JSON.stringify(data)
-        //             })
-        //             .then(response => {
-        //                 // Gérer la réponse de l'API
-        //                 console.log('Données exportées avec succès :', response);
-        //             })
-        //             .catch(error => {
-        //                 // Gérer les erreurs
-        //                 console.error('Erreur lors de l\'exportation des données :', error);
-        //             });
-        //     });
-        // });
-
-        // Download a Json file with every data of a location
-        // document.addEventListener('livewire:load', function() {
-        //     Livewire.on('exportLocationData', data => {
-        //         const jsonContent = JSON.stringify(data, null, 2);
-        //         const blob = new Blob([jsonContent], {
-        //             type: 'application/json'
-        //         });
-
-        //         const url = URL.createObjectURL(blob);
-        //         const a = document.createElement('a');
-        //         a.href = url;
-        //         a.download = 'location_data.json';
-        //         a.click();
-        //     });
-        // });
-
-        document.addEventListener('alpine:init', () => {
-            console.log('Alpine initialized');
-            Alpine.data('locationMap', () => ({
-                init() {
-                    // Ecouter les événements showLocationOnMap
-                },
-                showLocationOnMap(locationId, lat, lng) {
-                    console.log('showLocationOnMap', locationId, lat, lng);
-                    // Déclencher l'événement personnalisé avec les détails
-                    window.dispatchEvent(new CustomEvent('showLocationOnMap', {
-                        detail: {
-                            latitude: lat,
-                            longitude: lng
-                        }
-                    }));
-                }
-            }));
-        });
     </script>
+    @endscript
+
 </div>
