@@ -1,6 +1,7 @@
 <div class="select-menu flex flex-col md:flex-row " style="margin-top:132px; margin-left: 20px;">
 
-    <div x-data="{
+    <div x-data="{ showResultClass: @entangle('showResultClass'), 
+                   openHeight: '0px',
                    isHvo100: true,
                    isHvoBlend: false,       
                    test() {
@@ -8,19 +9,20 @@
                             $dispatch('filterChanged');
                         }, 100);
                     }
-                }" style="z-index: 5; min-width: 400px;" class="w-full md:w-1/5 transition-all duration-2000 shadow rounded-t-md border-b border-gray-300 xl:rounded-l-md xl:border-r-0 xl:rounded-r-md xl:border-b-0 xl:border-t-0 bg-white">
+                }"
+        style="z-index: 5; min-width: 400px;" class="w-full md:w-1/5 transition-all duration-2000 shadow rounded-t-md border-b border-gray-300 xl:rounded-l-md xl:border-r-0 xl:rounded-r-md xl:border-b-0 xl:border-t-0 bg-white">
         <div class="mx-auto mt-4 mr-4 ml-4">
             <div class="w-full flex flex-col items-center space-y-4">
                 <div class="w-full">
                     <div class="animated">
                         <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                         <div class="relative">
-                            <div id="searchAreaButton" class="cursor-pointer absolute inset-y-0 start-0 flex items-center ps-3">
+                            <div @click="showResultClass = true;" id="searchAreaButton" class="cursor-pointer absolute inset-y-0 start-0 flex items-center ps-3">
                                 <svg class="searchAreaButton w-4 h-4 text-indigo-500 dark:text-indigo-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                                 </svg>
                             </div>
-                            <input id="searchBar" name="searchbox" placeholder="Search..." type="search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                            <input @keyup.enter="showResultClass = true" id="searchBar" name="searchbox" placeholder="Search..." type="search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                             <button @click="isHvoBlend = false; isHvo100 = false" id="resetButton" type="button" class="text-white absolute end-2.5 bottom-2.5 bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                 <svg class="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
@@ -68,17 +70,16 @@
             <input id="filter-is-open" wire:model.live="filters.is_open" type="checkbox" class="h-5 w-5 rounded ring-1 ring-inset ring-gray-300 text-indigo-600 focus:ring-indigo-600">
         </div> -->
 
-        <div x-data="{ showResultClass: @entangle('showResultClass'), openHeight: '0px' }"
-            x-init="$watch('showResultClass', value => {
-        if (value) {
-            // Delayed to ensure element is rendered before changing height
-            setTimeout(() => {
-                openHeight = '570px';
-            }, 10);
-        } else {
-            openHeight = '0px';
-        }
-     })">
+        <div x-init="$watch('showResultClass', value => {
+                    if (value) {
+                        // Delayed to ensure element is rendered before changing height
+                        setTimeout(() => {
+                            openHeight = '570px';
+                        }, 10);
+                    } else {
+                        openHeight = '0px';
+                    }
+                })">
             <div x-show="showResultClass"
                 x-transition:enter="transition-all ease-out duration-500"
                 x-transition:enter-start="opacity-0"
@@ -127,6 +128,7 @@
                                                 <div class="text-xs text-gray-500 location-tenant">
                                                     <!-- Le nom du tenant sera injecté ici -->
                                                 </div>
+                                                <div class="text-xs text-gray-500 location-id" hidden></div>
                                             </div>
                                         </div>
                                     </div>
@@ -214,13 +216,13 @@
             background-color: #e5e7eb;
         }
 
-        .searchAreaButton:hover {
+        #searchAreaButton:hover .searchAreaButton {
             color: #4f46e5;
             transform: rotate(90deg);
             transition: transform 0.2s ease-out;
         }
 
-        .searchAreaButton {
+        #searchAreaButton .searchAreaButton {
             transform: rotate(0deg);
             transition: transform 0.2s ease-in;
         }
@@ -249,10 +251,11 @@
             zoom: 10
         });
 
-        let activePopup = null; // Pour gérer le popup actif
-        let lastCenter = map.getCenter(); // Stocke le centre initial de la carte
-        const updateThreshold = 50; // Distance minimale pour considérer que la carte a "bougé"
-        let currentCenter = map.getCenter(); // Stocke le centre courant de la carte
+        let activePopup = null; // to manage the active popup
+        let lastCenter = map.getCenter(); // stock the initial center
+        const updateThreshold = 50; // Minimal distance to consider that the map has moved
+        let currentCenter = map.getCenter(); // Sotck the current center
+        let mouseOverPopup = false;
 
         map.on('load', function() {
             map.addSource('your-tileset-source', {
@@ -264,7 +267,6 @@
                 if (error) throw error;
                 map.addImage('custom-marker', image);
 
-                // Initialement, ajoutez toutes les features du tileset
                 map.addLayer({
                     'id': 'initial-locations-layer',
                     'type': 'symbol',
@@ -279,117 +281,149 @@
                 });
                 setTimeout(updateMarkersAndTable, 500);
 
-
-
-
-
+                function debounce(func, delay) {
+                    let timeout;
+                    return function(...args) {
+                        clearTimeout(timeout);
+                        timeout = setTimeout(() => func.apply(this, args), delay);
+                    };
+                }
 
                 function updateMarkersAndTable() {
-                    currentCenter = map.getCenter(); // Obtenez le centre actuel de la carte
-                    lastCenter = currentCenter; // Met à jour le dernier centre de la carte
+                    if (activePopup) activePopup.remove(); // Delete the active popup
 
-                    // Récupérer les features de la source vectorielle
-                    const features = map.querySourceFeatures('your-tileset-source', {
-                        sourceLayer: 'efuelmap_v1'
+                    // Define the current center of the map
+                    currentCenter = map.getCenter();
+                    lastCenter = currentCenter; // Update the last center of the map
+
+                    // Define the minimum and maximum zoom levels
+                    const minZoom = 1; // Minimum zoom level to reach
+                    const currentZoom = map.getZoom(); // Get the current zoom level
+                    const maxZoom = 20; // The usual maximum zoom level for the map
+
+                    // Get the visible features based on the current zoom level
+                    let features = map.querySourceFeatures('your-tileset-source', {
+                        sourceLayer: 'efuelmap_v1',
+                        filter: ['all'],
+                        validate: false
                     });
 
-                    // Vérifier s'il y a un texte dans la barre de recherche
-                    const searchBar = document.getElementById('searchBar');
-                    const isHvo100 = document.getElementById('isHvo100').textContent === 'true'; // Convertir en booléen
-                    const isHvoBlend = document.getElementById('isHvoBlend').textContent === 'true'; // Convertir en booléen
-                    const query = searchBar.value.trim(); // Obtenir et trim la valeur de la barre de recherche
+                    // Check the activated HVO filters
+                    const isHvo100 = document.getElementById('isHvo100').textContent === 'true'; // Convert to boolean
+                    const isHvoBlend = document.getElementById('isHvoBlend').textContent === 'true';
 
-                    let filteredFeatures = features;
+                    // Filter the features based on the HVO filters
+                    let filteredFeatures = features.filter(feature => {
+                        const productTypes = feature.properties.product_types || [];
+
+                        // Conditions to filter based on the values of isHvo100 and isHvoBlend
+                        if (isHvo100 && isHvoBlend) {
+                            // Both filters are activated, so we search [1, 2]
+                            return productTypes.includes(1) && productTypes.includes(2);
+                        } else if (isHvo100) {
+                            // Only HVO 100 is activated
+                            return productTypes.includes(1);
+                        } else if (isHvoBlend) {
+                            // Only HVO Blend is activated
+                            return productTypes.includes(2);
+                        } else {
+                            // No filter is activated
+                            return true;
+                        }
+                    });
+
+                    // Check if there is text in the search bar
+                    const searchBar = document.getElementById('searchBar');
+                    const query = searchBar.value.trim().toLowerCase();
 
                     if (query.length > 0) {
-                        // Si une requête de recherche est présente, filtrer les features
-                        const lowerCaseQuery = query.toLowerCase();
-                        filteredFeatures = features.filter(feature => {
+                        // If a search query is made, filter the features
+                        filteredFeatures = filteredFeatures.filter(feature => {
                             const name = feature.properties.name || "";
                             const tenantName = feature.properties.tenant || "";
                             const address = feature.properties.address || "";
 
                             return (
-                                name.toLowerCase().includes(lowerCaseQuery) ||
-                                tenantName.toLowerCase().includes(lowerCaseQuery) ||
-                                address.toLowerCase().includes(lowerCaseQuery)
+                                name.toLowerCase().includes(query) ||
+                                tenantName.toLowerCase().includes(query) ||
+                                address.toLowerCase().includes(query)
                             );
                         });
-
-                        // Si aucun résultat de recherche n'est trouvé, met à jour les marqueurs et le tableau
-                        if (filteredFeatures.length === 0) {
-                            updateMarkers([]);
-                            updateTable([]);
-                            return; // Sortir de la fonction car il n'y a pas de résultats à afficher
-                        }
                     }
 
-                    // Appliquer les filtres HVO 100 et HVO Blend
-                    filteredFeatures = filteredFeatures.filter(feature => {
-                        const productTypes = feature.properties.product_types || [];
+                    // Progressive zoom out function
+                    function progressiveZoomOut() {
+                        if (filteredFeatures.length > 0 || map.getZoom() <= minZoom) {
+                            // If results are found or the minimum zoom level is reached
+                            updateMarkers(filteredFeatures);
+                            updateTable(filteredFeatures);
 
-                        // Conditions pour filtrer selon les valeurs de isHvo100 et isHvoBlend
-                        if (isHvo100 && isHvoBlend) {
-                            // Les deux filtres sont activés, donc on recherche [1, 2]
-                            return productTypes.includes(1) && productTypes.includes(2);
-                        } else if (isHvo100) {
-                            // Seulement HVO 100 est activé
-                            return productTypes.includes(1);
-                        } else if (isHvoBlend) {
-                            // Seulement HVO Blend est activé
-                            return productTypes.includes(2);
+                            if (filteredFeatures.length === 0) {
+                                const tableBody = document.querySelector("#locationsTable tbody");
+                                tableBody.innerHTML = '';
+                                const tr = document.createElement('tr');
+                                const td = document.createElement('td');
+                                td.textContent = 'No locations found';
+                                td.colSpan = 4;
+                                td.style.textAlign = 'center';
+                                td.style.paddingTop = '20px';
+                                tr.appendChild(td);
+                                tableBody.appendChild(tr);
+                            }
+
+                            // Adjust the map view if successful
+                            adjustMapView(filteredFeatures);
                         } else {
-                            // Aucun filtre activé, on accepte tout
-                            return true;
-                        }
-                    });
-
-                    // Calculer la distance de chaque feature par rapport au centre de la carte
-                    filteredFeatures.forEach(feature => {
-                        const coordinates = feature.geometry.coordinates;
-                        feature.properties.distance = calculateDistance(currentCenter, coordinates);
-                    });
-
-                    // Trier les features par distance croissante
-                    filteredFeatures.sort((a, b) => a.properties.distance - b.properties.distance);
-
-                    // Ne prendre que les 20 premières features les plus proches
-                    const closestFeatures = filteredFeatures.slice(0, 20);
-
-                    // Logique pour la mise à jour des marqueurs et de la carte en fonction du nombre de résultats
-                    if (closestFeatures.length === 0) {
-                        // Aucun résultat trouvé après application des filtres
-                        updateMarkers([]);
-                        updateTable([]);
-                        return; // Sortir de la fonction car il n'y a pas de résultats à afficher
-                    } else if (closestFeatures.length === 1) {
-                        // Si un seul résultat est trouvé, zoomer sur cet emplacement
-                        const coordinates = closestFeatures[0].geometry.coordinates;
-                        const name = closestFeatures[0].properties.name;
-                        const opening_start = closestFeatures[0].properties.opening_start || "00:00";
-                        const opening_end = closestFeatures[0].properties.opening_end || "23:59";
-                        flyToLocation(coordinates, name, opening_start, opening_end);
-                        moveRowToTop(name);
-                    } else {
-                        // Vérifier si la location la plus proche est visible
-                        const closestFeatureCoordinates = closestFeatures[0].geometry.coordinates;
-                        if (!map.getBounds().contains(closestFeatureCoordinates)) {
-                            // Dézoomer jusqu'à ce que la location la plus proche soit visible
-                            const currentBounds = map.getBounds();
-                            const newBounds = currentBounds.extend(closestFeatureCoordinates);
-                            map.fitBounds(newBounds, {
-                                padding: 50,
-                                maxZoom: map.getZoom() // Limiter le zoom pour éviter de trop dézoomer
+                            // Zoom out progressively until results are found or the minimum zoom level is reached
+                            map.zoomOut({
+                                animate: true
                             });
+                            setTimeout(() => {
+                                // Refetch with the new zoom level
+                                features = map.querySourceFeatures('your-tileset-source', {
+                                    sourceLayer: 'efuelmap_v1',
+                                    filter: ['all'],
+                                    validate: false
+                                });
+
+                                // Apply the same HVO and search filters
+                                filteredFeatures = features.filter(feature => {
+                                    const productTypes = feature.properties.product_types || [];
+                                    if (isHvo100 && isHvoBlend) {
+                                        return productTypes.includes(1) && productTypes.includes(2);
+                                    } else if (isHvo100) {
+                                        return productTypes.includes(1);
+                                    } else if (isHvoBlend) {
+                                        return productTypes.includes(2);
+                                    } else {
+                                        return true;
+                                    }
+                                });
+
+                                if (query.length > 0) {
+                                    filteredFeatures = filteredFeatures.filter(feature => {
+                                        const name = feature.properties.name || "";
+                                        const tenantName = feature.properties.tenant || "";
+                                        const address = feature.properties.address || "";
+
+                                        return (
+                                            name.toLowerCase().includes(query) ||
+                                            tenantName.toLowerCase().includes(query) ||
+                                            address.toLowerCase().includes(query)
+                                        );
+                                    });
+                                }
+
+                                // Call the recursive function to continue zooming progressively
+                                progressiveZoomOut();
+                            }, 500); // Delay for allowing the zoom
                         }
                     }
 
-                    // Mettre à jour les marqueurs sur la carte
-                    updateMarkers(closestFeatures);
-
-                    // Mettre à jour le tableau HTML
-                    updateTable(closestFeatures);
+                    // Call the progressive zoom function
+                    progressiveZoomOut();
                 }
+
 
                 function updateTable(closestFeatures) {
                     if (!closestFeatures || closestFeatures.length === 0) {
@@ -407,35 +441,37 @@
                     }
 
                     const tableBody = document.querySelector("#locationsTable tbody");
-                    tableBody.innerHTML = ''; // Réinitialiser le tableau
+                    tableBody.innerHTML = ''; // Reset the table
                     const template = document.getElementById('locationRowTemplate');
 
                     closestFeatures.forEach(feature => {
                         const clone = document.importNode(template.content, true);
 
-                        // Récupérer les données spécifiques
+                        // Get the specific data
                         const name = feature.properties.name || "N/A";
                         const tenant = feature.properties.tenant || "N/A";
                         const opening_start = feature.properties.opening_start || "00:00";
                         const opening_end = feature.properties.opening_end || "23:59";
                         const address = feature.properties.address || "N/A";
+                        const id = feature.properties.id || "";
 
                         const product_types = feature.properties.product_types || [];
                         const isHvo100 = product_types.includes(1);
                         const isHvoBlend = product_types.includes(2);
 
-                        // Injecter le nom
+                        // Inject the name
                         clone.querySelector('.location-name').textContent = name;
                         clone.querySelector('.location-tenant').textContent = tenant;
+                        clone.querySelector('.location-id').textContent = id;
 
-                        // Vérifier si le lieu est ouvert
+                        // Check if the location is open
                         const isOpen = isLocationOpen(opening_start, opening_end);
 
-                        // Injecter le statut d'ouverture
+                        // Inject the opening status
                         const statusSvg = clone.querySelector('.location-status');
                         statusSvg.setAttribute('fill', isOpen ? 'rgb(0, 160, 0)' : 'red');
 
-                        // Ajouter les badges de produit
+                        // Add the product badges
                         const productsContainer = clone.querySelector('.location-products');
 
                         if (isHvo100) {
@@ -460,33 +496,25 @@
                             productsContainer.appendChild(hvoBlendBadge);
                         }
 
-                        // Ajouter un événement pour zoomer et afficher un popup lors du clic sur la ligne
+                        // Add an event listener for zooming and showing a popup when the line is clicked
                         clone.querySelector('tr').addEventListener('click', function() {
                             const coordinates = feature.geometry.coordinates;
                             flyToLocation(coordinates, name, opening_start, opening_end);
+                            highlightLocation(feature);
+                            hightLightLocationInTable(id);
 
-                            const tableBody = document.querySelector("#locationsTable tbody");
-                            const rows = Array.from(tableBody.querySelectorAll('tr'));
 
-                            // Trouver la ligne qui correspond au nom de la location cliquée
-                            const targetRow = rows.find(row => row.querySelector('.location-name').textContent === name);
-                            // Enlever la classe 'highlight' de toutes les autres lignes
-                            rows.forEach(row => row.classList.remove('highlight'));
 
-                            // Ajouter la classe 'highlight' pour mettre en surbrillance la ligne
-                            targetRow.classList.add('highlight');
-
-                            // Déplacer la ligne correspondante en haut du tableau
                         });
 
-                        // Ajouter un gestionnaire d'événement pour le bouton "Show Details"
+                        // Add an event handler for the "Show Details" button
                         clone.querySelector('.details-button').addEventListener('click', function(event) {
-                            event.stopPropagation(); // Empêcher l'événement de clic de se propager à la ligne
+                            event.stopPropagation(); // Prevent the click event from propagating to the cloned line
                             const detailsRow = this.closest('tr').nextElementSibling;
                             const detailsContent = detailsRow.querySelector('.details-content');
                             const locationInfoSpan = detailsRow.querySelector('.details-location-info');
 
-                            // Mettre à jour le contenu de la div des détails
+                            // Update the details content
 
                             locationInfoSpan.innerHTML = `<div class="text-sm text-gray-800">
                                 Open hours : ${opening_start} - ${opening_end}<br />
@@ -494,27 +522,29 @@
                             </div>
                             `;
 
-                            // Basculer l'affichage de la div des détails
+                            // Toggle the details content
                             detailsRow.classList.toggle('hidden');
                         });
-                        // Ajouter la ligne clonée au tableau
+                        // Add the cloned line to the table
                         tableBody.appendChild(clone);
                     });
                 }
 
-                // Fonction pour mettre à jour les marqueurs sur la carte
+                // Update markers on the map
                 function updateMarkers(closestFeatures) {
 
-                    if (closestFeatures.length === 0) {
-                        return;
-                    }
-                    // Supprimer la couche existante si elle existe déjà
+
+                    // Remove the layer if it already exists    
                     if (map.getLayer('locations-layer')) {
                         map.removeLayer('locations-layer');
                         map.removeSource('closest-features');
                     }
+                    if (map.getLayer('highlighted-location')) {
+                        map.removeLayer('highlighted-location');
+                        map.removeSource('highlighted-location');
+                    }
 
-                    // Créer une nouvelle source avec les 20 features les plus proches
+                    // Create a new source with the closest 20 features
                     map.addSource('closest-features', {
                         'type': 'geojson',
                         'data': {
@@ -523,7 +553,7 @@
                         }
                     });
 
-                    // Ajouter une nouvelle couche pour ces features
+                    // Add a new layer for these features
                     map.addLayer({
                         'id': 'locations-layer',
                         'type': 'symbol',
@@ -540,46 +570,187 @@
                             ],
                         }
                     });
+
                 }
 
-                // Ajouter un popup lorsqu'on passe la souris sur un marqueur
-                map.on('mouseenter', 'locations-layer', function(e) {
-                    if (activePopup) activePopup.remove(); // Supprimer le popup actif
+                function adjustMapView(features) {
+                    if (features.length === 0) {
+                        // No features match the filter
+                        return;
+                    }
+
+                    if (features.length === 1) {
+                        // If only one match is found, zoom to that location
+                        const coordinates = features[0].geometry.coordinates;
+                        const name = features[0].properties.name;
+                        const opening_start = features[0].properties.opening_start || "00:00";
+                        const opening_end = features[0].properties.opening_end || "23:59";
+                        const id = features[0].properties.id;
+                        flyToLocation(coordinates, name, opening_start, opening_end);
+                        hightLightLocationInTable(id);
+                    } else {
+                        // Adjust the map bounds to include all the matches
+                        const bounds = getBounds(features);
+                        map.fitBounds(bounds, {
+                            padding: 50,
+                            maxZoom: 15 // Limit the zoom to avoid too much zooming
+                        });
+                    }
+                }
+
+                function highlightLocation(location) {
+                    // Remove the highlighted layer if it already exists
+                    if (map.getLayer('highlighted-location')) {
+                        map.removeLayer('highlighted-location');
+                        map.removeSource('highlighted-location');
+                    }
+
+                    // Create a new source with a single location
+                    map.addSource('highlighted-location', {
+                        'type': 'geojson',
+                        'data': {
+                            'type': 'FeatureCollection',
+                            'features': [location] // Ensure that location is a single feature
+                        }
+                    });
+
+                    // Add a new layer for the highlighted location
+                    map.addLayer({
+                        'id': 'highlighted-location',
+                        'type': 'symbol',
+                        'source': 'highlighted-location',
+                        'layout': {
+                            'icon-image': 'location-dot-solid', // Use the defined icon in your style from mapbox
+                            'icon-size': [
+                                'interpolate', ['linear'],
+                                ['zoom'],
+                                0, 2.5,
+                                22, 2.5
+                            ],
+                            'text-field': ['get', 'name'],
+                            'text-size': 0.4
+                        },
+                        'paint': {
+                            'icon-color': '#FF0000' // Change the icon color to red
+                        }
+                    });
+                }
+
+
+                map.on('mouseenter', 'highlighted-location', function(e) {
+                    if (activePopup) activePopup.remove(); // Remove the active popup
 
                     const coordinates = e.features[0].geometry.coordinates.slice();
                     const name = e.features[0].properties.name;
                     const opening_start = e.features[0].properties.opening_start || "00:00";
                     const opening_end = e.features[0].properties.opening_end || "23:59";
 
-                    // Créer le contenu HTML du popup
+                    // Create the HTML content for the popup
                     const popupContent = `
-              <div style="text-align: center;">
-                  <div style="font-size: 14px; font-weight: bold;">${name}</div>
-                  <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
-              </div>
-          `;
+                                            <div style="text-align: center;">
+                                                <div style="font-size: 14px; font-weight: bold;">${name}</div>
+                                                <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
+                                            </div>
+                                        `;
 
-                    // Afficher un popup au survol avec le contenu personnalisé
+                    // Show a popup on hover with custom content 
                     activePopup = new mapboxgl.Popup({
                             closeButton: false,
-                            closeOnClick: false
+                            closeOnClick: false,
+                            offset: [0, -20] // Offset to raise the popup by 20px
                         })
                         .setLngLat(coordinates)
-                        .setHTML(popupContent) // Utiliser setHTML au lieu de setText pour permettre le HTML
+                        .setHTML(popupContent)
                         .addTo(map);
+
+                    // Add event listeners to keep the popup open
+                    activePopup.getElement().addEventListener('mouseenter', () => {
+                        mouseOverPopup = true;
+                    });
+
+                    activePopup.getElement().addEventListener('mouseleave', () => {
+                        mouseOverPopup = false;
+                        if (!mouseOverPopup && !mouseOverMarker) {
+                            activePopup.remove();
+                            activePopup = null;
+                            map.getCanvas().style.cursor = '';
+                        }
+                    });
 
                     map.getCanvas().style.cursor = 'pointer';
                 });
-                // Supprimer le popup lorsque la souris quitte le marqueur
-                map.on('mouseleave', 'locations-layer', function() {
-                    if (activePopup) {
+
+                let mouseOverMarker = false;
+
+                map.on('mouseenter', 'highlighted-location', function() {
+                    mouseOverMarker = true;
+                });
+
+                map.on('mouseleave', 'highlighted-location', function() {
+                    mouseOverMarker = false;
+                    if (!mouseOverPopup && activePopup) {
                         activePopup.remove();
                         activePopup = null;
                         map.getCanvas().style.cursor = '';
                     }
                 });
 
-                // Afficher un popup et zoomer sur une location spécifique
+                map.on('mouseenter', 'locations-layer', function(e) {
+                    if (activePopup) activePopup.remove(); // Remove the active popup
+
+                    const coordinates = e.features[0].geometry.coordinates.slice();
+                    const name = e.features[0].properties.name;
+                    const opening_start = e.features[0].properties.opening_start || "00:00";
+                    const opening_end = e.features[0].properties.opening_end || "23:59";
+
+                    // Create the HTML content for the popup
+                    const popupContent = `
+                                            <div style="text-align: center;">
+                                                <div style="font-size: 14px; font-weight: bold;">${name}</div>
+                                                <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
+                                            </div>
+                                        `;
+
+                    activePopup = new mapboxgl.Popup({
+                            closeButton: false,
+                            closeOnClick: false,
+                            offset: [0, -20]
+                        })
+                        .setLngLat(coordinates)
+                        .setHTML(popupContent)
+                        .addTo(map);
+
+                    activePopup.getElement().addEventListener('mouseenter', () => {
+                        mouseOverPopup = true;
+                    });
+
+                    activePopup.getElement().addEventListener('mouseleave', () => {
+                        mouseOverPopup = false;
+                        if (!mouseOverPopup && !mouseOverMarker) {
+                            activePopup.remove();
+                            activePopup = null;
+                            map.getCanvas().style.cursor = '';
+                        }
+                    });
+
+                    map.getCanvas().style.cursor = 'pointer';
+                });
+
+
+                map.on('mouseenter', 'locations-layer', function() {
+                    mouseOverMarker = true;
+                });
+
+                map.on('mouseleave', 'locations-layer', function() {
+                    mouseOverMarker = false;
+                    if (!mouseOverPopup && activePopup) {
+                        activePopup.remove();
+                        activePopup = null;
+                        map.getCanvas().style.cursor = '';
+                    }
+                });
+
+                // Show a popup and zoom to a specific location
                 function flyToLocation(coordinates, name, opening_start, opening_end) {
 
                     map.flyTo({
@@ -589,23 +760,24 @@
 
                     if (activePopup) activePopup.remove();
 
-                    // Créer le contenu du popup
                     const popupContent = `
-           <div style="text-align: center;">
-                  <div style="font-size: 14px; font-weight: bold;">${name}</div>
-                  <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
-              </div>
-            `;
+                                            <div style="text-align: center;">
+                                                    <div style="font-size: 14px; font-weight: bold;">${name}</div>
+                                                    <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
+                                                </div>
+                                                `;
 
                     activePopup = new mapboxgl.Popup({
                             closeButton: true,
-                            closeOnClick: false
+                            closeOnClick: false,
+                            offset: [0, -20]
+
                         })
                         .setLngLat(coordinates)
                         .setHTML(popupContent)
                         .addTo(map);
                 }
-                // Masquer le popup si on clique ailleurs sur la carte
+                // Hide the popup if the user clicks elsewhere
                 map.on('click', function(e) {
                     if (activePopup) {
                         const features = map.queryRenderedFeatures(e.point, {
@@ -620,73 +792,30 @@
                 });
 
                 map.on('click', 'locations-layer', function(e) {
-                    const clickedFeature = e.features[0]; // Récupérer la feature cliquée
+                    const clickedFeature = e.features[0]; // Get the clicked feature
                     const coordinates = clickedFeature.geometry.coordinates;
                     const name = clickedFeature.properties.name;
                     const opening_start = e.features[0].properties.opening_start || "00:00";
                     const opening_end = e.features[0].properties.opening_end || "23:59";
+                    const id = clickedFeature.properties.id;
 
 
-                    // Zoomer sur l'emplacement et afficher un popup
+                    // Zoom to the location and show a popup
                     flyToLocation(coordinates, name, opening_start, opening_end);
 
-                    // Faire remonter la ligne correspondante en haut du tableau
-                    moveRowToTop(clickedFeature.properties.name);
+                    // Move the table line to the top
+                    hightLightLocationInTable(id);
+                    highlightLocation(clickedFeature);
+
                 });
 
-                function searchInTileset(query) {
-                    // Convertir la requête de recherche en minuscules pour la rendre insensible à la casse
-                    const lowerCaseQuery = query.toLowerCase();
-
-                    // Récupérer les features de la source vectorielle
-                    const features = map.querySourceFeatures('your-tileset-source', {
-                        sourceLayer: 'efuelmap_v1'
-                    });
-
-                    // Filtrer les features qui correspondent à la recherche dans le name, tenant_name ou address
-                    const filteredFeatures = features.filter(feature => {
-                        const name = feature.properties.name || "";
-                        const tenantName = feature.properties.tenant || "";
-                        const address = feature.properties.address || "";
-
-                        return (
-                            name.toLowerCase().includes(lowerCaseQuery) ||
-                            tenantName.toLowerCase().includes(lowerCaseQuery) ||
-                            address.toLowerCase().includes(lowerCaseQuery)
-                        );
-                    });
-
-                    if (filteredFeatures.length === 1) {
-                        // Si un seul résultat est trouvé, zoomer sur cet emplacement
-                        const coordinates = filteredFeatures[0].geometry.coordinates;
-                        const name = filteredFeatures[0].properties.name;
-                        const opening_start = filteredFeatures[0].properties.opening_start || "00:00";
-                        const opening_end = filteredFeatures[0].properties.opening_end || "23:59";
-                        flyToLocation(coordinates, name, opening_start, opening_end);
-                        moveRowToTop(name);
-                        console.log(name);
-                    } else if (filteredFeatures.length > 1) {
-                        // Si plusieurs résultats sont trouvés, centrer la carte pour inclure tous les emplacements
 
 
-                        // Mettre en évidence les lignes correspondantes dans le tableau
+                const debouncedUpdateMarkersAndTable = debounce(updateMarkersAndTable, 1000);
 
-                    } else {
-                        updateMarkers([]);
-                        updateTable([]);
-                    }
+                // Listen for input on the search bar
+                document.getElementById('searchBar').addEventListener('input', debouncedUpdateMarkersAndTable);
 
-                    // Mettre à jour les marqueurs et le tableau avec les résultats filtrés
-                    updateMarkers(filteredFeatures);
-                    updateTable(filteredFeatures);
-                }
-
-                // Écouter l'événement 'keypress' sur la barre de recherche
-                document.getElementById('searchBar').addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
-                        updateMarkersAndTable();
-                    }
-                });
                 document.getElementById('resetButton').addEventListener('click', function(e) {
                     reset();
                 });
@@ -702,61 +831,69 @@
                     updateMarkersAndTable();
                 });
 
-               
+                // Function to calculate the distance between two points
+                function calculateDistance(center, coordinates) {
+                    return turf.distance(
+                        turf.point([center.lng, center.lat]),
+                        turf.point(coordinates)
+                    );
+                }
+
+                // Function to get the bounds (bounds) of a set of features
+                function getBounds(features) {
+                    const bounds = new mapboxgl.LngLatBounds();
+                    features.forEach(feature => {
+                        bounds.extend(feature.geometry.coordinates);
+                    });
+                    return bounds;
+                }
+
+                function hightLightLocationInTable(id) {
+                    const tableBody = document.querySelector("#locationsTable tbody");
+                    const rows = Array.from(tableBody.querySelectorAll('tr'));
+
+                    const targetRow = rows.find(row => {
+                        const locationIdElement = row.querySelector('.location-id');
+                        if (!locationIdElement) {
+                            return false;
+                        }
+                        return locationIdElement.textContent.trim() === id;
+                    });
+
+                    if (targetRow) {
+                        rows.forEach(row => row.classList.remove('highlight'));
+
+                        targetRow.classList.add('highlight');
+
+                        targetRow.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'center',
+                            inline: 'nearest'
+                        });
+                    }
+                }
+
+                function isLocationOpen(opening_start, opening_end) {
+                    const currentTime = new Date(); // Get the current time
+                    const currentHours = currentTime.getHours().toString().padStart(2, '0'); // Current hours
+                    const currentMinutes = currentTime.getMinutes().toString().padStart(2, '0'); // Current minutes
+
+                    const currentTimeString = `${currentHours}:${currentMinutes}`;
+
+                    return currentTimeString >= opening_start && currentTimeString <= opening_end;
+                }
+
+
             });
 
         });
 
-        // Fonction pour calculer la distance entre deux points
-        function calculateDistance(center, coordinates) {
-            return turf.distance(
-                turf.point([center.lng, center.lat]),
-                turf.point(coordinates)
-            );
-        }
-
-        // Fonction pour obtenir les limites (bounds) d'un ensemble de features
-        function getBounds(features) {
-            const bounds = new mapboxgl.LngLatBounds();
-            features.forEach(feature => {
-                bounds.extend(feature.geometry.coordinates);
-            });
-            return bounds;
-        }
 
 
 
-        function isLocationOpen(opening_start, opening_end) {
-            const currentTime = new Date(); // Obtenir l'heure actuelle
-            const currentHours = currentTime.getHours().toString().padStart(2, '0'); // Heures actuelles avec zéro-padding
-            const currentMinutes = currentTime.getMinutes().toString().padStart(2, '0'); // Minutes actuelles avec zéro-padding
-
-            const currentTimeString = `${currentHours}:${currentMinutes}`;
-
-            return currentTimeString >= opening_start && currentTimeString <= opening_end;
-        }
 
 
-        function moveRowToTop(locationName) {
-            const tableBody = document.querySelector("#locationsTable tbody");
-            const rows = Array.from(tableBody.querySelectorAll('tr'));
 
-            // Trouver la ligne qui correspond au nom de la location cliquée
-            const targetRow = rows.find(row => row.querySelector('.location-name').textContent === locationName);
-
-            if (targetRow) {
-                // Enlever la classe 'highlight' de toutes les autres lignes
-                rows.forEach(row => row.classList.remove('highlight'));
-
-                // Ajouter la classe 'highlight' pour mettre en surbrillance la ligne
-                targetRow.classList.add('highlight');
-
-                // Déplacer la ligne correspondante en haut du tableau
-                tableBody.insertBefore(targetRow, tableBody.firstChild);
-
-
-            }
-        }
 
 
 
