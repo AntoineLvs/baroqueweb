@@ -21,9 +21,12 @@ module.exports = {
         './resources/**/*.twig',
         './resources/**/*.blade.php',
         './vendor/tallstackui/tallstackui/src/**/*.php',
-        './app/Providers/MyCustomServiceProvider.php', 
+        './app/Providers/MyCustomServiceProvider.php',
         './app/Providers/AppServiceProvider.php',
-        './app/TallStackUi/**/*.php', 
+        './app/TallStackUi/**/*.php',
+        './resources/css/custom-styles.css', // Ajoutez ce chemin si nécessaire
+
+
 
     ],
 
@@ -62,7 +65,9 @@ module.exports = {
                 indigo: colors.indigo,
                 yellow: colors.yellow,
             },
-
+            margin: {
+                '18': '72px',  // Ajoute mt-18 avec une valeur de 72px
+            },
 
         },
     },

@@ -7,6 +7,8 @@
    }
  }
 
+ @import 'custom-styles.css'; /* Ajout de votre fichier de styles personnalisé */
+
 /* Eigene Basisstile */
 @layer base {
 
