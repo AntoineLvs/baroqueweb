@@ -1,17 +1,31 @@
-<div class="select-menu flex flex-col md:flex-row " style="margin-top:132px; margin-left: 20px;">
+<div x-data="{ 
+        isHidden: false, // Ajout d'une variable pour gérer la visibilité
+    }" class="select-menu flex flex-col md:flex-row md:mt-32 mt-18 ml-5">
 
-    <div x-data="{ showResultClass: @entangle('showResultClass'), 
-                   openHeight: '0px',
-                   isHvo100: true,
-                   isHvoBlend: false,       
-                   test() {
-                        setTimeout(() => {
-                            $dispatch('filterChanged');
-                        }, 100);
-                    }
-                }"
-        style="z-index: 5; min-width: 400px;" class="w-full md:w-1/5 transition-all duration-2000 shadow rounded-t-md border-b border-gray-300 xl:rounded-l-md xl:border-r-0 xl:rounded-r-md xl:border-b-0 xl:border-t-0 bg-white">
-        <div class="mx-auto mt-4 mr-4 ml-4">
+    <div x-data="{ 
+            showResultClass: @entangle('showResultClass'), 
+            openHeight: '0px',
+            isHvo100: true,
+            isHvoBlend: false, 
+            test() {
+                setTimeout(() => {
+                    $dispatch('filterChanged');
+                    }, 100);
+            }
+        }"
+        :class="{ 'hidden': isHidden }"
+        style="z-index: 5; min-width: 400px;"
+        class="relative main-container w-full md:w-1/5 transition-all duration-2000 shadow rounded-t-md border-b border-gray-300 xl:rounded-l-md xl:border-r-0 xl:rounded-r-md xl:border-b-0 xl:border-t-0 bg-white">
+
+        <!-- Croix de fermeture -->
+        <div class="invisible-buttons absolute top-1 right-1 cursor-pointer" @click="isHidden = true">
+            <svg class="w-6 h-6 text-gray-500 hover:text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+            </svg>
+        </div>
+
+        <!-- Contenu de la barre de recherche -->
+        <div x-show="!isHidden" x-transition x-cloak class="mx-auto mt-8 md:mt-4 mr-4 ml-4">
             <div class="w-full flex flex-col items-center space-y-4">
                 <div class="w-full">
                     <div class="animated">
@@ -24,22 +38,21 @@
                             </div>
                             <input @keyup.enter="showResultClass = true" id="searchBar" name="searchbox" placeholder="Search..." type="search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                             <button @click="isHvoBlend = false; isHvo100 = false" id="resetButton" type="button" class="text-white absolute end-2.5 bottom-2.5 bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                <svg class="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                                <svg class="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                 </svg>
-
                             </button>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>
-
         <form class="max-w-md mx-auto">
 
         </form>
 
-        <div class="mx-auto mb-4 mr-4 ml-6">
+        <div class="mx-auto mb-2 mr-2 ml-6">
             <div class="flex items-center justify-between">
                 <div class="mt-2">
                     <div class="flex items-center">
@@ -74,7 +87,7 @@
                     if (value) {
                         // Delayed to ensure element is rendered before changing height
                         setTimeout(() => {
-                            openHeight = '570px';
+                            openHeight = '560px';
                         }, 10);
                     } else {
                         openHeight = '0px';
@@ -96,12 +109,12 @@
                     </div>
                 </div> -->
                 <div class="bg-gray-100">
-                    <div class="text-gray-600 text-sm  px-4 py-4 border-b-2 border-gray-300 text-left leading-4 tracking-wider cursor-pointer">
+                    <div class="text-gray-600 text-sm  px-4 py-3 border-b-2 border-gray-300 text-left leading-4 tracking-wider cursor-pointer">
                         <span class="ml-4">Current Search Results</span>
                     </div>
 
                 </div>
-                <div class="table-container" id="tableContainer" style="overflow-y: scroll; height: 520px;">
+                <div class="table-container" id="tableContainer" style="overflow-y: scroll; height: 520px; background-color:rgba(255, 255, 255, 0.8);">
                     <table id="locationsTable" class="w-full">
                         <tbody>
                             <!-- Les lignes seront ajoutées ici dynamiquement -->
@@ -114,7 +127,7 @@
                                 <div class="flex items-center justify-between">
                                     <div class="ml-2">
                                         <div class="flex items-center">
-                                            <div class="flex-shrink-0 h-10 w-10">
+                                            <div class="flex-shrink-0 items-center h-8 h-8 md:h-10 md:w-10">
                                                 <div class="image-container">
                                                     <a href="#" class="location-link">
                                                         <img style="background: lightgrey;" class="h-10 w-10 rounded-full ring-2 ring-green location-img" src="/assets/img/hvo.png" alt="">
@@ -141,7 +154,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="whitespace-no-wrap border-b border-gray-300">
+                            <td class="whitespace-no-wrap text-center border-b border-gray-300 visible-buttons">
                                 <div class="flex ml-auto items-center">
                                     <div class="flex items-center justify-end">
                                         <div class="image-container">
@@ -154,7 +167,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="py-4 whitespace-no-wrap text-right border-b border-gray-300 leading-5 font-medium">
+                            <td class="py-4 whitespace-no-wrap text-center border-b border-gray-300 leading-5 font-medium">
                                 <button type="button" class="details-button">
                                     <div class="image-container">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -164,7 +177,7 @@
                                     </div>
                                 </button>
                             </td>
-                            <td class="py-4 whitespace-no-wrap text-right border-b border-gray-300 leading-5 font-medium">
+                            <td class="visible-buttons py-4 pr-2 whitespace-no-wrap text-center border-b border-gray-300 leading-5 font-medium">
                                 <button type="button" class="open-google-map">
                                     <div class="image-container">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -205,13 +218,30 @@
                 </div>
             </div>
         </div>
+    </div>
 
+    <div x-show="isHidden"
+        x-transition:enter="transition ease-out duration-300"
+        x-transition:enter-start="opacity-0 transform scale-90"
+        x-transition:enter-end="opacity-100 transform scale-100"
+        x-transition:leave="transition ease-in duration-300"
+        x-transition:leave-start="opacity-100 transform scale-100"
+        x-transition:leave-end="opacity-0 transform scale-90"
+        class="fixed bottom-4 right-4 cursor-pointer bg-indigo-600 text-white p-3 rounded-full shadow-lg"
+        @click="isHidden = false" style="z-index: 10;">
+        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+        </svg>
     </div>
     <div class="w-full transition-all duration-2000 bg-white">
         <div id='map' style='position: absolute; z-index: 1; top: 0; left: 0; width: 100%; height: 100%;'></div>
 
     </div>
     <style>
+        .mapboxgl-ctrl-bottom-right {
+            display: none;
+        }
+
         .tile-hover:hover {
             background-color: #e5e7eb;
         }
@@ -231,6 +261,30 @@
             .select-menu {
                 margin-right: 20px;
             }
+
+            .main-container {
+                min-width: auto !important;
+            }
+
+            .visible-buttons {
+                display: none !important;
+            }
+
+            .invisible-buttons {
+                visibility: visible !important;
+            }
+
+        }
+
+        @media screen and (min-width:768px) {
+            .visible-buttons {
+                visibility: visible !important;
+            }
+
+            .invisible-buttons {
+                display: none !important;
+            }
+
         }
 
         .highlight {
@@ -297,7 +351,7 @@
                     lastCenter = currentCenter; // Update the last center of the map
 
                     // Define the minimum and maximum zoom levels
-                    const minZoom = 1; // Minimum zoom level to reach
+                    const minZoom = 5; // Minimum zoom level to reach
                     const currentZoom = map.getZoom(); // Get the current zoom level
                     const maxZoom = 20; // The usual maximum zoom level for the map
 
@@ -620,15 +674,16 @@
                         'type': 'symbol',
                         'source': 'highlighted-location',
                         'layout': {
-                            'icon-image': 'location-dot-solid', // Use the defined icon in your style from mapbox
+                            'icon-image': 'placeholder', // Use the defined icon in your style from mapbox
                             'icon-size': [
                                 'interpolate', ['linear'],
                                 ['zoom'],
-                                0, 2.5,
-                                22, 2.5
+                                0, 0.09,
+                                22, 0.09
                             ],
                             'text-field': ['get', 'name'],
-                            'text-size': 0.4
+                            'text-size': 0,
+                            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
                         },
                         'paint': {
                             'icon-color': '#FF0000' // Change the icon color to red
