@@ -23,16 +23,7 @@ class LocationController extends Controller
      */
     public function index(): View
     {
-        //  ddd(auth()->user()->tenant_id);
 
-        // if(session()->has('tenant_id')) {
-        //
-        //   $tenant_id = auth()->user()->tenant_id;
-        //   $products = Product::where('tenant_id', $tenant_id)->paginate(25);
-        //   return view('products.index', compact('products'));
-        // }
-        //
-        // else {
 
         $locations = Location::latest()->paginate(25);
 

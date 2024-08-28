@@ -22,8 +22,8 @@ class ProductSeeder extends Seeder
                 [
                     'tenant_id' => '1',
                     'id' => '1',
-                    'name' => "TOTAL HV0 100",
-                    'data' => "Lorem ipsum data description",
+                    'name' => "HVO100",
+                    'data' => "HVO 100",
                     'product_type_id' => "1",
                     'base_product_id' => "1",
                     'product_unit_id' => "1",
@@ -35,15 +35,73 @@ class ProductSeeder extends Seeder
                 [
                     'tenant_id' => '1',
                     'id' => '2',
-                    'name' => "TOTAL HV0 75",
-                    'data' => "Lorem ipsum data description",
-                    'product_type_id' => "2",
-                    'base_product_id' => "2",
+                    'name' => "KlimaDiesel 90",
+                    'data' => "HVO 100",
+                    'product_type_id' => "1",
+                    'base_product_id' => "1",
                     'product_unit_id' => "1",
                     'active' => '1',
-                    'blend_percent' => '75',
+                    'blend_percent' => NULL,
                     'created_at' => Carbon::now()->format('Y-m-d H:i:s')
                 ],
+
+                [
+                    'tenant_id' => '1',
+                    'id' => '3',
+                    'name' => "NesteMY",
+                    'data' => "HVO 100",
+                    'product_type_id' => "1",
+                    'base_product_id' => "1",
+                    'product_unit_id' => "1",
+                    'active' => '1',
+                    'blend_percent' => NULL,
+                    'created_at' => Carbon::now()->format('Y-m-d H:i:s')
+                ],
+
+                [
+                    'tenant_id' => '1',
+                    'id' => '4',
+                    'name' => "Fuelmotion H",
+                    'data' => "HVO 100",
+                    'product_type_id' => "1",
+                    'base_product_id' => "1",
+                    'product_unit_id' => "1",
+                    'active' => '1',
+                    'blend_percent' => NULL,
+                    'created_at' => Carbon::now()->format('Y-m-d H:i:s')
+                ],
+
+
+                [
+                    'tenant_id' => '1',
+                    'id' => '5',
+                    'name' => "C.A.R.E Diesel",
+                    'data' => "HVO 100",
+                    'product_type_id' => "1",
+                    'base_product_id' => "1",
+                    'product_unit_id' => "1",
+                    'active' => '1',
+                    'blend_percent' => NULL,
+                    'created_at' => Carbon::now()->format('Y-m-d H:i:s')
+                ],
+
+                [
+                    'tenant_id' => '1',
+                    'id' => '6',
+                    'name' => "ROTH HVO100 Diesel",
+                    'data' => "HVO 100",
+                    'product_type_id' => "1",
+                    'base_product_id' => "1",
+                    'product_unit_id' => "1",
+                    'active' => '1',
+                    'blend_percent' => NULL,
+                    'created_at' => Carbon::now()->format('Y-m-d H:i:s')
+                ],
+
+
+
+
+
 
                 // [
                 //     'tenant_id' => '1',

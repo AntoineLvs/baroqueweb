@@ -241,7 +241,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::controller(ImportExportController::class)->group(function () {
             Route::get('admin/import_export', 'importExport');
             Route::post('admin/import', 'importData')->name('data.import');
-            Route::get('admin-export/export', 'exportData')->name('data.export');            
+            Route::get('admin-export/export', 'exportData')->name('data.export');
             // Route::post('admin/{event}/import-attendees', 'importEventAttendees')->name('eventAttendees.import');
             // Route::get('event/export-attendees', 'exportEventAttendees')->name('eventAttendees.export');
         });
@@ -359,10 +359,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('locations', LocationController::class);
     Route::get('locations', [LocationController::class, 'index'])->name('locations.index');
     Route::get('locations/create', [LocationController::class, 'create'])->name('locations.create');
-    Route::get('import-data', [ImportExportController::class, 'importData'])->name('locations.import-data');
+    Route::get('import-data', [ImportExportController::class, 'importData'])->name('locations.import-view');
 
-    Route::post('import-locations', [ImportExportController::class, 'importLocation'])->name('locations.import-locations');
-
+    Route::post('locations-import', [ImportExportController::class, 'importLocations'])->name('locations.import');
+    Route::get('locations-export', [ImportExportController::class, 'exportLocations'])->name('locations.export');
 
     // Map Routes
     //Route::resource('map', MapController::class);

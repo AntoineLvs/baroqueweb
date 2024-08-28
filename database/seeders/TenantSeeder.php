@@ -19,26 +19,139 @@ class TenantSeeder extends Seeder
 
         $faker = Faker::create();
 
-        $esso = Tenant::factory()->create([
+        Tenant::factory()->create([
             'id' => 1,
-            'name' => 'Esso',
-            'email' => $faker->unique()->safeEmail,
+            'tenant_type_id' => 1,
+            'name' => 'refuelOS',
+            'email' => 'mail@refuelos.com',
             'street' => $faker->address(),
         ]);
 
-        $shell = Tenant::factory()->create([
+         Tenant::factory()->create([
             'id' => 2,
-            'name' => 'Shell',
+            'name' => 'bft e.V.',
+            'tenant_type_id' => 1,
             'email' => $faker->unique()->safeEmail,
             'street' => $faker->address(),
         ]);
 
-        $totalenergies = Tenant::factory()->create([
+         Tenant::factory()->create([
             'id' => 3,
-            'name' => 'TotalEnergies',
+            'name' => 'Sprint Tank',
+            'tenant_type_id' => 1,
             'email' => $faker->unique()->safeEmail,
             'street' => $faker->address(),
         ]);
+
+        Tenant::factory()->create([
+            'id' => 4,
+            'name' => 'team Energie',
+            'tenant_type_id' => 1,
+            'email' => $faker->unique()->safeEmail,
+            'street' => $faker->address(),
+        ]);
+
+        Tenant::factory()->create([
+            'id' => 5,
+            'name' => 'Classic Oil',
+            'tenant_type_id' => 1,
+            'email' => $faker->unique()->safeEmail,
+            'street' => $faker->address(),
+        ]);
+
+        Tenant::factory()->create([
+            'id' => 6,
+            'name' => 'EDi',
+            'tenant_type_id' => 1,
+            'email' => $faker->unique()->safeEmail,
+            'street' => $faker->address(),
+        ]);
+
+        Tenant::factory()->create([
+            'id' => 7,
+            'name' => 'ROTH',
+            'tenant_type_id' => 1,
+            'email' => $faker->unique()->safeEmail,
+            'street' => $faker->address(),
+        ]);
+
+        Tenant::factory()->create([
+            'id' => 8,
+            'name' => 'Anton Willer',
+            'tenant_type_id' => 1,
+            'email' => $faker->unique()->safeEmail,
+            'street' => $faker->address(),
+        ]);
+
+        Tenant::factory()->create([
+            'id' => 9,
+            'name' => 'RHV',
+            'tenant_type_id' => 1,
+            'email' => $faker->unique()->safeEmail,
+            'street' => $faker->address(),
+        ]);
+        Tenant::factory()->create([
+            'id' => 10,
+            'name' => 'Stoffmehl Tankstelle',
+            'tenant_type_id' => 1,
+            'email' => $faker->unique()->safeEmail,
+            'street' => $faker->address(),
+        ]);
+        Tenant::factory()->create([
+            'id' => 11,
+            'name' => 'Rosa Heizöl GmbH',
+            'tenant_type_id' => 1,
+            'email' => $faker->unique()->safeEmail,
+            'street' => $faker->address(),
+        ]);
+        Tenant::factory()->create([
+            'id' => 12,
+            'name' => 'Wirtz Energie',
+            'tenant_type_id' => 1,
+            'email' => $faker->unique()->safeEmail,
+            'street' => $faker->address(),
+        ]);
+        Tenant::factory()->create([
+            'id' => 13,
+            'name' => 'Tramin',
+            'tenant_type_id' => 1,
+            'email' => $faker->unique()->safeEmail,
+            'street' => $faker->address(),
+        ]);
+
+        Tenant::factory()->create([
+            'id' => 14,
+            'name' => 'Takstelle Ahlert',
+            'tenant_type_id' => 1,
+            'email' => $faker->unique()->safeEmail,
+            'street' => $faker->address(),
+        ]);
+
+        Tenant::factory()->create([
+            'id' => 15,
+            'name' => 'Zieglmeier Tankstellen',
+            'tenant_type_id' => 1,
+            'email' => $faker->unique()->safeEmail,
+            'street' => $faker->address(),
+        ]);
+
+        Tenant::factory()->create([
+            'id' => 16,
+            'name' => 'Kuster Energy',
+            'tenant_type_id' => 1,
+            'email' => $faker->unique()->safeEmail,
+            'street' => $faker->address(),
+        ]);
+
+        Tenant::factory()->create([
+            'id' => 17,
+            'name' => 'Rosa Heizöl GmbH',
+            'tenant_type_id' => 1,
+            'email' => $faker->unique()->safeEmail,
+            'street' => $faker->address(),
+        ]);
+
+
 
     }
 }

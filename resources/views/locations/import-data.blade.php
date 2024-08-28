@@ -83,7 +83,7 @@
                             <div>
                                 <div class="container">
                                     <h3>CSV oder EXCEL File wählen</h3>
-                                    <form action="{{ route('locations.import-locations') }}" method="POST" name="importform" enctype="multipart/form-data">
+                                    <form action="{{ route('locations.import') }}" method="POST" name="importform" enctype="multipart/form-data">
                                         @csrf
                                         <div class="form-group pt-8 pb-8">
                                             <label for="file">File:</label>

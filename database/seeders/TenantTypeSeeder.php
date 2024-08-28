@@ -20,31 +20,20 @@ class TenantTypeSeeder extends Seeder
         DB::table('tenant_types')->insert([
             [
                 'id' => '1',
-                'name' => 'Hofladen',
+                'name' => 'Tankstelle & Handel',
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
 
             [
                 'id' => '2',
-                'name' => 'Hobbygärtner',
+                'name' => 'Hersteller',
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
+
 
             [
                 'id' => '3',
-                'name' => 'Konsument',
-                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            ],
-
-            [
-                'id' => '4',
-                'name' => 'Händler',
-                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
-            ],
-
-            [
-                'id' => '5',
-                'name' => 'Andere',
+                'name' => 'Sonstige',
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
 

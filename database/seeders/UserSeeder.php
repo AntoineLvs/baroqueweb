@@ -22,22 +22,23 @@ class UserSeeder extends Seeder
             'password' => bcrypt('h3londerasd'),
         ]);
 
-        $antoine = User::factory()->create([
+        User::factory()->create([
             'email' => 'antoine@elsenmedia.com',
             'name' => 'antoine',
             'tenant_id' => '1',
             'password' => bcrypt('homesteadsecret'),
           ]);
 
-        $tenant = Tenant::factory()->count(3)->create();
+        //$tenants = Tenant::factory()->count(1)->create();
 
         foreach (Tenant::all() as $tenant) {
 
             // Create Folder
             Storage::disk('local')->makeDirectory('tenants/'.$tenant->id);
 
-            $tenant = User::factory()->count(2)->create([
+            $tenant = User::factory()->count(1)->create([
                 'tenant_id' => $tenant->id,
+                'role' => 'user',
             ]);
 
         }

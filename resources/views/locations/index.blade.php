@@ -73,10 +73,14 @@
               text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Create Location</a>
 
-              <a href="{{ route('locations.import-data') }}" class="inline-flex items-center px-4 py-2 border border-transparent
+              <a href="{{ route('locations.import-view') }}" class="inline-flex items-center px-4 py-2 border border-transparent
               text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700
               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Import Locations</a>
 
+
+                <a href="{{ route('locations.export') }}" class="inline-flex items-center px-4 py-2 border border-transparent
+              text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700
+              focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Export Locations</a>
             </div>
 
           </div>
@@ -274,8 +278,10 @@
                         @endforeach
                         <!-- More people... -->
                       </tbody>
+
                     </table>
                   </div>
+                    {{ $locations->links() }}
                 </div>
               </div>
             </div>

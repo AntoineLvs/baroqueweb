@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\LocationsExport;
 use App\Imports\DataImport;
 use App\Imports\EventAttendeesImport;
 use App\Imports\LocationsImport;
@@ -26,7 +27,7 @@ class ImportExportController extends Controller
     }
 
 
-    public function importLocation(): RedirectResponse
+    public function importLocations(): RedirectResponse
     {
 
         Excel::import(new LocationsImport, request()->file('file'));
@@ -34,6 +35,11 @@ class ImportExportController extends Controller
         return redirect()
             ->route('locations.index')
             ->with('message', 'Locations wurden importiert.');
+    }
+
+    public function exportLocations()
+    {
+        return Excel::download(new LocationsExport, 'locations.csv');
     }
 
 
