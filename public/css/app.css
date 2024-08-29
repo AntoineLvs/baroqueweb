@@ -1634,6 +1634,9 @@ h1, h2, h3, h4, h5, h6, p, span {
 .min-w-8 {
   min-width: 2rem;
 }
+.min-w-\[80px\] {
+  min-width: 80px;
+}
 .min-w-full {
   min-width: 100%;
 }
@@ -2179,6 +2182,9 @@ h1, h2, h3, h4, h5, h6, p, span {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+.text-ellipsis {
+  text-overflow: ellipsis;
 }
 .whitespace-normal {
   white-space: normal;
@@ -5600,6 +5606,11 @@ input[type="number"].appearance-number-none {
   color: rgb(185 28 28 / var(--tw-text-opacity));
 }
 
+.hover\:text-red-900:hover {
+  --tw-text-opacity: 1;
+  color: rgb(127 29 29 / var(--tw-text-opacity));
+}
+
 .hover\:text-rose-700:hover {
   --tw-text-opacity: 1;
   color: rgb(190 18 60 / var(--tw-text-opacity));
@@ -6685,16 +6696,6 @@ input[type="number"].appearance-number-none {
 
 .group:last-child .group-last\:hidden {
   display: none;
-}
-
-.group:hover .group-hover\:bg-green-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(34 197 94 / var(--tw-bg-opacity));
-}
-
-.group:hover .group-hover\:bg-primary-400 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(129 140 248 / var(--tw-bg-opacity));
 }
 
 .group:hover .group-hover\:stroke-gray-600 {
@@ -10010,6 +10011,10 @@ input[type="number"].appearance-number-none {
   --tw-bg-opacity: 0.1;
 }
 
+:is(:where(.dark) .dark\:hover\:bg-opacity-15:hover) {
+  --tw-bg-opacity: 0.15;
+}
+
 :is(:where(.dark) .dark\:hover\:bg-opacity-30:hover) {
   --tw-bg-opacity: 0.3;
 }
@@ -10435,6 +10440,10 @@ input[type="number"].appearance-number-none {
 
 :is(:where(.dark) .dark\:focus\:bg-opacity-10:focus) {
   --tw-bg-opacity: 0.1;
+}
+
+:is(:where(.dark) .dark\:focus\:bg-opacity-15:focus) {
+  --tw-bg-opacity: 0.15;
 }
 
 :is(:where(.dark) .dark\:focus\:text-amber-400:focus) {
