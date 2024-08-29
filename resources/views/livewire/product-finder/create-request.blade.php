@@ -76,44 +76,65 @@
         </div>
 
 
-        <form action="#" method="POST" class="mx-auto mt-16 max-w-xl sm:mt-20">
+        <form wire:submit="save" class="mx-auto mt-16 max-w-xl sm:mt-20">
             <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+
+                <!-- Customer Information -->
+
+
+
                 <div>
-                    <label for="first-name" class="block text-sm font-semibold leading-6 text-gray-900">First name</label>
+                    <label for="first-name" class="block text-sm font-semibold leading-6 text-gray-900">Vorname</label>
                     <div class="mt-2.5">
-                        <input type="text" name="first-name" id="first-name" autocomplete="given-name" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <input type="text" wire:model="customer_contact_firstname" id="customer_contact_firstname" autocomplete="given-name" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     </div>
+                    @error('customer_contact_firstname') <span class="error">{{ $message }}</span> @enderror
                 </div>
+
                 <div>
-                    <label for="last-name" class="block text-sm font-semibold leading-6 text-gray-900">Last name</label>
+                    <label for="first-name" class="block text-sm font-semibold leading-6 text-gray-900">Nachname</label>
                     <div class="mt-2.5">
-                        <input type="text" name="last-name" id="last-name" autocomplete="family-name" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <input type="text" wire:model="customer_contact_lastname" id="customer_contact_lastname" autocomplete="given-name" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     </div>
+                    @error('customer_contact_lastname') <span class="error">{{ $message }}</span> @enderror
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label for="company" class="block text-sm font-semibold leading-6 text-gray-900">Firma</label>
+                    <div class="mt-2.5">
+                        <input type="text"  wire:model="customer_company_name" id="customer_company" autocomplete="organization" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    </div>
+                    @error('customer_company_name') <span class="error">{{ $message }}</span> @enderror
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label for="email" class="block text-sm font-semibold leading-6 text-gray-900">E-Mail</label>
+                    <div class="mt-2.5">
+                        <input type="email" wire:model="customer_email" name="customer_email" id="customer_email" autocomplete="email" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    </div>
+                    @error('customer_email') <span class="error">{{ $message }}</span> @enderror
                 </div>
                 <div class="sm:col-span-2">
-                    <label for="company" class="block text-sm font-semibold leading-6 text-gray-900">Company</label>
-                    <div class="mt-2.5">
-                        <input type="text" name="company" id="company" autocomplete="organization" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                    </div>
-                </div>
-                <div class="sm:col-span-2">
-                    <label for="email" class="block text-sm font-semibold leading-6 text-gray-900">Email</label>
-                    <div class="mt-2.5">
-                        <input type="email" name="email" id="email" autocomplete="email" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                    </div>
-                </div>
-                <div class="sm:col-span-2">
-                    <label for="phone-number" class="block text-sm font-semibold leading-6 text-gray-900">Phone number</label>
+                    <label for="phone-number" class="block text-sm font-semibold leading-6 text-gray-900">Telefon</label>
                     <div class="relative mt-2.5">
-                        <input type="tel" name="phone-number" id="phone-number" autocomplete="tel" class="block w-full rounded-md border-0 px-3.5 py-2 pl-20 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                        <input type="tel" wire:model="customer_phone" name="customer_phone" id="customer_phone" autocomplete="tel" class="block w-full rounded-md border-0 px-3.5 py-2 pl-20 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     </div>
+                    @error('customer_phone') <span class="error">{{ $message }}</span> @enderror
                 </div>
                 <div class="sm:col-span-2">
-                    <label for="message" class="block text-sm font-semibold leading-6 text-gray-900">Message</label>
+                    <label for="message" class="block text-sm font-semibold leading-6 text-gray-900">Ergänzungen zur Anfrage</label>
                     <div class="mt-2.5">
-                        <textarea name="message" id="message" rows="4" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
+                        <textarea wire:model="customer_order_notice" name="customer_order_notice" id="customer_order_notice" rows="4" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"></textarea>
                     </div>
+                    @error('customer_order_notice') <span class="error">{{ $message }}</span> @enderror
                 </div>
+
+
+
+
+
+
+
                 <div class="flex gap-x-4 sm:col-span-2">
                     <div class="flex h-6 items-center">
                         <x-toggle>

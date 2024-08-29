@@ -12,19 +12,51 @@ class Order extends Model
     use BelongsToTenant, HasFactory;
 
     protected $fillable = [
-        'informations',
-        'date_valid',
+        # Order values
+        'order_status_id',
+        'order_type_id',
         'product_type_id',
+        'tenant_id',
+
+        # Customer values
+        'customer_tenant_id',
+        'customer_company_name',
+        'customer_email',
+        'customer_phone',
+        'customer_contact_firstname',
+        'customer_contact_lastname',
+        'customer_street',
+        'customer_zip',
+        'customer_city',
+        'customer_country',
+        'customer_order_notice',
+
+        # General fields
+        'order_notice',
+        'date_valid',
         'total_amount',
         'price_unit',
-        'tenant_id',
-        'customer_tenant_id',
+        'date_customer_sent',
+        'date_customer_confirmed',
+        'date_customer_cancelled'
     ];
 
     public function tenant()
     {
         return $this->belongsTo(Tenant::class);
     }
+
+    public function status()
+    {
+        return $this->belongsTo(OrderStatus::class, 'order_status_id');
+    }
+
+    public function type()
+    {
+        return $this->hasOne(OrderType::class);
+    }
+
+
 
     public function products()
     {

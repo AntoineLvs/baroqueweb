@@ -34,6 +34,8 @@ class DatabaseSeeder extends Seeder
             // LocationSeeder::class,
             StandardSeeder::class,
             TokenTypeSeeder::class,
+            OrderTypeSeeder::class,
+            OrderStatusSeeder::class,
         ]);
 
     }

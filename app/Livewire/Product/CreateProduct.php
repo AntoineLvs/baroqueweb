@@ -14,50 +14,50 @@ use Livewire\WithFileUploads;
 class CreateProduct extends Component
 {
 
-    use WithFileUploads;
+
 
     public $product;
-  
+
     public $name;
     public $data;
-  
-  
+
+
     public $product_type_id;
     public $product_types;
     public $value;
     public $document_id;
-  
+
     public $base_products;
     public $base_product_id;
-  
+
     public $standards;
     public $standard_id;
-  
+
     public $model;
     public $options;
     public $showContent;
-  
-  
+
+
     public $product_unit_id = 1;
     public $product_units;
-  
+
     public $selectedProductType;
-  
+
     public $document_type = 1;
-  
+
     public $blend_percent = 0;
     public $blendPercentVisible = false;
-  
-  
+
+
     public function mount($product_types, $product_units, $base_products, $standards)
     {
       $this->product_types = $product_types;
-  
+
       $this->product_units = $product_units;
       $this->base_products = $base_products;
       $this->standards = $standards;
     }
-  
+
     public function updatedSelectedBaseProduct()
     {
       if ($this->product_type_id == '1') {
@@ -80,7 +80,7 @@ class CreateProduct extends Component
         $this->blendPercentVisible = false;
       }
     }
-  
+
     public function updatedBaseProductId()
     {
       if ($this->product_type_id == '1' && $this->base_product_id != '1') {
@@ -92,7 +92,7 @@ class CreateProduct extends Component
         }
       }
     }
-  
+
     public function submit()
     {
       $data = $this->validate([
@@ -103,47 +103,47 @@ class CreateProduct extends Component
         'base_product_id' => 'required',
         'standard_id' => 'required',
         'blend_percent' => 'nullable',
-  
+
       ]);
-  
+
       // Créez le produit
       $product = Product::create($data);
-  
+
       // Sauvegardez le produit pour obtenir son ID généré automatiquement
       $product->save();
-  
+
       // Sauvegardez le document si présent
       if ($this->document_id) {
         $path = $this->document_id->storeAs('/documents/' . $product->id . '/', 'document_' . now()->timestamp . '.' . $this->document_id->getClientOriginalExtension(), 'public');
-  
+
         // Créez un nouveau document associé au produit
         $document = $this->createDocument($this->document_id, $product->user_id);
-  
+
         // Associez l'ID du document au produit
         $product->document_id = $document->id;
-  
+
         // Sauvegardez à nouveau le produit avec l'ID du document mis à jour
         $product->save();
       }
-  
+
       $message = '' . $product->name . ' was created successfully.';
-  
+
       return redirect()
         ->route('products.index')
         ->with('message', $message);
     }
-  
+
     public function createDocument($file, $userId)
     {
-  
+
       $user = Auth::user();
-  
+
       $filename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME)
         . '_' . now()->timestamp . '.' . $file->getClientOriginalExtension();
-  
+
       // store private s3
       $file->storeAs('/documents/' . $user->tenant_id . '/', $filename, 's3');
-  
+
       // create document in db
       $document = Document::create([
         'document_type_id' => $this->document_type,
@@ -153,10 +153,10 @@ class CreateProduct extends Component
         'extension' => $file->getClientOriginalExtension(),
         'size' => $file->getSize(),
       ]);
-  
+
       return $document;
     }
-  
+
     public function render()
     {
       $this->product_types = ProductType::all();
@@ -167,7 +167,7 @@ class CreateProduct extends Component
         $this->base_products = [];
         $this->standards = [];
       }
-  
+
       return view('livewire.product.create-product', [
         'product_types' => $this->product_types,
         'product_units' => $this->product_units,

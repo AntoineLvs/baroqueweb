@@ -136,19 +136,6 @@ Route::get('/check/manufacturers', function (Request $request) {
         ->map(fn (Manufacturer $manufacturer) => $manufacturer->only('id', 'name'));
 })->name('api.manufacturers');
 
-// hub finder
-Route::get('mapfinder/', [HubController::class, 'showMap'])->name('hub.showMap');
-Route::get('hub/{id}', [HubController::class, 'showPublicProfile'])->name('hub.showPublicProfile');
-
-
-// PRODUCT FINDER
-Route::get('product-finder/', [ProductFinderController::class, 'index'])->name('product-finder.index-public');
-
-Route::get('find/', [LocationController::class, 'showLocationFinder'])->name('locations.find-locations-public');
-
-Route::get('/find/locations/{id}', [LocationController::class, 'showLocationProfile'])->name('locations.profile-locations-public');
-Route::get('/find/{tenant_id}', [LocationController::class, 'showTenantProfile'])->name('locations.profile-tenants');
-Route::get('/find/products/{id}', [LocationController::class, 'showProducts'])->name('locations.show-products');
 
 Route::middleware('guest')->group(function () {
     Route::get('login', Login::class)->name('login');
@@ -175,7 +162,22 @@ Route::middleware('auth')->group(function () {
 
 
 // PUBLIC Order Routes
+
+// hub finder
+Route::get('mapfinder/', [HubController::class, 'showMap'])->name('hub.showMap');
+Route::get('hub/{id}', [HubController::class, 'showPublicProfile'])->name('hub.showPublicProfile');
+
+
+// PRODUCT FINDER
+Route::get('product-finder/', [ProductFinderController::class, 'index'])->name('product-finder.index-public');
 Route::get('request-product/{product}', [OrderController::class, 'createProductRequest'])->name('orders.public-product-request');
+
+Route::get('find/', [LocationController::class, 'showLocationFinder'])->name('locations.find-locations-public');
+
+Route::get('/find/locations/{id}', [LocationController::class, 'showLocationProfile'])->name('locations.profile-locations-public');
+Route::get('/find/{tenant_id}', [LocationController::class, 'showTenantProfile'])->name('locations.profile-tenants');
+Route::get('/find/products/{id}', [LocationController::class, 'showProducts'])->name('locations.show-products');
+
 
 
 // AUTH SECTION BACKEND

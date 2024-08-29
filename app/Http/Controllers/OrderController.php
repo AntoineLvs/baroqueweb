@@ -27,7 +27,6 @@ class OrderController extends Controller
     public function createProductRequest(Product $product): View
     {
 
-
         return view('product-finder.public-product-request', compact('product'));
     }
 
