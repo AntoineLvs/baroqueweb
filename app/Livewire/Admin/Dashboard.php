@@ -15,6 +15,8 @@ class Dashboard extends Component
     public $all_locations;
     public $toggleButton = false;
 
+    public $datasetId = 'ckvsnxal129qg27qrclgdhekc';
+
     public function toggleButton()
     {
         $this->toggleButton = !$this->toggleButton;

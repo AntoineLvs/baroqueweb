@@ -199,6 +199,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('admin/{location}/createqueue', [AdminController::class, 'queueLocation'])->name('admin.queueLocation');
         Route::post('admin/{location}/disablequeue', [AdminController::class, 'disableLocation'])->name('admin.disableLocation');
         Route::post('admin/queue-locations', [AdminController::class, 'queueAllLocations'])->name('admin.queueAllLocations');
+        Route::post('admin/export-tileset', [AdminController::class, 'exportToTileset'])->name('admin.exportToTileset');
+
 
         // API Dashboard
         Route::resource('/api-dashboard', ApiTokenController::class)->except(['show']);

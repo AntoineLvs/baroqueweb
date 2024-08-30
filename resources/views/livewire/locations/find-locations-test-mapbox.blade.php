@@ -167,7 +167,7 @@
                                     </div>
                                 </div>
                             </td>
-                            <td class="py-4 whitespace-no-wrap text-center border-b border-gray-300 leading-5 font-medium">
+                            <td class="py-4 pr-4 whitespace-no-wrap text-center border-b border-gray-300 leading-5 font-medium">
                                 <!-- Adjust the parent div for the second badge -->
                                 <div class="flex items-center justify-center h-full" style="padding-top: 3px;">
                                     <button type="button" class="details-button">
@@ -539,6 +539,8 @@
                         const opening_start = feature.properties.opening_start || "00:00";
                         const opening_end = feature.properties.opening_end || "23:59";
                         const address = feature.properties.address || "N/A";
+                        const productType = feature.properties.product_types || [];
+                        let productIds = feature.properties.products;
                         const id = feature.properties.id || "";
 
                         const product_types = feature.properties.product_types || [];
@@ -565,7 +567,7 @@
                             hvo100Badge.className = 'w-full';
                             hvo100Badge.innerHTML = `
                                                         <button type="button" class="w-full min-w-[80px] text-xs cursor-default rounded-full bg-indigo-600 px-2.5 py-1 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
-                                                            HVO Blend
+                                                            HVO 100
                                                         </button>
                                                     `;
                             productsContainer.appendChild(hvo100Badge);
@@ -575,7 +577,7 @@
                             const hvoBlendBadge = document.createElement('div');
                             hvoBlendBadge.className = 'w-full';
                             hvoBlendBadge.innerHTML = `
-                                                        <button type="button" style="min-width: 80px;" class="w-full text-xs cursor-default rounded-full bg-indigo-600 px-2.5 py-1 text-white shadow-sm">
+                                                        <button type="button" class="w-full min-w-[80px] text-xs cursor-default rounded-full bg-indigo-600 px-2.5 py-1 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
                                                             HVO Blend
                                                         </button>
                                                     `;
@@ -585,7 +587,7 @@
                         // Add an event listener for zooming and showing a popup when the line is clicked
                         clone.querySelector('tr').addEventListener('click', function() {
                             const coordinates = feature.geometry.coordinates;
-                            flyToLocation(coordinates, name, opening_start, opening_end);
+                            flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds);
                             highlightLocation(feature);
                             hightLightLocationInTable(id);
                         });
@@ -670,8 +672,11 @@
                         const name = features[0].properties.name;
                         const opening_start = features[0].properties.opening_start || "00:00";
                         const opening_end = features[0].properties.opening_end || "23:59";
+                        const productType = e.features[0].properties.product_types || [];
+                        let productIds = e.features[0].properties.products;
                         const id = features[0].properties.id;
-                        flyToLocation(coordinates, name, opening_start, opening_end);
+
+                        flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds);
                         hightLightLocationInTable(id);
                     } else {
                         // Adjust the map bounds to include all the matches
@@ -730,11 +735,58 @@
                     const name = e.features[0].properties.name;
                     const opening_start = e.features[0].properties.opening_start || "00:00";
                     const opening_end = e.features[0].properties.opening_end || "23:59";
+                    const productType = e.features[0].properties.product_types || [];
+                    let productIds = e.features[0].properties.products;
 
-                    // Create the HTML content for the popup
+                    // Vérification de la valeur de productType pour déterminer le type de badge à afficher
+                    let productBadge = '';
+
+                    if (productType.includes(1)) {
+                        productBadge = `<button type="button" class="w-full min-w-[80px] text-xs cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+
+                        HVO 100
+                    </button>`;
+                    } else if (productType.includes(2)) {
+                        productBadge = `<button type="button" class="w-full min-w-[80px] text-xs cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                        HVO Blend
+                    </button>`;
+                    }
+
+                    // Tableau de correspondance des noms de produits
+                    const productNames = {
+                        1: 'HVO100',
+                        2: 'KlimaDiesel 90',
+                        3: 'NesteMY',
+                        4: 'Fuelmotion H',
+                        5: 'C.A.R.E Diesel',
+                        6: 'ROTH HVO100 Diesel'
+                    };
+
+
+                    // Vérifier si productIds est déjà un tableau, sinon essayer de le convertir
+                    if (!Array.isArray(productIds)) {
+                        try {
+                            productIds = JSON.parse(productIds);
+                        } catch (e) {
+                            // Si la conversion échoue, utiliser un tableau vide par défaut
+                            productIds = [];
+                        }
+                    }
+
+                    // Convertir les IDs en noms
+                    const productNamesList = productIds
+                        .map(id => productNames[id])
+                        .filter(name => name !== undefined)
+                        .join(', ');
+
+                    // Créer le contenu HTML pour le popup
                     const popupContent = `
                                             <div style="text-align: center;">
-                                                <div style="font-size: 14px; font-weight: bold;">${name}</div>
+                                                 <div style="font-size: 14px; font-weight: bold;">${name}</div>
+                                                <div style="display: flex; align-items: center; justify-content: center;">
+                                                    ${productBadge}
+                                                    <div>${productNamesList}</div>
+                                                </div>
                                                 <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
                                             </div>
                                         `;
@@ -788,11 +840,57 @@
                     const name = e.features[0].properties.name;
                     const opening_start = e.features[0].properties.opening_start || "00:00";
                     const opening_end = e.features[0].properties.opening_end || "23:59";
+                    const productType = e.features[0].properties.product_types || [];
+                    let productIds = e.features[0].properties.products;
+                    // Vérification de la valeur de productType pour déterminer le type de badge à afficher
+                    let productBadge = '';
 
-                    // Create the HTML content for the popup
+                    if (productType.includes(1)) {
+                        productBadge = `<button type="button" class="w-full min-w-[80px] text-xs cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+
+                        HVO 100
+                    </button>`;
+                    } else if (productType.includes(2)) {
+                        productBadge = `<button type="button" class="w-full min-w-[80px] text-xs cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                        HVO Blend
+                    </button>`;
+                    }
+
+                    // Tableau de correspondance des noms de produits
+                    const productNames = {
+                        1: 'HVO100',
+                        2: 'KlimaDiesel 90',
+                        3: 'NesteMY',
+                        4: 'Fuelmotion H',
+                        5: 'C.A.R.E Diesel',
+                        6: 'ROTH HVO100 Diesel'
+                    };
+
+
+                    // Vérifier si productIds est déjà un tableau, sinon essayer de le convertir
+                    if (!Array.isArray(productIds)) {
+                        try {
+                            productIds = JSON.parse(productIds);
+                        } catch (e) {
+                            // Si la conversion échoue, utiliser un tableau vide par défaut
+                            productIds = [];
+                        }
+                    }
+
+                    // Convertir les IDs en noms
+                    const productNamesList = productIds
+                        .map(id => productNames[id])
+                        .filter(name => name !== undefined)
+                        .join(', ');
+
+                    // Créer le contenu HTML pour le popup
                     const popupContent = `
                                             <div style="text-align: center;">
-                                                <div style="font-size: 14px; font-weight: bold;">${name}</div>
+                                                 <div style="font-size: 14px; font-weight: bold;">${name}</div>
+                                                <div style="display: flex; align-items: center; justify-content: center;">
+                                                    ${productBadge}
+                                                    <div>${productNamesList}</div>
+                                                </div>
                                                 <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
                                             </div>
                                         `;
@@ -837,7 +935,7 @@
                 });
 
                 // Show a popup and zoom to a specific location
-                function flyToLocation(coordinates, name, opening_start, opening_end) {
+                function flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds) {
 
                     map.flyTo({
                         center: coordinates,
@@ -846,12 +944,58 @@
 
                     if (activePopup) activePopup.remove();
 
+
+                    // Vérification de la valeur de productType pour déterminer le type de badge à afficher
+                    let productBadge = '';
+
+                    if (productType.includes(1)) {
+                        productBadge = `<button type="button" class="w-full min-w-[80px] text-xs cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+
+                        HVO 100
+                    </button>`;
+                    } else if (productType.includes(2)) {
+                        productBadge = `<button type="button" class="w-full min-w-[80px] text-xs cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                        HVO Blend
+                    </button>`;
+                    }
+
+                    // Tableau de correspondance des noms de produits
+                    const productNames = {
+                        1: 'HVO100',
+                        2: 'KlimaDiesel 90',
+                        3: 'NesteMY',
+                        4: 'Fuelmotion H',
+                        5: 'C.A.R.E Diesel',
+                        6: 'ROTH HVO100 Diesel'
+                    };
+
+                    // Vérifier si productIds est déjà un tableau, sinon essayer de le convertir
+                    if (!Array.isArray(productIds)) {
+                        try {
+                            productIds = JSON.parse(productIds);
+                        } catch (e) {
+                            // Si la conversion échoue, utiliser un tableau vide par défaut
+                            productIds = [];
+                        }
+                    }
+
+                    // Convertir les IDs en noms
+                    const productNamesList = productIds
+                        .map(id => productNames[id])
+                        .filter(name => name !== undefined)
+                        .join(', ');
+
+                    // Créer le contenu HTML pour le popup
                     const popupContent = `
                                             <div style="text-align: center;">
-                                                    <div style="font-size: 14px; font-weight: bold;">${name}</div>
-                                                    <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
+                                                 <div style="font-size: 14px; font-weight: bold;">${name}</div>
+                                                <div style="display: flex; align-items: center; justify-content: center;">
+                                                    ${productBadge}
+                                                    <div>${productNamesList}</div>
                                                 </div>
-                                                `;
+                                                <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
+                                            </div>
+                                        `;
 
                     activePopup = new mapboxgl.Popup({
                             closeButton: true,
@@ -883,11 +1027,13 @@
                     const name = clickedFeature.properties.name;
                     const opening_start = e.features[0].properties.opening_start || "00:00";
                     const opening_end = e.features[0].properties.opening_end || "23:59";
+                    const productType = e.features[0].properties.product_types || [];
+                    let productIds = e.features[0].properties.products;
                     const id = clickedFeature.properties.id;
 
 
                     // Zoom to the location and show a popup
-                    flyToLocation(coordinates, name, opening_start, opening_end);
+                    flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds);
 
                     // Move the table line to the top
                     hightLightLocationInTable(id);
