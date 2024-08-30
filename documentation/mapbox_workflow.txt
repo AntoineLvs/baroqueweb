@@ -1,0 +1,12 @@
+Insert Mapbox workflow here and create a guideline for
+
+
+1. Import new Locations in the Database (refuelOS)
+
+2. Add a new Location to the Database  (refuelOS)
+
+3. Remove a Single or a Couple of Locations from the Database (refuelOS)
+
+4. Update the Mapbox Data Accordingly to the Changes from 1-3
+
+
