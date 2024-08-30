@@ -109,10 +109,9 @@
                     </div>
                 </div> -->
                 <div class="bg-gray-100">
-                    <div class="text-gray-600 text-sm  px-4 py-3 border-b-2 border-gray-300 text-left leading-4 tracking-wider cursor-pointer">
-                        <span class="ml-4">Current Search Results</span>
+                    <div class="text-gray-600 text-sm px-4 py-3 border-b-2 border-gray-300 text-left leading-4 tracking-wider cursor-pointer">
+                        <span class="ml-4">Current Search Results: <span id="resultsCount">0</span></span>
                     </div>
-
                 </div>
                 <div class="table-container" id="tableContainer" style="overflow-y: scroll; height: 520px; background-color:rgba(255, 255, 255, 0.8);">
                     <table id="locationsTable" class="w-full">
@@ -155,10 +154,11 @@
                                 </div>
                             </td>
                             <td class="whitespace-no-wrap text-center border-b border-gray-300 visible-buttons">
-                                <div class="flex ml-auto items-center">
-                                    <div class="flex items-center justify-end">
+                                <!-- Adjust the parent div for the first badge -->
+                                <div class="flex items-center justify-center h-full">
+                                    <div class="flex items-center justify-center h-full">
                                         <div class="image-container">
-                                            <div class="flex items-center">
+                                            <div class="flex items-center justify-center">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="w-5 h-5 ml-2 location-status" fill="red">
                                                     <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 000-1.5h-3.25V5z" clip-rule="evenodd" />
                                                 </svg>
@@ -168,16 +168,21 @@
                                 </div>
                             </td>
                             <td class="py-4 whitespace-no-wrap text-center border-b border-gray-300 leading-5 font-medium">
-                                <button type="button" class="details-button">
-                                    <div class="image-container">
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
-                                        </svg>
-                                        <span class="tooltip text-gray-500" style="z-index: 10; transform: translateX(-70%);">Show Details</span>
-                                    </div>
-                                </button>
+                                <!-- Adjust the parent div for the second badge -->
+                                <div class="flex items-center justify-center h-full" style="padding-top: 3px;">
+                                    <button type="button" class="details-button">
+                                        <div class="image-container">
+                                            <div class="flex items-center justify-center">
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                                                </svg>
+                                                <span class="tooltip text-gray-500" style="z-index: 10; transform: translateX(-90%);">Show Details</span>
+                                            </div>
+                                        </div>
+                                    </button>
+                                </div>
                             </td>
-                            <td class="visible-buttons py-4 pr-2 whitespace-no-wrap text-center border-b border-gray-300 leading-5 font-medium">
+                            <!-- <td class="visible-buttons py-4 pr-2 whitespace-no-wrap text-center border-b border-gray-300 leading-5 font-medium">
                                 <button type="button" class="open-google-map">
                                     <div class="image-container">
                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -186,7 +191,7 @@
                                         <span class="tooltip text-gray-500" style="z-index: 10; transform: translateX(-90%);">Show on Map</span>
                                     </div>
                                 </button>
-                            </td>
+                            </td> -->
                         </tr>
                         <tr class="details-row hidden">
                             <td colspan="5" class="pr-2 py-4 whitespace-no-wrap border-b border-gray-300">
@@ -205,15 +210,11 @@
                 <div class="w-full flex flex-col items-center justify-center">
                     <button @click="showResultClass = !showResultClass" class="w-full mx-auto bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded flex items-center justify-between" type="button">
                         <span>Show Results</span>
-                        @if($showResultClass)
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="text-white w-5 h-5" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
-                        </svg>
-                        @else
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="text-white w-5 h-5" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                        </svg>
-                        @endif
+                        <div class="transform transition-transform duration-600" :class="{ 'rotate-180': !showResultClass }">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="text-white w-5 h-5" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
+                            </svg>
+                        </div>
                     </button>
                 </div>
             </div>
@@ -301,8 +302,8 @@
         const map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/elsenmedia/ckvso4s5p189k14pltjqo1rqo',
-            center: [9.967627253948834, 53.573922489205195],
-            zoom: 10
+            center: [10.451526, 51.165691],
+            zoom: 5
         });
 
         let activePopup = null; // to manage the active popup
@@ -343,45 +344,44 @@
                     };
                 }
 
-                function updateMarkersAndTable() {
+                function updateMarkersAndTable(unzoom) {
                     if (activePopup) activePopup.remove(); // Delete the active popup
 
-                    // Define the current center of the map
+                    // Set the current center of the map
                     currentCenter = map.getCenter();
                     lastCenter = currentCenter; // Update the last center of the map
 
-                    // Define the minimum and maximum zoom levels
+                    // Set the minimum and maximum zoom levels
                     const minZoom = 5; // Minimum zoom level to reach
                     const currentZoom = map.getZoom(); // Get the current zoom level
                     const maxZoom = 20; // The usual maximum zoom level for the map
 
-                    // Get the visible features based on the current zoom level
+                    // Get the features visible at the current zoom level
                     let features = map.querySourceFeatures('your-tileset-source', {
                         sourceLayer: 'efuelmap_v1',
                         filter: ['all'],
                         validate: false
                     });
 
-                    // Check the activated HVO filters
+                    //  Check HVO filters
                     const isHvo100 = document.getElementById('isHvo100').textContent === 'true'; // Convert to boolean
                     const isHvoBlend = document.getElementById('isHvoBlend').textContent === 'true';
 
-                    // Filter the features based on the HVO filters
+                    // Filter the features based on HVO filters
                     let filteredFeatures = features.filter(feature => {
                         const productTypes = feature.properties.product_types || [];
-
-                        // Conditions to filter based on the values of isHvo100 and isHvoBlend
+                        // Filter based on the values of isHvo100 and isHvoBlend
                         if (isHvo100 && isHvoBlend) {
-                            // Both filters are activated, so we search [1, 2]
-                            return productTypes.includes(1) && productTypes.includes(2);
+                            // Both filters are active, so we search [1, 2]
+                            return productTypes.includes(1) || productTypes.includes(2);
                         } else if (isHvo100) {
-                            // Only HVO 100 is activated
+                            // Only HVO 100 is active
                             return productTypes.includes(1);
                         } else if (isHvoBlend) {
-                            // Only HVO Blend is activated
+                            // Only HVO Blend is active
                             return productTypes.includes(2);
                         } else {
-                            // No filter is activated
+                            // No filter is active
                             return true;
                         }
                     });
@@ -405,7 +405,23 @@
                         });
                     }
 
-                    // Progressive zoom out function
+                    // Get the current bounds of the map if unzoom is false
+                    if (unzoom === false) {
+                        const bounds = map.getBounds();
+                        const sw = bounds.getSouthWest();
+                        const ne = bounds.getNorthEast();
+
+                        // Filter the features to include only those visible on the map
+                        filteredFeatures = filteredFeatures.filter(feature => {
+                            const [longitude, latitude] = feature.geometry.coordinates;
+                            return (
+                                longitude >= sw.lng && longitude <= ne.lng &&
+                                latitude >= sw.lat && latitude <= ne.lat
+                            );
+                        });
+                    }
+
+                    // Progressive zoom out
                     function progressiveZoomOut() {
                         if (filteredFeatures.length > 0 || map.getZoom() <= minZoom) {
                             // If results are found or the minimum zoom level is reached
@@ -425,15 +441,15 @@
                                 tableBody.appendChild(tr);
                             }
 
-                            // Adjust the map view if successful
+                            // Adjust the map view if it is zoomed out
                             adjustMapView(filteredFeatures);
                         } else {
-                            // Zoom out progressively until results are found or the minimum zoom level is reached
+                            // If no results are found, zoom out progressively
                             map.zoomOut({
                                 animate: true
                             });
                             setTimeout(() => {
-                                // Refetch with the new zoom level
+                                // Search with the new zoom level
                                 features = map.querySourceFeatures('your-tileset-source', {
                                     sourceLayer: 'efuelmap_v1',
                                     filter: ['all'],
@@ -444,7 +460,7 @@
                                 filteredFeatures = features.filter(feature => {
                                     const productTypes = feature.properties.product_types || [];
                                     if (isHvo100 && isHvoBlend) {
-                                        return productTypes.includes(1) && productTypes.includes(2);
+                                        return productTypes.includes(1) || productTypes.includes(2);
                                     } else if (isHvo100) {
                                         return productTypes.includes(1);
                                     } else if (isHvoBlend) {
@@ -470,16 +486,32 @@
 
                                 // Call the recursive function to continue zooming progressively
                                 progressiveZoomOut();
-                            }, 500); // Delay for allowing the zoom
+                            }, 500); // Delay to allow the zoom
                         }
                     }
 
-                    // Call the progressive zoom function
-                    progressiveZoomOut();
+                    // Check if there are results that are visible
+                    if (filteredFeatures.length > 0) {
+                        // If results are found, update the markers and the table
+                        updateMarkers(filteredFeatures);
+                        updateTable(filteredFeatures);
+                        if (unzoom === true) {
+                            adjustMapView(filteredFeatures);
+                        }
+                    } else {
+                        // Otherwise, start the progressive zoom
+                        if (unzoom === true) {
+                            progressiveZoomOut();
+                        }
+                    }
                 }
 
 
                 function updateTable(closestFeatures) {
+                    // Update the number of results
+                    const resultsCount = document.getElementById('resultsCount');
+                    resultsCount.textContent = closestFeatures ? closestFeatures.length : 0;
+
                     if (!closestFeatures || closestFeatures.length === 0) {
                         const tableBody = document.querySelector("#locationsTable tbody");
                         tableBody.innerHTML = '';
@@ -532,8 +564,8 @@
                             const hvo100Badge = document.createElement('div');
                             hvo100Badge.className = 'w-full';
                             hvo100Badge.innerHTML = `
-                                                        <button type="button" style="min-width: 80px;" class="w-full text-xs cursor-default rounded-full bg-indigo-600 px-2.5 py-1 text-white shadow-sm">
-                                                            HVO100
+                                                        <button type="button" class="w-full min-w-[80px] text-xs cursor-default rounded-full bg-indigo-600 px-2.5 py-1 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                                                            HVO Blend
                                                         </button>
                                                     `;
                             productsContainer.appendChild(hvo100Badge);
@@ -543,10 +575,10 @@
                             const hvoBlendBadge = document.createElement('div');
                             hvoBlendBadge.className = 'w-full';
                             hvoBlendBadge.innerHTML = `
-                                                            <button type="button" style="min-width: 80px;" class="w-full text-xs cursor-default rounded-full bg-indigo-600 px-2.5 py-1 text-white shadow-sm">
-                                                                HVO Blend
-                                                            </button>
-                                                        `;
+                                                        <button type="button" style="min-width: 80px;" class="w-full text-xs cursor-default rounded-full bg-indigo-600 px-2.5 py-1 text-white shadow-sm">
+                                                            HVO Blend
+                                                        </button>
+                                                    `;
                             productsContainer.appendChild(hvoBlendBadge);
                         }
 
@@ -556,9 +588,6 @@
                             flyToLocation(coordinates, name, opening_start, opening_end);
                             highlightLocation(feature);
                             hightLightLocationInTable(id);
-
-
-
                         });
 
                         // Add an event handler for the "Show Details" button
@@ -569,20 +598,22 @@
                             const locationInfoSpan = detailsRow.querySelector('.details-location-info');
 
                             // Update the details content
-
-                            locationInfoSpan.innerHTML = `<div class="text-sm text-gray-800">
-                                Open hours : ${opening_start} - ${opening_end}<br />
-                                Address : ${address}
-                            </div>
-                            `;
+                            locationInfoSpan.innerHTML = `
+                                                        <div class="text-sm text-gray-800">
+                                                            Open hours : ${opening_start} - ${opening_end}<br />
+                                                            Address : <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}" target="_blank" class="text-blue-600 underline">${address}</a>
+                                                        </div>
+                                                    `;
 
                             // Toggle the details content
                             detailsRow.classList.toggle('hidden');
                         });
+
                         // Add the cloned line to the table
                         tableBody.appendChild(clone);
                     });
                 }
+
 
                 // Update markers on the map
                 function updateMarkers(closestFeatures) {
@@ -875,15 +906,18 @@
                     reset();
                 });
                 document.getElementById('searchAreaButton').addEventListener('click', function(e) {
-                    updateMarkersAndTable();
+                    const unzoom = false;
+                    updateMarkersAndTable(unzoom);
                 });
 
                 function reset() {
                     document.getElementById('searchBar').value = '';
-                    updateMarkersAndTable();
+                    const unzoom = true;
+                    updateMarkersAndTable(unzoom);
                 }
                 document.addEventListener('filterChanged', () => {
-                    updateMarkersAndTable();
+                    const unzoom = true;
+                    updateMarkersAndTable(unzoom);
                 });
 
                 // Function to calculate the distance between two points
