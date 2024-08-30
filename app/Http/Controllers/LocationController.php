@@ -80,14 +80,15 @@ class LocationController extends Controller
             fn ($val) => intval(trim($val)),
             explode(',', $selectedServices)
         );
-        $location->service_id = json_encode($cleanedArray);
+        $location->service_id = empty($cleanedArray) ? '[]' : json_encode($cleanedArray);
 
         $selectedProducts = $request->product_id;
         $cleanedArray = array_map(
             fn ($val) => intval(trim($val)),
             explode(',', $selectedProducts)
         );
-        $location->product_id = json_encode($cleanedArray);
+        $location->product_id = empty($cleanedArray) ? '[]' : json_encode($cleanedArray);
+
 
         $user = auth()->user();
         $tenant_id = $user->tenant_id ?? 0;

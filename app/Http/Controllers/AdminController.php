@@ -13,7 +13,8 @@ use App\Models\MapboxRecord;
 use App\Scopes\TenantScope;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class AdminController extends Controller
 {
@@ -50,7 +51,7 @@ class AdminController extends Controller
     public function queueLocation(Request $request, Location $location)
     {
         //the location is sent to mapbox_records table, in a queue. You can then manage the jobs of this queue by going in app/jobs/PushToMapbox
-        PushToMapbox::dispatch($location)->onQueue('mapbox_create');
+        PushToMapbox::dispatch($location->id)->onQueue('mapbox_create');
 
         $message = '' . $location->name . ' has been added to the Mapbox queue successfully, please be aware that there will be some time before your location appears online';
 
@@ -79,30 +80,59 @@ class AdminController extends Controller
         $locations = Location::withoutGlobalScope(TenantScope::class)->get();
 
         foreach ($locations as $location) {
-            if ($location->active == 1 && $location->verified == 0 && ($location->status == 0 || $location->status == 1)) {
-                PushToMapbox::dispatch($location)->onQueue('mapbox_create');
+            foreach ($locations as $location) {
+                if ($location->active == 1 && $location->verified == 0 && ($location->status == 0 || $location->status == 1)) {
+                    PushToMapbox::dispatch($location->id)->onQueue('mapbox_create');
 
-                $location->verified = 1;
-                $location->status = 2;
-                $location->save();
-            } elseif ($location->active == 0 && $location->verified == 1 && $location->status == 4) {
+                    $location->verified = 1;
+                    $location->status = 2;
+                    $location->save();
+                } elseif ($location->active == 0 && $location->verified == 1 && $location->status == 4) {
 
-                PushToMapbox::dispatch($location)->onQueue('mapbox_disable');
+                    PushToMapbox::dispatch($location)->onQueue('mapbox_disable');
 
-                $location->status = 5;
+                    $location->status = 5;
 
-                $location->save();
-            } elseif ($location->active == 1 && $location->verified == 1 && $location->status == 5) {
+                    $location->save();
+                } elseif ($location->active == 1 && $location->verified == 1 && $location->status == 5) {
 
-                PushToMapbox::dispatch($location)->onQueue('mapbox_reactivate');
+                    PushToMapbox::dispatch($location)->onQueue('mapbox_reactivate');
 
-                $location->status = 2;
-                $location->save();
+                    $location->status = 2;
+                    $location->save();
+                }
             }
-        }
 
-        $message = 'All locations have been processed successfully, please, be aware that there will be some time before modifications appears on the map ';
-        return back()->with('message', $message);
+            $message = 'All locations have been processed successfully, please, be aware that there will be some time before modifications appears on the map ';
+            return back()->with('message', $message);
+        }
+    }
+
+    public function exportToTileset($datasetId)
+    {
+        $token = 'sk.eyJ1IjoiZWxzZW5tZWRpYSIsImEiOiJjbHB2MmVnYWwwMTZtMmtwOWRnMGg0MjBjIn0.FIatojtElq0bfLj8G9xVhw';
+        $tilesetId = 'elsenmedia.ckvsnxal129qg27qrclgdhekc-330dh'; // Remplacez par l'ID de votre tileset
+
+        // Créez l'URL de l'API pour l'exportation, en incluant l'ID du dataset
+        $url = "https://api.mapbox.com/tilesets/v1/{$tilesetId}/export?access_token={$token}";
+
+        // Le corps de la requête doit inclure le datasetId
+        $body = [
+            'dataset' => $datasetId
+        ];
+
+        // Envoyez la requête POST pour démarrer l'exportation
+        $response = Http::withHeaders([
+            'Content-Type' => 'application/json',
+        ])->post($url, $body);
+
+        if ($response->successful()) {
+            return $response->json(); // Vous pouvez loguer la réponse ou renvoyer un message de succès
+        } else {
+            // Gérez les erreurs de l'API
+            Log::error('Mapbox tileset export failed', ['status' => $response->status(), 'response' => $response->body()]);
+            return ['error' => 'Failed to export dataset'];
+        }
     }
 
     /**

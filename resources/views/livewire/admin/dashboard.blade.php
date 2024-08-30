@@ -15,6 +15,11 @@
                         Push all
                     </button>
                 </form>
+                <form action="{{ route('admin.exportToTileset') }}" method="POST">
+                    @csrf
+                    <input type="hidden" name="dataset_id" value="{{ $datasetId }}">
+                    <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Export to Tileset</button>
+                </form>
 
 
             </div>
@@ -143,7 +148,7 @@
                                                 </a>
 
                                             </td>
-                        
+
                                             <!-- Here we send locations either to the create Queue, or to the disable Queue. It will depends on if the location is active or not :
                                             if it's already active, it means that we want to disable it, if it's not active, then it means that we want to put it online.
                                             The process of push to mapbox is the same, we separate them to have the choice to only push one the two queue. -->

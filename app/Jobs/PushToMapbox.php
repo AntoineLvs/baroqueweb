@@ -13,72 +13,73 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class PushToMapbox implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    protected $location;
-    /**
-     * Create a new job instance.
-     *
-     * @return void
-     */
-    public function __construct(Location $location)
+
+    protected $locationId;
+
+    public function __construct($locationId)
     {
-        $this->location = $location;
+        $this->locationId = $locationId;
     }
 
-    /**
-     * Execute the job.
-     *
-     * @return void
-     */
-    public function handle(Location $location): void
+    public function handle(): void
     {
-        //here we retrieve the needed data, to send it to the Mapbox API, to push a location on Mapbox's dataset
-        $lat = $this->location->lat;
-        $lng = $this->location->lng;
+        $location = Location::with(['location_type', 'tenant'])->find($this->locationId);
 
-        $username = 'elsenmedia';
-        $dataset_id = 'ckvsnxal129qg27qrclgdhekc';
+        if (!$location) {
+            Log::error("Location not found with ID: " . $this->locationId);
+            return;
+        }
+
         // default public token
         // $token = 'pk.eyJ1IjoiZWxzZW5tZWRpYSIsImEiOiJja3ZlYW9iZHQwcXJpMm9vMHp6YXl2dHFhIn0.FqjCjUzMT0v_HsVw2bSxbw';
 
         // refuelos-2 accessToken
         $token = 'sk.eyJ1IjoiZWxzZW5tZWRpYSIsImEiOiJjbHB2MmVnYWwwMTZtMmtwOWRnMGg0MjBjIn0.FIatojtElq0bfLj8G9xVhw';
 
-        $feature_id = strval($this->location->id);
-        $opening_start = substr($this->location->opening_start, 0, 5);
-        $opening_end = substr($this->location->opening_end, 0, 5);
-        $address = "{$this->location->address}, {$this->location->zipcode} {$this->location->city}";
+        // Utilisez l'instance $location pour récupérer les données nécessaires et envoyer la requête
+        $lat = $location->lat;
+        $lng = $location->lng;
+        $feature_id = strval($location->id);
+        $opening_start = substr($location->opening_start, 0, 5);
+        $opening_end = substr($location->opening_end, 0, 5);
+        $address = "{$location->address}, {$location->zipcode} {$location->city}";
 
-        $product_ids = json_decode($this->location->product_id);
+        // Vérifications pour éviter les erreurs
+        $locationTypeName = $location->location_type?->name ?? 'default_location_type';
+        $tenantName = $location->tenant?->name ?? 'default_tenant';
+
+        $product_ids = json_decode($location->product_id);
         $products = Product::whereIn('id', $product_ids)->get();
-        $product_types_ids = $products->pluck('product_type_id')->unique()->sort()->values()->all();
+        $product_types_ids = $products->pluck('product_type_id')->all();
         $product_types_json = json_encode($product_types_ids);
 
-        $service_ids = json_decode($this->location->service_id);
+        $service_ids = json_decode($location->service_id);
         $services = Service::whereIn('id', $service_ids)->get();
-        $service_types_ids = $services->pluck('base_service_id')->unique()->sort()->values()->all();
+        $service_types_ids = $services->pluck('base_service_id')->all();
         $service_types_json = json_encode($service_types_ids);
 
-        
         $body = [
             'id' => $feature_id,
             'type' => "Feature",
             'properties' => [
                 'id' => $feature_id,
-                'name' => $this->location->name,
-                'description' => $this->location->description,
-                'type'  => $this->location->location_type->name,
-                'tenant' => $this->location->tenant->name,
-                'opening_start' => $opening_start,
-                'opening_end' => $opening_end,
+                'name' => $location->name ?? 'default_name',
+                'description' => $location->description ?? 'default_description',
+                'type' => $locationTypeName,
+                'tenant' => $tenantName,
+                'opening_start' => $opening_start ?? '00:01',
+                'opening_end' => $opening_end ?? '23:59',
                 'address' => $address,
-                'active' => $this->location->active,
-                'product_types' => $product_types_json,
-                'service_types' => $service_types_json
-
+                'active' => $location->active,
+                'product_types' => $product_types_json ?? '[]',
+                'service_types' => $service_types_json ?? '[]',
+                'products' => $location->product_id ?? '[]',
+                'services' => $location->service_id ?? '[]'
             ],
             'geometry' => [
                 'coordinates' => [$lng, $lat],
@@ -86,40 +87,33 @@ class PushToMapbox implements ShouldQueue
             ]
         ];
 
-        $jsonbody = json_encode($body);
-
-        // FORWARD geocoding to convert adress to geo infor
-
+        // Envoyer la requête à l'API Mapbox
         $response = Http::withBody(
             json_encode($body),
             'application/json'
-        )
-            ->put('https://api.mapbox.com/datasets/v1/elsenmedia/ckvsnxal129qg27qrclgdhekc/features/' . $feature_id . '?access_token=' . $token . '');
+        )->put('https://api.mapbox.com/datasets/v1/elsenmedia/ckvsnxal129qg27qrclgdhekc/features/' . $feature_id . '?access_token=' . $token);
 
         if ($response->successful()) {
             $responseData = $response->json();
-
-            // dd($responseData);
-            // $this->publishDataset($token, $dataset_id);
-
+            // Log successful response or handle as needed
         } else {
-            dd($response->status());
+            // Log error response
+            Log::error('Mapbox request failed', ['status' => $response->status(), 'response' => $response->body()]);
         }
     }
-
     //here is an attempt to push the dataset to the Tileset without having to do it manually on Mapbox, but it didn't work, as I don't know if it's really possible to do...
     protected function publishDataset($token, $dataset_id)
     {
-        dd("https://api.mapbox.com/datasets/v1/elsenmedia/{$dataset_id}/exports?access_token={$token}");
+        // dd("https://api.mapbox.com/datasets/v1/elsenmedia/{$dataset_id}/exports?access_token={$token}");
 
-        $response = Http::post('https://api.mapbox.com/datasets/v1/elsenmedia/' . $dataset_id . '/exports?access_token=' . $token . '', [
-            'type' => 'tileset'
-        ]);
-        if ($response->successful()) {
+        // $response = Http::post('https://api.mapbox.com/datasets/v1/elsenmedia/' . $dataset_id . '/exports?access_token=' . $token . '', [
+        //     'type' => 'tileset'
+        // ]);
+        // if ($response->successful()) {
 
-            dd('Dataset with ' .  $this->location->name . ' has been published successfully');
-        } else {
-            dd($response->status());
-        }
+        //     dd('Dataset with ' .  $this->location->name . ' has been published successfully');
+        // } else {
+        //     dd($response->status());
+        // }
     }
 }
