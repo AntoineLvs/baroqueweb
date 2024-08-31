@@ -25,8 +25,7 @@ class LocationController extends Controller
     {
 
 
-        $locations = Location::latest()->paginate(25);
-
+        $locations = Location::whereNotIn('status', [6, 7])->latest()->paginate(25);
         return view('locations.index', compact('locations'));
     }
 
@@ -77,14 +76,14 @@ class LocationController extends Controller
 
         $selectedServices = $request->service_id;
         $cleanedArray = array_map(
-            fn ($val) => intval(trim($val)),
+            fn($val) => intval(trim($val)),
             explode(',', $selectedServices)
         );
         $location->service_id = empty($cleanedArray) ? '[]' : json_encode($cleanedArray);
 
         $selectedProducts = $request->product_id;
         $cleanedArray = array_map(
-            fn ($val) => intval(trim($val)),
+            fn($val) => intval(trim($val)),
             explode(',', $selectedProducts)
         );
         $location->product_id = empty($cleanedArray) ? '[]' : json_encode($cleanedArray);
@@ -159,14 +158,14 @@ class LocationController extends Controller
 
         $selectedServices = $request->service_id;
         $cleanedArray = array_map(
-            fn ($val) => intval(trim($val)),
+            fn($val) => intval(trim($val)),
             explode(',', $selectedServices)
         );
         $location->service_id = json_encode($cleanedArray);
 
         $selectedProducts = $request->product_id;
         $cleanedArray = array_map(
-            fn ($val) => intval(trim($val)),
+            fn($val) => intval(trim($val)),
             explode(',', $selectedProducts)
         );
         $location->product_id = json_encode($cleanedArray);
@@ -177,7 +176,7 @@ class LocationController extends Controller
 
         return redirect()
             ->route('locations.edit', $location)
-            ->with('message', '' . $location->name . ' informations have been successfully updated. Please wait for the changes to apply on the Find page.')
+            ->with('message', '' . $location->name . ' informations have been successfully updated. Please wait for the changes to apply on the HVO Map.')
             ->with('locationId', $location->id);
     }
 
@@ -186,11 +185,23 @@ class LocationController extends Controller
      */
     public function destroy(Location $location): RedirectResponse
     {
-        $location->delete();
-
-        return redirect()
-            ->route('locations.index')
-            ->with('message', 'Location was deleted successfully.');
+        if ($location->verified == 1 && $location->status == 7) {
+            $location->delete();
+            return redirect()
+                ->route('locations.index')
+                ->with('message', 'Location was deleted successfully.');
+        } elseif ($location->verified == 1) {
+            $location->status = 6;
+            $location->save();
+            return redirect()
+                ->route('locations.index')
+                ->with('message', 'We need to verify your request, before deleting your location. Thank you for your comprehension.');
+        } else {
+            $location->delete();
+            return redirect()
+                ->route('locations.index')
+                ->with('message', 'Location was deleted successfully.');
+        }
     }
 
     public function getGeoResponse($search1, $search2)

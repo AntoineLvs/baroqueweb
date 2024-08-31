@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\DeleteOnMapbox;
 use App\Jobs\PushToMapbox;
 use App\Models\Location;
 use App\Models\ProductType;
@@ -15,6 +16,7 @@ use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Aws\S3\S3Client;
 
 class AdminController extends Controller
 {
@@ -89,49 +91,27 @@ class AdminController extends Controller
                     $location->save();
                 } elseif ($location->active == 0 && $location->verified == 1 && $location->status == 4) {
 
-                    PushToMapbox::dispatch($location)->onQueue('mapbox_disable');
+                    PushToMapbox::dispatch($location->id)->onQueue('mapbox_disable');
 
                     $location->status = 5;
 
                     $location->save();
                 } elseif ($location->active == 1 && $location->verified == 1 && $location->status == 5) {
 
-                    PushToMapbox::dispatch($location)->onQueue('mapbox_reactivate');
+                    PushToMapbox::dispatch($location->id)->onQueue('mapbox_reactivate');
 
                     $location->status = 2;
+                    $location->save();
+                } elseif ($location->active == 1 && $location->verified == 1 && $location->status == 6) {
+                    DeleteOnMapbox::dispatch($location->id)->onQueue('mapbox_delete');
+
+                    $location->status = 7;
                     $location->save();
                 }
             }
 
             $message = 'All locations have been processed successfully, please, be aware that there will be some time before modifications appears on the map ';
             return back()->with('message', $message);
-        }
-    }
-
-    public function exportToTileset($datasetId)
-    {
-        $token = 'sk.eyJ1IjoiZWxzZW5tZWRpYSIsImEiOiJjbHB2MmVnYWwwMTZtMmtwOWRnMGg0MjBjIn0.FIatojtElq0bfLj8G9xVhw';
-        $tilesetId = 'elsenmedia.ckvsnxal129qg27qrclgdhekc-330dh'; // Remplacez par l'ID de votre tileset
-
-        // Créez l'URL de l'API pour l'exportation, en incluant l'ID du dataset
-        $url = "https://api.mapbox.com/tilesets/v1/{$tilesetId}/export?access_token={$token}";
-
-        // Le corps de la requête doit inclure le datasetId
-        $body = [
-            'dataset' => $datasetId
-        ];
-
-        // Envoyez la requête POST pour démarrer l'exportation
-        $response = Http::withHeaders([
-            'Content-Type' => 'application/json',
-        ])->post($url, $body);
-
-        if ($response->successful()) {
-            return $response->json(); // Vous pouvez loguer la réponse ou renvoyer un message de succès
-        } else {
-            // Gérez les erreurs de l'API
-            Log::error('Mapbox tileset export failed', ['status' => $response->status(), 'response' => $response->body()]);
-            return ['error' => 'Failed to export dataset'];
         }
     }
 

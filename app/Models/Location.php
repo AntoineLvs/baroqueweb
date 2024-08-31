@@ -144,7 +144,14 @@ class Location extends Model
         $statusText = '';
         $statusColor = '';
 
-        if ($this->active == 0 && $this->verified == 1 && $this->status == 4) {
+
+        if ($this->verified == 1 && $this->status == 6) {
+            $statusText = 'Waiting to be deleted';
+            $statusColor = 'red';
+        } elseif ($this->verified == 1 && $this->status == 7) {
+            $statusText = 'Delete if not on mapbox anymore';
+            $statusColor = 'red';
+        } elseif ($this->active == 0 && $this->verified == 1 && $this->status == 4) {
             $statusText = 'Disable Location';
             $statusColor = 'red';
         } elseif ($this->active == 1 && $this->verified == 1 && $this->status == 5) {
@@ -167,7 +174,6 @@ class Location extends Model
                     $statusText = 'Verified';
                     $statusColor = 'green';
                     break;
-
                 case 3:
                     $statusText = 'Awaiting to be pushed online';
                     $statusColor = 'purple';

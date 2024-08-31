@@ -566,7 +566,7 @@
                             const hvo100Badge = document.createElement('div');
                             hvo100Badge.className = 'w-full';
                             hvo100Badge.innerHTML = `
-                                                        <button type="button" class="w-full min-w-[80px] text-xs cursor-default rounded-full bg-indigo-600 px-2.5 py-1 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                                                        <button type="button" class="w-full min-mr-4 w-[80px] text-xs cursor-default rounded-full bg-indigo-600 px-2.5 py-1 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
                                                             HVO 100
                                                         </button>
                                                     `;
@@ -577,7 +577,7 @@
                             const hvoBlendBadge = document.createElement('div');
                             hvoBlendBadge.className = 'w-full';
                             hvoBlendBadge.innerHTML = `
-                                                        <button type="button" class="w-full min-w-[80px] text-xs cursor-default rounded-full bg-indigo-600 px-2.5 py-1 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                                                        <button type="button" class="w-full min-mr-4 w-[80px] text-xs cursor-default rounded-full bg-indigo-600 px-2.5 py-1 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
                                                             HVO Blend
                                                         </button>
                                                     `;
@@ -598,12 +598,54 @@
                             const detailsRow = this.closest('tr').nextElementSibling;
                             const detailsContent = detailsRow.querySelector('.details-content');
                             const locationInfoSpan = detailsRow.querySelector('.details-location-info');
+                            if (productType.includes(1)) {
+                                productBadge = `<button type="button" class="mr-2 w-[80px] cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+
+                        HVO 100
+                    </button>`;
+                            } else if (productType.includes(2)) {
+                                productBadge = `<button type="button" class="mr-2 w-[80px] cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                        HVO Blend
+                    </button>`;
+                            } else {
+                                productBadge = '';
+                            }
+
+                            // Tableau de correspondance des noms de produits
+                            const productNames = {
+                                1: 'HVO 100',
+                                2: 'KlimaDiesel 90',
+                                3: 'NesteMY',
+                                4: 'Fuelmotion H',
+                                5: 'C.A.R.E Diesel',
+                                6: 'ROTH HVO100 Diesel'
+                            };
+
+                            // Vérifier si productIds est déjà un tableau, sinon essayer de le convertir
+                            if (!Array.isArray(productIds)) {
+                                try {
+                                    productIds = JSON.parse(productIds);
+                                } catch (e) {
+                                    // Si la conversion échoue, utiliser un tableau vide par défaut
+                                    productIds = [];
+                                }
+                            }
+
+                            // Convertir les IDs en noms
+                            const productNamesList = productIds
+                                .map(id => productNames[id])
+                                .filter(name => name !== undefined)
+                                .join(', ');
 
                             // Update the details content
                             locationInfoSpan.innerHTML = `
                                                         <div class="text-sm text-gray-800">
-                                                            Open hours : ${opening_start} - ${opening_end}<br />
-                                                            Address : <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}" target="_blank" class="text-blue-600 underline">${address}</a>
+                                                            <div style="display: flex; align-items: center; justify-content: start; margin-bottom: 5px;">
+                                                                ${productBadge}
+                                                                <div class="whitespace-nowrap  text-ellipsis"> ${productNamesList}</div>
+                                                            </div>
+                                                            <div style="margin-bottom: 5px;">Open hours : ${opening_start} - ${opening_end}</div>
+                                                            <div style="margin-bottom: 5px;">Address : <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}" target="_blank" class="text-blue-600 underline">${address}</a></div>
                                                         </div>
                                                     `;
 
@@ -710,12 +752,12 @@
                         'type': 'symbol',
                         'source': 'highlighted-location',
                         'layout': {
-                            'icon-image': 'placeholder', // Use the defined icon in your style from mapbox
+                            'icon-image': 'red-fuel-location', // Use the defined icon in your style from mapbox
                             'icon-size': [
                                 'interpolate', ['linear'],
                                 ['zoom'],
-                                0, 0.09,
-                                22, 0.09
+                                0, 0.5,
+                                22, 0.5
                             ],
                             'text-field': ['get', 'name'],
                             'text-size': 0,
@@ -742,19 +784,19 @@
                     let productBadge = '';
 
                     if (productType.includes(1)) {
-                        productBadge = `<button type="button" class="w-full min-w-[80px] text-xs cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                        productBadge = `<button type="button" style="font-size:10px;" class="mr-2 w-[80px] cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
 
                         HVO 100
                     </button>`;
                     } else if (productType.includes(2)) {
-                        productBadge = `<button type="button" class="w-full min-w-[80px] text-xs cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                        productBadge = `<button type="button" style="font-size:10px;" class="mr-2 w-[80px] cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
                         HVO Blend
                     </button>`;
                     }
 
                     // Tableau de correspondance des noms de produits
                     const productNames = {
-                        1: 'HVO100',
+                        1: 'HVO 100',
                         2: 'KlimaDiesel 90',
                         3: 'NesteMY',
                         4: 'Fuelmotion H',
@@ -781,11 +823,11 @@
 
                     // Créer le contenu HTML pour le popup
                     const popupContent = `
-                                            <div style="text-align: center;">
-                                                 <div style="font-size: 14px; font-weight: bold;">${name}</div>
+                                            <div style="text-align: center; border-radius: 10px">
+                                                 <div style="font-size: 14px; font-weight: bold; margin-bottom:5px;">${name}</div>
                                                 <div style="display: flex; align-items: center; justify-content: center;">
                                                     ${productBadge}
-                                                    <div>${productNamesList}</div>
+                                                    <div class="whitespace-nowrap  text-ellipsis">${productNamesList}</div>
                                                 </div>
                                                 <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
                                             </div>
@@ -846,19 +888,19 @@
                     let productBadge = '';
 
                     if (productType.includes(1)) {
-                        productBadge = `<button type="button" class="w-full min-w-[80px] text-xs cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                        productBadge = `<button type="button" style="font-size:10px;" class="mr-2 w-[80px] cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
 
                         HVO 100
                     </button>`;
                     } else if (productType.includes(2)) {
-                        productBadge = `<button type="button" class="w-full min-w-[80px] text-xs cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                        productBadge = `<button type="button" style="font-size:10px;" class="mr-2 w-[80px] cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
                         HVO Blend
                     </button>`;
                     }
 
                     // Tableau de correspondance des noms de produits
                     const productNames = {
-                        1: 'HVO100',
+                        1: 'HVO 100',
                         2: 'KlimaDiesel 90',
                         3: 'NesteMY',
                         4: 'Fuelmotion H',
@@ -885,11 +927,11 @@
 
                     // Créer le contenu HTML pour le popup
                     const popupContent = `
-                                            <div style="text-align: center;">
-                                                 <div style="font-size: 14px; font-weight: bold;">${name}</div>
+                                            <div style="text-align: center; border-radius: 10px">
+                                                 <div style="font-size: 14px; font-weight: bold; margin-bottom:5px;">${name}</div>
                                                 <div style="display: flex; align-items: center; justify-content: center;">
                                                     ${productBadge}
-                                                    <div>${productNamesList}</div>
+                                                    <div class="whitespace-nowrap  text-ellipsis">${productNamesList}</div>
                                                 </div>
                                                 <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
                                             </div>
@@ -949,19 +991,19 @@
                     let productBadge = '';
 
                     if (productType.includes(1)) {
-                        productBadge = `<button type="button" class="w-full min-w-[80px] text-xs cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                        productBadge = `<button type="button" style="font-size:10px;" class="mr-2 w-[80px] cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
 
                         HVO 100
                     </button>`;
                     } else if (productType.includes(2)) {
-                        productBadge = `<button type="button" class="w-full min-w-[80px] text-xs cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                        productBadge = `<button type="button" style="font-size:10px;" class="mr-2 w-[80px] cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
                         HVO Blend
                     </button>`;
                     }
 
                     // Tableau de correspondance des noms de produits
                     const productNames = {
-                        1: 'HVO100',
+                        1: 'HVO 100',
                         2: 'KlimaDiesel 90',
                         3: 'NesteMY',
                         4: 'Fuelmotion H',
@@ -987,11 +1029,11 @@
 
                     // Créer le contenu HTML pour le popup
                     const popupContent = `
-                                            <div style="text-align: center;">
-                                                 <div style="font-size: 14px; font-weight: bold;">${name}</div>
+                                         <div style="text-align: center; border-radius: 10px">
+                                                 <div style="font-size: 14px; font-weight: bold; margin-bottom:5px;">${name}</div>
                                                 <div style="display: flex; align-items: center; justify-content: center;">
                                                     ${productBadge}
-                                                    <div>${productNamesList}</div>
+                                                    <div class="whitespace-nowrap  text-ellipsis">${productNamesList}</div>
                                                 </div>
                                                 <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
                                             </div>
