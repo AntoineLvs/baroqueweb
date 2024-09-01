@@ -35,33 +35,39 @@
 
                             <dl class="-my-3 divide-y divide-gray-100 px-6 py-4 text-sm leading-6">
                                 <div class="flex justify-between gap-x-4 py-3">
-                                    <dt class="text-gray-500">Bezeichnung</dt>
+                                    <dt class="text-gray-500">Produkt-Bezeichnung</dt>
                                     <dd class="text-gray-700">
-                                        <b>name</b>
+                                        <b>{{$product->name}}</b>
                                     </dd>
                                 </div>
 
                                 <div class="flex justify-between gap-x-4 py-3">
-                                    <dt class="text-gray-500">Norm</dt>
+                                    <dt class="text-gray-500">Produkt-Typ</dt>
                                     <dd class="text-gray-700">
-                                        x
+                                        {{ $product->product_type->name }}
                                     </dd>
                                 </div>
 
                                 <div class="flex justify-between gap-x-4 py-3">
-                                    <dt class="text-gray-500">Link</dt>
-                                    <dd class="flex items-start gap-x-2">
-                                        <a href="#"><span
-                                                class="text-decoration-line: underline"> Link öffnen </span></a>
+                                    <dt class="text-gray-500">Produkt-Details</dt>
+                                    <dd class="text-gray-700">
+                                        {{ $product->data }}
+                                    </dd>
+                                </div>
+
+                                <div class="flex justify-between gap-x-4 py-3">
+                                    <dt class="text-gray-500">Anbieter</dt>
+                                    <dd class="text-gray-700">
+                                        {{ $product->tenant->name }}
                                     </dd>
                                 </div>
 
 
                                 <div class="flex justify-between gap-x-4 py-3">
-                                    <dt class="text-gray-500">Detail</dt>
+                                    <dt class="text-gray-500"></dt>
                                     <dd class="flex items-start gap-x-2">
                                         <div class="font-medium text-gray-900">
-                                            {{ $product }}
+
                                         </div>
                                     </dd>
                                 </div>
@@ -79,8 +85,44 @@
         <form wire:submit="save" class="mx-auto mt-16 max-w-xl sm:mt-20">
             <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
 
-                <!-- Customer Information -->
 
+                <!-- Quantity -->
+                <div>
+                    <label for="quantity" class="block text-sm font-semibold leading-6 text-gray-900">request_quantity</label>
+                    <div class="mt-2.5">
+                        <input type="number" wire:model="request_quantity" id="quantity" min="1" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    </div>
+                    @error('request_quantity') <span class="error">{{ $message }}</span> @enderror
+                </div>
+
+                <!-- Unit -->
+                <div>
+                    <label for="price" class="block text-sm font-semibold leading-6 text-gray-900">product_unit_id</label>
+                    <div class="mt-2.5">
+
+                        <select wire:model.live="product_unit_id" id="product_unit_id" class="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md" required>
+                            <option value="">-- Please choose --</option>
+                            @foreach ($product_units as $product_unit)
+                                @if($product_unit)
+                                    <option wire:key="{{ $product_unit['id'] }}" value="{{$product_unit->id }}" selected>{{ $product_unit->name }}</option>
+                                @else
+                                    <option wire:key="{{ $product_unit['id']}}" value="{{$product_unit->id }}">{{$product_unit['name']}}</option>
+                                @endif
+                            @endforeach
+
+
+
+                        </select>
+
+
+                    </div>
+                    @error('product_unit') <span class="error">{{ $message }}</span> @enderror
+                </div>
+
+
+
+
+                <!-- Customer Information -->
 
 
                 <div>
@@ -106,6 +148,39 @@
                     </div>
                     @error('customer_company_name') <span class="error">{{ $message }}</span> @enderror
                 </div>
+
+                <div class="sm:col-span-2">
+                    <label for="company" class="block text-sm font-semibold leading-6 text-gray-900">customer_street</label>
+                    <div class="mt-2.5">
+                        <input type="text"  wire:model="customer_street" id="customer_street" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    </div>
+                    @error('customer_street') <span class="error">{{ $message }}</span> @enderror
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label for="company" class="block text-sm font-semibold leading-6 text-gray-900">customer_zip</label>
+                    <div class="mt-2.5">
+                        <input type="text"  wire:model="customer_zip" id="customer_zip" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    </div>
+                    @error('customer_zip') <span class="error">{{ $message }}</span> @enderror
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label for="customer_city" class="block text-sm font-semibold leading-6 text-gray-900">customer_city</label>
+                    <div class="mt-2.5">
+                        <input type="text"  wire:model="customer_city" id="customer_city" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    </div>
+                    @error('customer_city') <span class="error">{{ $message }}</span> @enderror
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label for="customer_country" class="block text-sm font-semibold leading-6 text-gray-900">customer_country</label>
+                    <div class="mt-2.5">
+                        <input type="text"  wire:model="customer_country" id="customer_country" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    </div>
+                    @error('customer_country') <span class="error">{{ $message }}</span> @enderror
+                </div>
+
 
                 <div class="sm:col-span-2">
                     <label for="email" class="block text-sm font-semibold leading-6 text-gray-900">E-Mail</label>
@@ -148,7 +223,7 @@
             </div>
 
             <div class="mt-10">
-                <button type="submit" class="block w-full rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Send Request</button>
+                <button type="submit" class="block w-full rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">Anfrage absenden</button>
             </div>
 
         </form>

@@ -11,13 +11,12 @@ use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\BaseProductController;
 use App\Http\Controllers\BaseServiceController;
-use App\Http\Controllers\BucketController;
-use App\Http\Controllers\DashboardController;
+
 use App\Http\Controllers\DirectoryController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\EngineController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\HubController;
+
 use App\Http\Controllers\ImpersonationController;
 use App\Http\Controllers\ImportExportController;
 use App\Http\Controllers\LocationController;
@@ -27,11 +26,10 @@ use App\Http\Controllers\MapController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductFinderController;
-use App\Http\Controllers\ProductOfferController;
-use App\Http\Controllers\ProductOfferInquiryController;
+
 use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ProjectController;
+
 use App\Http\Controllers\ReleaseController;
 use App\Http\Controllers\SepaMandateController;
 use App\Http\Controllers\ServiceController;
@@ -46,7 +44,7 @@ use App\Livewire\Auth\Register;
 use App\Livewire\Auth\Verify;
 use App\Models\Engine;
 use App\Models\Manufacturer;
-use App\Models\Release;
+
 
 
 
@@ -264,15 +262,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::put('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
 
-    // Hub Routes
-    Route::resource('hub', HubController::class);
-    Route::get('hub', [HubController::class, 'index'])->name('hub.index');
-    Route::get('hub/offer/{offer}', [HubController::class, 'show'])->name('hub.show');
-    Route::get('hub/inquiry/{inquiry}', [HubController::class, 'showInquiry'])->name('hub.showInquiry');
-    Route::get('addtobucket/{offer}', [HubController::class, 'addToBucket'])->name('add.to.bucket');
-    Route::get('hub/createInquiry/{offer}', [ProductOfferInquiryController::class, 'createNew'])->name('product-offer-inquiries.createNew');
-    Route::get('hub/createOffer/{inquiry}', [ProductOfferController::class, 'createNew'])->name('product-offers.createNew');
-
     // Tenant Routes
     //Route::resource('tenant', 'TenantController')->except(['edit', 'update']);
     Route::view('/tenant', 'tenant.edit')->name('tenant.index');
@@ -305,38 +294,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('services/{service}/edit/delete-document', [ServiceController::class, 'destroyDocument'])->name('services.destroyDocument');
 
 
-
-    // Watchlist Routes
-    Route::resource('bucket', BucketController::class);
-    Route::get('bucket', [BucketController::class, 'index'])->name('bucket.index');
-
-    // Product Offer Routes
-    Route::get('product-offers/makePublicOrder', [ProductOfferController::class, 'createPublic'])->name('product-offers.createPublic');
-    Route::resource('product-offers', ProductOfferController::class);
-    Route::get('product-offers', [ProductOfferController::class, 'index'])->name('product-offers.index');
-    Route::get('product-offers/create', [ProductOfferController::class, 'create'])->name('product-offers.create');
-    Route::get('product-offers/editpublic/{product_offer}', [ProductOfferController::class, 'editPublic'])->name('product-offers.edit-public');
-    Route::delete('product-offers/destroyPublicOffer/{product_offer}', [ProductOfferController::class, 'destroyPublicOffer'])->name('product-offers.destroyPublicOffer');
-    Route::get('product-offers/createFromInquiry/{product_offer_inquiry}/', [ProductOfferController::class, 'createFromInquiry'])->name('product-offers.createFromInquiry');
-
-    // Product Offer Inquiries Routes
-    Route::resource('product-offer-inquiries', ProductOfferInquiryController::class);
-    Route::get('product-offer-inquiries', [ProductOfferInquiryController::class, 'index'])->name('product-offer-inquiries.index');
-    Route::get('product-offer-inquiries/create', [ProductOfferInquiryController::class, 'create'])->name('product-offer-inquiries.create');
-    Route::get('product-offer-inquiries/showincoming/{product_offer_inquiry}', [ProductOfferInquiryController::class, 'incomingShow'])->name('product-offer-inquiries.incomingShow');
-    Route::get('product-offer-inquiries/{product_offer_inquiry}', [ProductOfferInquiryController::class, 'show'])->name('product-offer-inquiries.show');
-    Route::get('product-offer-inquiries/cancel/{product_offer_inquiry}', [ProductOfferInquiryController::class, 'cancel'])->name('product-offer-inquiries.cancel');
-
     // Order Routes
     Route::resource('orders', OrderController::class)->except(['update']);
     Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('orders/create', [OrderController::class, 'create'])->name('orders.create');
-
-
-    // Project Routes
-    Route::resource('projects', ProjectController::class)->except(['show']);
-    Route::get('projects', [ProjectController::class, 'index'])->name('projects.index');
-    Route::get('projects/create', [ProjectController::class, 'create'])->name('projects.create');
 
     // Manufacturers Routes
     Route::resource('manufacturers', ManufacturerController::class)->except(['show']);
