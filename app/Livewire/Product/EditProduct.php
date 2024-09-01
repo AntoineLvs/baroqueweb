@@ -13,48 +13,47 @@ use Livewire\WithFileUploads;
 class EditProduct extends Component
 {
 
-    use WithFileUploads;
 
 
     public $name;
     public $data;
     public $blend_percent;
-  
+
     public $product_type_id;
     public $product_types;
-  
+
     public $product_unit_id;
     public $product_units;
-  
+
     public $standards;
     public $standard_id;
-  
+
     public $baseProducts = [];
     public $base_product_id;
-  
-  
+
+
     public $product;
-  
+
     public $blendPercentVisible = false;
     public $base_products;
-  
-  
-  
+
+
+
     public function mount(Product $product, $product_types, $product_units)
     {
       $this->product_types = $product_types;
       $this->product_units = $product_units;
-  
+
       $this->product = $product;
-  
+
       $this->product_type_id = $product->product_type_id;
       $this->product_unit_id = $product->product_unit_id;
       $this->standard_id = $product->standard_id;
 
-  
+
       $this->name = $product->name;
       $this->data = $product->data;
-  
+
       $this->baseProducts = BaseProduct::all();
       $this->base_product_id = BaseProduct::where('id', $product->base_product_id)->get()->first()->id;
     }
@@ -91,7 +90,7 @@ class EditProduct extends Component
         }
       }
     }
-  
+
     public function submit()
     {
       $data = $this->validate([
@@ -102,11 +101,11 @@ class EditProduct extends Component
         'base_product_id' => 'required',
         'standard_id' => 'nullable',
         'blend_percent' => 'nullable',
-  
+
       ]);
-  
-  
-  
+
+
+
       $this->product->product_type_id = $this->product_type_id;
       $this->product->base_product_id = $this->base_product_id;
       $this->product->blend_percent = $this->blend_percent;
@@ -114,17 +113,17 @@ class EditProduct extends Component
       $this->product->name = $this->name;
       $this->product->data = $this->data;
       $this->product->product_unit_id = $this->product_unit_id;;
-  
+
       $this->product->fresh();
       $this->product->save();
-  
+
       $message = '' . $this->product->name . ' was edited successfully.';
-  
+
       return redirect()
         ->route('products.index')
         ->with('message', $message);
     }
-  
+
     public function render()
     {
       $this->product_types = ProductType::all();
@@ -135,13 +134,13 @@ class EditProduct extends Component
         $this->base_products = [];
         $this->standards = [];
       }
-  
+
       return view('livewire.product.edit-product', [
         'product_types' => $this->product_types,
         'product_units' => $this->product_units,
         'base_products' => $this->base_products,
         'standards' => $this->standards,
-  
+
       ]);
     }
 }

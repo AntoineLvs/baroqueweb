@@ -4,6 +4,7 @@ namespace App\Livewire\ProductFinder;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\ProductUnit;
 use Livewire\Component;
 
 class CreateRequest extends Component
@@ -15,6 +16,11 @@ class CreateRequest extends Component
     public $order_type_id = 1;
     public $order_status_id = 1;
     public $product_type_id;
+
+    public $product_units;
+    public $product_unit_id = 1;
+
+    public $request_quantity = 1000;
 
     // Customer-related fields
     public $customer_tenant_id;
@@ -33,7 +39,7 @@ class CreateRequest extends Component
     public $order_notice;
     public $date_valid;
     public $total_amount;
-    public $price_unit;
+    public $product_unit;
     public $date_customer_sent;
     public $date_customer_confirmed;
     public $date_customer_cancelled;
@@ -41,6 +47,7 @@ class CreateRequest extends Component
     public function mount(Product $product)
     {
         $this->product = $product;
+        $this->product_units = ProductUnit::all();
     }
 
     public function save()
@@ -51,6 +58,7 @@ class CreateRequest extends Component
             'order_type_id' => 'required|integer',
             'order_status_id' => 'required|integer',
             'product_type_id' => 'nullable|integer',
+            'request_quantity' => 'nullable|integer',
 
             // Customer-related fields
             'customer_tenant_id' => 'nullable|integer',
@@ -67,19 +75,15 @@ class CreateRequest extends Component
 
             // General fields
             'order_notice' => 'nullable|string',
-            'date_valid' => 'nullable|date',
-            'total_amount' => 'nullable|numeric',
-            'price_unit' => 'nullable|string|max:50',
-            'date_customer_sent' => 'nullable|date',
-            'date_customer_confirmed' => 'nullable|date',
-            'date_customer_cancelled' => 'nullable|date',
+
+
         ]);
 
         $order = Order::create($data);
 
         $order->save();
 
-        $message = 'Order was created successfully.';
+        $message = 'Ihre Anfrage wurde erfolgreich übermittelt. ';
 
         return redirect()
             ->route('product-finder.index-public')
@@ -90,6 +94,7 @@ class CreateRequest extends Component
     {
         return view('livewire.product-finder.create-request')->with([
             'product' => $this->product,
+            'product_units' => $this->product_units,
         ]);
     }
 }
