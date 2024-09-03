@@ -27,7 +27,7 @@ class MapboxRecord extends Model
         return self::all()->pluck('payload')
             ->map(function ($payload) {
                 // Déboguer la valeur du payload
-                preg_match('/locationId.+?(\d+)/', $payload, $matches);
+                preg_match('/;i:(\d+);/', $payload, $matches);
                 return isset($matches[1]) ? (int) $matches[1] : null;
             })->filter()->toArray();
     }

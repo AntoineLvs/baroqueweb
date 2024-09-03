@@ -152,7 +152,7 @@
                                             The process of push to mapbox is the same, we separate them to have the choice to only push one the two queue. -->
                                             <td class="px-6 py-4 whitespace-nowrap text-left text-sm font-medium">
                                                 @if($location->active == 0 )
-                                                <form method="POST" action="{{ route('admin.disableLocation', ['location' => $location]) }}">
+                                                <form method="POST" action="{{ route('admin.queueLocation', ['location' => $location]) }}">
                                                     @csrf
                                                     <button type="submit">
                                                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -138,7 +138,7 @@ class Dashboard extends Component
         }
 
         foreach ($deletedLocations as $location) {
-            $location->update(['status' => 7]);
+            $location->delete();
         }
     }
     public function refreshData()
@@ -175,7 +175,7 @@ class Dashboard extends Component
                     ->whereIn('status', [6, 7]);
             })->limit(25)->get();
         $this->all_locations = Location::all();
-        
+
         $this->pushedLocations = Location::where(function ($query) {
             $query->where('status', 12)
                 ->orWhere('status', 15)
@@ -188,7 +188,7 @@ class Dashboard extends Component
         // Compare les IDs pour trouver les IDs qui sont communs
         $this->commonIds = array_intersect($locationIds->toArray(), $mapboxLocationIds);
         $this->commonIds = count($this->commonIds);
-        return view('livewire.admin.dashboard', [
+         return view('livewire.admin.dashboard', [
             'locations' => $this->locations,
             'all_locations' => $this->all_locations,
             'commonIds' => $this->commonIds,
