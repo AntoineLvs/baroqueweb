@@ -186,6 +186,18 @@ class Location extends Model
                     $statusText = 'Refused';
                     $statusColor = 'red';
                     break;
+                case 12:
+                    $statusText = 'Waiting to be added';
+                    $statusColor = 'green';
+                    break;
+                case 15:
+                    $statusText = 'Waiting to be disabled';
+                    $statusColor = 'orange';
+                    break;
+                case 17:
+                    $statusText = 'Waiting to be deleted';
+                    $statusColor = 'red';
+                    break;
                 default:
                     $statusText = 'Unknown';
                     break;

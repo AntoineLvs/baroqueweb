@@ -161,10 +161,6 @@ Route::middleware('auth')->group(function () {
 
 // PUBLIC Order Routes
 
-// hub finder
-Route::get('mapfinder/', [HubController::class, 'showMap'])->name('hub.showMap');
-Route::get('hub/{id}', [HubController::class, 'showPublicProfile'])->name('hub.showPublicProfile');
-
 
 // PRODUCT FINDER
 Route::get('product-finder/', [ProductFinderController::class, 'index'])->name('product-finder.index-public');

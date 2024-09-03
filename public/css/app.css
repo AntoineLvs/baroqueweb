@@ -1637,9 +1637,6 @@ h1, h2, h3, h4, h5, h6, p, span {
 .min-w-8 {
   min-width: 2rem;
 }
-.min-w-\[80px\] {
-  min-width: 80px;
-}
 .min-w-full {
   min-width: 100%;
 }

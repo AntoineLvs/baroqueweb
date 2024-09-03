@@ -16,7 +16,9 @@ class Dashboard extends Component
 {
     public $locations;
     public $all_locations;
+    public $pushedLocations;
     public $toggleButton = false;
+    public $commonIds = [];
 
     public $uploadId;
     public $username = 'elsenmedia';
@@ -29,33 +31,8 @@ class Dashboard extends Component
     }
     public function mount()
     {
-        $this->locations = Location::withoutGlobalScope(TenantScope::class)
-            ->where(function ($query) {
-                // Conditions to get every location that has been created/edited and need to be pushed online
-                $query->where('active', 1)
-                    ->where('verified', 0)
-                    ->whereIn('status', [0, 1]);
-            })
-            ->orWhere(function ($query) {
-                // Conditions to get every location that is online, and need to be disable
-                $query->where('active', 0)
-                    ->where('verified', 1)
-                    ->where('status', 4);
-            })
-            ->orWhere(function ($query) {
-                //  Conditions to get every location that has been disabled, and need to be reactivate
-                $query->where('active', 1)
-                    ->where('verified', 1)
-                    ->where('status', 5);
-            })
-            ->orWhere(function ($query) {
-                //  Conditions to get every location that need to be deleted
-                $query->where('verified', 1)
-                    ->whereIn('status', [6, 7]);
-            })->limit(25)->get();
-        $this->all_locations = Location::all();
+        
     }
-
 
 
     public function exportDataset()
@@ -143,13 +120,79 @@ class Dashboard extends Component
         $uploadData = $uploadResponse->json();
         $this->uploadId = $uploadData['id']; // Store the upload ID for future verification
         session()->flash('message', 'Upload initiated successfully ! It will be processed in the background.');
+        $this->updateStatus();
+    }
+
+    public function updateStatus()
+    {
+        $createdLocations = Location::where('status', 12)->get();
+        $disabledLocations = Location::where('status', 15)->get();
+        $deletedLocations = Location::where('status', 17)->get();
+
+        foreach ($createdLocations as $location) {
+            $location->update(['status' => 2]);
+        }
+
+        foreach ($disabledLocations as $location) {
+            $location->update(['status' => 5]);
+        }
+
+        foreach ($deletedLocations as $location) {
+            $location->delete();
+        }
+    }
+    public function refreshData()
+    {
+        $this->render();
+        session()->flash('message', 'Data refreshed successfully !');
+
     }
 
     public function render()
     {
-        return view('livewire.admin.dashboard', [
+        $this->locations = Location::withoutGlobalScope(TenantScope::class)
+            ->where(function ($query) {
+                // Conditions to get every location that has been created/edited and need to be pushed online
+                $query->where('active', 1)
+                    ->where('verified', 0)
+                    ->whereIn('status', [0, 1]);
+            })
+            ->orWhere(function ($query) {
+                // Conditions to get every location that is online, and need to be disable
+                $query->where('active', 0)
+                    ->where('verified', 1)
+                    ->where('status', 4);
+            })
+            ->orWhere(function ($query) {
+                //  Conditions to get every location that has been disabled, and need to be reactivate
+                $query->where('active', 1)
+                    ->where('verified', 1)
+                    ->where('status', 5);
+            })
+            ->orWhere(function ($query) {
+                //  Conditions to get every location that need to be deleted
+                $query->where('verified', 1)
+                    ->whereIn('status', [6, 7]);
+            })->limit(25)->get();
+        $this->all_locations = Location::all();
+
+        $this->pushedLocations = Location::where(function ($query) {
+            $query->where('status', 12)
+                ->orWhere('status', 15)
+                ->orWhere('status', 17);
+        })->limit(25)->get();
+        $locationIds = $this->pushedLocations->pluck('id');
+
+        $mapboxLocationIds = MapboxRecord::getLocations();
+
+        // Compare les IDs pour trouver les IDs qui sont communs
+        $this->commonIds = array_intersect($locationIds->toArray(), $mapboxLocationIds);
+        $this->commonIds = count($this->commonIds);
+         return view('livewire.admin.dashboard', [
             'locations' => $this->locations,
             'all_locations' => $this->all_locations,
+            'commonIds' => $this->commonIds,
+            'pushedLocations' => $this->pushedLocations,
         ]);
     }
 }

@@ -109,6 +109,8 @@ class EditLocation extends Component
     {
         $selected = json_decode($request->get('selected', ''), true);
 
+        
+
         return Product::query()
             ->when(
                 $search = $request->get('search'),

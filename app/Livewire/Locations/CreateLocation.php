@@ -23,6 +23,7 @@ class CreateLocation extends Component
     public $services = [];
     public $products = [];
     public $location_types;
+    public $location_type_id = 1;
     public $service_id = [];
     public $product_id = [];
 
@@ -34,9 +35,10 @@ class CreateLocation extends Component
     public $lat;
     public $lng;
 
-    public $opening_start;
-    public $opening_end;
+    public $opening_start = '06:00';
+    public $opening_end = '22:00';
     public $opening_info;
+    public $allday = false;
 
     public $toggleMapButton = false;
     public $getCoordinatesButton = false;
@@ -47,7 +49,16 @@ class CreateLocation extends Component
     protected $listeners = ['coordinatesUpdated' => 'updateCoordinates', 'mapToggled' => 'toggleMap'];
 
 
-
+    public function toggleAllDay()
+    {
+        if ($this->allday) {
+            $this->opening_start = '00:00';
+            $this->opening_end = '00:00';
+        } else {
+            $this->opening_start = '06:00';
+            $this->opening_end = '22:00';
+        }
+    }
 
     public function openMap()
     {
@@ -216,6 +227,7 @@ class CreateLocation extends Component
             ->limit(10)
             ->get()
             ->map(fn (Product $product) => $product->only('id', 'name'));
+        
     }
     public function getServices(Request $request)
     {
