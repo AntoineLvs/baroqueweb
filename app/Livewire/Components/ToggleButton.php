@@ -28,9 +28,17 @@ class ToggleButton extends Component
     {
         $this->model->setAttribute($this->field, $value)->save();
 
+        if ($value === false) {
+            $this->dispatch('locationDeactivated');
+
+        } else {
+            $this->dispatch('locationActivated');
+        }
+
         if ($this->model->getTable() == 'locations' && $value == false && $this->model->getAttribute('verified') == 1) {
 
             $this->model->update(['status' => 4]);
+
         }
     }
 }

@@ -180,24 +180,39 @@
                                             Provide Opening Informations for this locations.<br>You can also write further informations<br>(We are close on Christmas Day).
                                         </p>
                                     </div>
-                                    <div class="flex items-center">
-                                        <div class="mr-4">
-                                            <div class="flex items-center">
-                                                <label for="opening_end" class="block text-sm font-medium leading-6 text-gray-900 mr-2">Start</label>
-                                            </div>
-                                            <div class="mt-2">
-                                                <input type="time" name="opening_start" id="opening_start" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="HH:MM" pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]">
-                                            </div>
-                                        </div>
-                                        <div class="mr-4 mt-6">
-                                            --
-                                        </div>
+                                    <div class="flex-col items-center">
                                         <div>
-                                            <div class="flex items-center">
-                                                <label for="opening_end" class="block text-sm font-medium leading-6 text-gray-900 mr-2">End</label>
+                                            <div>
+                                                <div class="flex items-center">
+                                                    <label for="allday" class="block text-sm font-medium leading-6 text-gray-900 mr-2">Open 24 Hours</label>
+                                                </div>
+                                                <div class="mt-2">
+                                                    <!-- Ajoutez wire:click pour appeler la méthode toggleAllDay -->
+                                                    <input id="allday" wire:model="allday" wire:click="toggleAllDay" aria-describedby="candidates-description" name="allday" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                                                </div>
                                             </div>
-                                            <div class="mt-2">
-                                                <input type="time" name="opening_end" id="opening_end" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="HH:MM" pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]">
+                                        </div>
+                                        <div class="flex mt-6">
+                                            <div class="mr-4">
+                                                <div class="flex items-center">
+                                                    <label for="opening_start" class="block text-sm font-medium leading-6 text-gray-900 mr-2">Start</label>
+                                                </div>
+                                                <div class="mt-2">
+                                                    <input type="time" wire:model="opening_start" name="opening_start" id="opening_start" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="06:00" pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]">
+                                                </div>
+                                            </div>
+                                            <div class="mr-4 mt-6">
+                                                --
+                                            </div>
+                                            <div>
+                                                <div class="flex items-center">
+                                                    <label for="opening_end" class="block text-sm font-medium leading-6 text-gray-900 mr-2">End</label>
+                                                </div>
+                                                <div class="mt-2">
+                                                    <input type="time" wire:model="opening_end" name="opening_end" id="opening_end" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="22:00" pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]">
+                                                </div>
+                                            </div>
+                                            <div class="mr-4 mt-6">
                                             </div>
                                         </div>
                                     </div>
@@ -227,7 +242,7 @@
                                         Location Type
                                     </label>
                                     <div class="mt-1 sm:mt-0 sm:col-span-2">
-                                        <select name="location_type_id" id="location_type_id" class="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md" required>
+                                        <select name="location_type_id" id="location_type_id" wire:model="location_type_id" class="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md" required>
                                             <option value="">-- Please choose --</option>
                                             @foreach ($location_types as $location_type)
                                             @if($location_type['id'] == old('document'))

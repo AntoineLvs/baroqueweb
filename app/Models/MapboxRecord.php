@@ -20,4 +20,15 @@ class MapboxRecord extends Model
         'available_at',
         'created_at',
     ];
+
+
+    public static function getLocations()
+    {
+        return self::all()->pluck('payload')
+            ->map(function ($payload) {
+                // Déboguer la valeur du payload
+                preg_match('/locationId.+?(\d+)/', $payload, $matches);
+                return isset($matches[1]) ? (int) $matches[1] : null;
+            })->filter()->toArray();
+    }
 }

@@ -60,33 +60,16 @@
 
     <div class="max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
 
-        @if (session()->has('message'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('message') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-        @endif
+        <x-message-component></x-message-component>
 
-
-        @if ($errors->any())
-        <div class="alert alert-danger">
-            <ul>
-                @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-        @endif
 
     </div>
     @livewire('locations.profile-location', [
-        'location' => $location,
-        'services' => $services,
-        'products' => $products,
-        'location_id' => $location->id, 
-        ])
+    'location' => $location,
+    'services' => $services,
+    'products' => $products,
+    'location_id' => $location->id,
+    ])
 
 </div>
 @endsection

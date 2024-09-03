@@ -53,14 +53,33 @@ class AdminController extends Controller
     public function queueLocation(Request $request, Location $location)
     {
         //the location is sent to mapbox_records table, in a queue. You can then manage the jobs of this queue by going in app/jobs/PushToMapbox
-        PushToMapbox::dispatch($location->id)->onQueue('mapbox_create');
+        if ($location->active == 1 && $location->verified == 0 && ($location->status == 0 || $location->status == 1)) {
+            PushToMapbox::dispatch($location->id)->onQueue('mapbox_create');
+
+            $location->verified = 1;
+            $location->status = 12;
+            $location->save();
+        } elseif ($location->active == 0 && $location->verified == 1 && $location->status == 4) {
+
+            PushToMapbox::dispatch($location->id)->onQueue('mapbox_disable');
+
+            $location->status = 15;
+
+            $location->save();
+        } elseif ($location->active == 1 && $location->verified == 1 && $location->status == 5) {
+
+            PushToMapbox::dispatch($location->id)->onQueue('mapbox_reactivate');
+
+            $location->status = 12;
+            $location->save();
+        } elseif ($location->active == 1 && $location->verified == 1 && $location->status == 6) {
+            DeleteOnMapbox::dispatch($location->id)->onQueue('mapbox_delete');
+
+            $location->status = 17;
+            $location->save();
+        }
 
         $message = '' . $location->name . ' has been added to the Mapbox queue successfully, please be aware that there will be some time before your location appears online';
-
-        $location->verified = 1;
-        $location->status = 2;
-        $location->save();
-
         return back()->with('message', $message);
     }
 
@@ -87,25 +106,25 @@ class AdminController extends Controller
                     PushToMapbox::dispatch($location->id)->onQueue('mapbox_create');
 
                     $location->verified = 1;
-                    $location->status = 2;
+                    $location->status = 12;
                     $location->save();
                 } elseif ($location->active == 0 && $location->verified == 1 && $location->status == 4) {
 
                     PushToMapbox::dispatch($location->id)->onQueue('mapbox_disable');
 
-                    $location->status = 5;
+                    $location->status = 15;
 
                     $location->save();
                 } elseif ($location->active == 1 && $location->verified == 1 && $location->status == 5) {
 
                     PushToMapbox::dispatch($location->id)->onQueue('mapbox_reactivate');
 
-                    $location->status = 2;
+                    $location->status = 12;
                     $location->save();
-                } elseif ($location->active == 1 && $location->verified == 1 && $location->status == 6) {
+                } elseif ($location->verified == 1 && $location->status == 6) {
                     DeleteOnMapbox::dispatch($location->id)->onQueue('mapbox_delete');
 
-                    $location->status = 7;
+                    $location->status = 17;
                     $location->save();
                 }
             }
