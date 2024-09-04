@@ -17,14 +17,14 @@
         style="z-index: 5; min-width: 400px;"
         class="relative main-container w-full md:w-1/5 transition-all duration-2000 shadow rounded-t-md border-b border-gray-300 xl:rounded-l-md xl:border-r-0 xl:rounded-r-md xl:border-b-0 xl:border-t-0 bg-white">
 
-        <!-- Croix de fermeture -->
+        <!-- closure button -->
         <div class="invisible-buttons absolute top-1 right-1 cursor-pointer" @click="isHidden = true">
             <svg class="w-6 h-6 text-gray-500 hover:text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
             </svg>
         </div>
 
-        <!-- Contenu de la barre de recherche -->
+        <!-- content of the search bar -->
         <div x-show="!isHidden" x-transition x-cloak class="mx-auto mt-8 md:mt-4 mr-4 ml-4">
             <div class="w-full flex flex-col items-center space-y-4">
                 <div class="w-full">
@@ -116,7 +116,7 @@
                 <div class="table-container" id="tableContainer" style="overflow-y: scroll; height: 520px; background-color:rgba(255, 255, 255, 0.8);">
                     <table id="locationsTable" class="w-full">
                         <tbody>
-                            <!-- Les lignes seront ajoutées ici dynamiquement -->
+                            <!-- The code will be injected here dynamically -->
                         </tbody>
                     </table>
 
@@ -135,10 +135,10 @@
                                             </div>
                                             <div class="ml-2">
                                                 <div class="text-sm text-gray-900 location-name">
-                                                    <!-- Le nom de la location sera injecté ici -->
+                                                    <!-- The name of the location will be injected here-->
                                                 </div>
                                                 <div class="text-xs text-gray-500 location-tenant">
-                                                    <!-- Le nom du tenant sera injecté ici -->
+                                                    <!-- The name of the tenant will be injected here-->
                                                 </div>
                                                 <div class="text-xs text-gray-500 location-id" hidden></div>
                                             </div>
@@ -149,7 +149,7 @@
                             <td class="whitespace-no-wrap border-b border-gray-300">
                                 <div class="flex items-start justify-between">
                                     <div class="flex flex-col items-center space-y-2 location-products">
-                                        <!-- Les badges des produits seront injectés ici -->
+                                        <!-- The badges of the products will be injected here-->
                                     </div>
                                 </div>
                             </td>
@@ -318,327 +318,320 @@
                 'url': 'mapbox://elsenmedia.ckvsnxal129qg27qrclgdhekc-330dh'
             });
 
-            map.loadImage('https://cdn-icons-png.flaticon.com/512/3448/3448558.png', function(error, image) {
-                if (error) throw error;
-                map.addImage('custom-marker', image);
 
-                map.addLayer({
-                    'id': 'initial-locations-layer',
-                    'type': 'symbol',
-                    'source': 'your-tileset-source',
-                    'source-layer': 'efuelmap_v1',
-                    'layout': {
-                        'icon-image': 'custom-marker',
-                        'text-field': ['get', 'name'],
-                        'text-size': 0,
-                        'icon-size': 0,
+
+            map.addLayer({
+                'id': 'initial-locations-layer',
+                'type': 'symbol',
+                'source': 'your-tileset-source',
+                'source-layer': 'efuelmap_v1',
+                'layout': {
+                    'icon-image': 'blue-location',
+                    'text-field': ['get', 'name'],
+                    'text-size': 0,
+                    'icon-size': 0,
+                },
+                'filter': ['==', ['get', 'active'], 1] // Filter to display only the locations where 'active' is equal to 1
+            });
+            setTimeout(updateMarkersAndTable, 500);
+
+            function debounce(func, delay) {
+                let timeout;
+                return function(...args) {
+                    clearTimeout(timeout);
+                    timeout = setTimeout(() => func.apply(this, args), delay);
+                };
+            }
+
+            function updateMarkersAndTable() {
+                if (activePopup) activePopup.remove(); // Delete the active popup
+
+                // Set the current center of the map
+                currentCenter = map.getCenter();
+                lastCenter = currentCenter; // Update the last center of the map
+
+                // Set the minimum and maximum zoom levels
+                const minZoom = 5; // Minimum zoom level to reach
+                const currentZoom = map.getZoom(); // Get the current zoom level
+                const maxZoom = 20; // The usual maximum zoom level for the map
+
+                // Get the features visible at the current zoom level
+                let features = map.querySourceFeatures('your-tileset-source', {
+                    sourceLayer: 'efuelmap_v1',
+                    filter: ['==', ['get', 'active'], 1], // Filter to display only the locations where 'active' is equal to 1,             
+                    validate: false
+                });
+
+                //  Check HVO filters
+                const isHvo100 = document.getElementById('isHvo100').textContent === 'true'; // Convert to boolean
+                const isHvoBlend = document.getElementById('isHvoBlend').textContent === 'true';
+
+                // Filter the features based on HVO filters
+                let filteredFeatures = features.filter(feature => {
+                    const productTypes = feature.properties.product_types || [];
+                    // Filter based on the values of isHvo100 and isHvoBlend
+                    if (isHvo100 && isHvoBlend) {
+                        // Both filters are active, so we search [1, 2]
+                        return productTypes.includes(1) || productTypes.includes(2);
+                    } else if (isHvo100) {
+                        // Only HVO 100 is active
+                        return productTypes.includes(1);
+                    } else if (isHvoBlend) {
+                        // Only HVO Blend is active
+                        return productTypes.includes(2);
+                    } else {
+                        // No filter is active
+                        return true;
                     }
                 });
-                setTimeout(updateMarkersAndTable, 500);
 
-                function debounce(func, delay) {
-                    let timeout;
-                    return function(...args) {
-                        clearTimeout(timeout);
-                        timeout = setTimeout(() => func.apply(this, args), delay);
-                    };
+                // Check if there is text in the search bar
+                const searchBar = document.getElementById('searchBar');
+                const query = searchBar.value.trim().toLowerCase();
+
+                if (query.length > 0) {
+                    // If a search query is made, filter the features
+                    filteredFeatures = filteredFeatures.filter(feature => {
+                        const name = feature.properties.name || "";
+                        const tenantName = feature.properties.tenant || "";
+                        const address = feature.properties.address || "";
+
+                        return (
+                            name.toLowerCase().includes(query) ||
+                            tenantName.toLowerCase().includes(query) ||
+                            address.toLowerCase().includes(query)
+                        );
+                    });
                 }
 
-                function updateMarkersAndTable(unzoom) {
-                    if (activePopup) activePopup.remove(); // Delete the active popup
+                // Get the current bounds of the map if unzoom is false
+                const bounds = map.getBounds();
+                const sw = bounds.getSouthWest();
+                const ne = bounds.getNorthEast();
 
-                    // Set the current center of the map
-                    currentCenter = map.getCenter();
-                    lastCenter = currentCenter; // Update the last center of the map
-
-                    // Set the minimum and maximum zoom levels
-                    const minZoom = 5; // Minimum zoom level to reach
-                    const currentZoom = map.getZoom(); // Get the current zoom level
-                    const maxZoom = 20; // The usual maximum zoom level for the map
-
-                    // Get the features visible at the current zoom level
-                    let features = map.querySourceFeatures('your-tileset-source', {
-                        sourceLayer: 'efuelmap_v1',
-                        filter: ['all'],
-                        validate: false
-                    });
-
-                    //  Check HVO filters
-                    const isHvo100 = document.getElementById('isHvo100').textContent === 'true'; // Convert to boolean
-                    const isHvoBlend = document.getElementById('isHvoBlend').textContent === 'true';
-
-                    // Filter the features based on HVO filters
-                    let filteredFeatures = features.filter(feature => {
-                        const productTypes = feature.properties.product_types || [];
-                        // Filter based on the values of isHvo100 and isHvoBlend
-                        if (isHvo100 && isHvoBlend) {
-                            // Both filters are active, so we search [1, 2]
-                            return productTypes.includes(1) || productTypes.includes(2);
-                        } else if (isHvo100) {
-                            // Only HVO 100 is active
-                            return productTypes.includes(1);
-                        } else if (isHvoBlend) {
-                            // Only HVO Blend is active
-                            return productTypes.includes(2);
-                        } else {
-                            // No filter is active
-                            return true;
-                        }
-                    });
-
-                    // Check if there is text in the search bar
-                    const searchBar = document.getElementById('searchBar');
-                    const query = searchBar.value.trim().toLowerCase();
-
-                    if (query.length > 0) {
-                        // If a search query is made, filter the features
-                        filteredFeatures = filteredFeatures.filter(feature => {
-                            const name = feature.properties.name || "";
-                            const tenantName = feature.properties.tenant || "";
-                            const address = feature.properties.address || "";
-
-                            return (
-                                name.toLowerCase().includes(query) ||
-                                tenantName.toLowerCase().includes(query) ||
-                                address.toLowerCase().includes(query)
-                            );
-                        });
-                    }
-
-                    // Get the current bounds of the map if unzoom is false
-                    if (unzoom === false) {
-                        const bounds = map.getBounds();
-                        const sw = bounds.getSouthWest();
-                        const ne = bounds.getNorthEast();
-
-                        // Filter the features to include only those visible on the map
-                        filteredFeatures = filteredFeatures.filter(feature => {
-                            const [longitude, latitude] = feature.geometry.coordinates;
-                            return (
-                                longitude >= sw.lng && longitude <= ne.lng &&
-                                latitude >= sw.lat && latitude <= ne.lat
-                            );
-                        });
-                    }
-
-                    // Progressive zoom out
-                    function progressiveZoomOut() {
-                        if (filteredFeatures.length > 0 || map.getZoom() <= minZoom) {
-                            // If results are found or the minimum zoom level is reached
-                            updateMarkers(filteredFeatures);
-                            updateTable(filteredFeatures);
-
-                            if (filteredFeatures.length === 0) {
-                                const tableBody = document.querySelector("#locationsTable tbody");
-                                tableBody.innerHTML = '';
-                                const tr = document.createElement('tr');
-                                const td = document.createElement('td');
-                                td.textContent = 'No locations found';
-                                td.colSpan = 4;
-                                td.style.textAlign = 'center';
-                                td.style.paddingTop = '20px';
-                                tr.appendChild(td);
-                                tableBody.appendChild(tr);
-                            }
-
-                            // Adjust the map view if it is zoomed out
-                            adjustMapView(filteredFeatures);
-                        } else {
-                            // If no results are found, zoom out progressively
-                            map.zoomOut({
-                                animate: true
-                            });
-                            setTimeout(() => {
-                                // Search with the new zoom level
-                                features = map.querySourceFeatures('your-tileset-source', {
-                                    sourceLayer: 'efuelmap_v1',
-                                    filter: ['all'],
-                                    validate: false
-                                });
-
-                                // Apply the same HVO and search filters
-                                filteredFeatures = features.filter(feature => {
-                                    const productTypes = feature.properties.product_types || [];
-                                    if (isHvo100 && isHvoBlend) {
-                                        return productTypes.includes(1) || productTypes.includes(2);
-                                    } else if (isHvo100) {
-                                        return productTypes.includes(1);
-                                    } else if (isHvoBlend) {
-                                        return productTypes.includes(2);
-                                    } else {
-                                        return true;
-                                    }
-                                });
-
-                                if (query.length > 0) {
-                                    filteredFeatures = filteredFeatures.filter(feature => {
-                                        const name = feature.properties.name || "";
-                                        const tenantName = feature.properties.tenant || "";
-                                        const address = feature.properties.address || "";
-
-                                        return (
-                                            name.toLowerCase().includes(query) ||
-                                            tenantName.toLowerCase().includes(query) ||
-                                            address.toLowerCase().includes(query)
-                                        );
-                                    });
-                                }
-
-                                // Call the recursive function to continue zooming progressively
-                                progressiveZoomOut();
-                            }, 500); // Delay to allow the zoom
-                        }
-                    }
-
-                    // Check if there are results that are visible
-                    if (filteredFeatures.length > 0) {
-                        // If results are found, update the markers and the table
+                // Filter the features to include only those visible on the map
+                filteredFeatures = filteredFeatures.filter(feature => {
+                    const [longitude, latitude] = feature.geometry.coordinates;
+                    return (
+                        longitude >= sw.lng && longitude <= ne.lng &&
+                        latitude >= sw.lat && latitude <= ne.lat
+                    );
+                });
+                // Progressive zoom out
+                function progressiveZoomOut() {
+                    if (filteredFeatures.length > 0 || map.getZoom() <= minZoom) {
+                        // If results are found or the minimum zoom level is reached
                         updateMarkers(filteredFeatures);
                         updateTable(filteredFeatures);
-                        if (unzoom === true) {
-                            adjustMapView(filteredFeatures);
+
+                        if (filteredFeatures.length === 0) {
+                            const tableBody = document.querySelector("#locationsTable tbody");
+                            tableBody.innerHTML = '';
+                            const tr = document.createElement('tr');
+                            const td = document.createElement('td');
+                            td.textContent = 'No locations found';
+                            td.colSpan = 4;
+                            td.style.textAlign = 'center';
+                            td.style.paddingTop = '20px';
+                            tr.appendChild(td);
+                            tableBody.appendChild(tr);
                         }
+
+                        // Adjust the map view if it is zoomed out
+                        adjustMapView(filteredFeatures);
                     } else {
-                        // Otherwise, start the progressive zoom
-                        if (unzoom === true) {
+                        // If no results are found, zoom out progressively
+                        map.zoomOut({
+                            animate: true
+                        });
+                        setTimeout(() => {
+                            // Search with the new zoom level
+                            features = map.querySourceFeatures('your-tileset-source', {
+                                sourceLayer: 'efuelmap_v1',
+                                filter: ['==', ['get', 'active'], 1], // Filter to display only the locations where 'active' is equal to 1,             
+                                validate: false
+                            });
+
+                            // Apply the same HVO and search filters
+                            filteredFeatures = features.filter(feature => {
+                                const productTypes = feature.properties.product_types || [];
+                                if (isHvo100 && isHvoBlend) {
+                                    return productTypes.includes(1) || productTypes.includes(2);
+                                } else if (isHvo100) {
+                                    return productTypes.includes(1);
+                                } else if (isHvoBlend) {
+                                    return productTypes.includes(2);
+                                } else {
+                                    return true;
+                                }
+                            });
+
+                            if (query.length > 0) {
+                                filteredFeatures = filteredFeatures.filter(feature => {
+                                    const name = feature.properties.name || "";
+                                    const tenantName = feature.properties.tenant || "";
+                                    const address = feature.properties.address || "";
+
+                                    return (
+                                        name.toLowerCase().includes(query) ||
+                                        tenantName.toLowerCase().includes(query) ||
+                                        address.toLowerCase().includes(query)
+                                    );
+                                });
+                            }
+
+                            // Call the recursive function to continue zooming progressively
                             progressiveZoomOut();
-                        }
+                        }, 500); // Delay to allow the zoom
                     }
                 }
 
+                // Check if there are results that are visible
+                if (filteredFeatures.length > 0) {
+                    // If results are found, update the markers and the table
+                    updateMarkers(filteredFeatures);
+                    updateTable(filteredFeatures);
+                    adjustMapView(filteredFeatures);
 
-                function updateTable(closestFeatures) {
-                    // Update the number of results
-                    const resultsCount = document.getElementById('resultsCount');
-                    resultsCount.textContent = closestFeatures ? closestFeatures.length : 0;
+                } else {
+                    // Otherwise, start the progressive zoom
+                    progressiveZoomOut();
 
-                    if (!closestFeatures || closestFeatures.length === 0) {
-                        const tableBody = document.querySelector("#locationsTable tbody");
-                        tableBody.innerHTML = '';
-                        const tr = document.createElement('tr');
-                        const td = document.createElement('td');
-                        td.textContent = 'No locations found';
-                        td.colSpan = 4;
-                        td.style.textAlign = 'center';
-                        td.style.paddingTop = '20px';
-                        tr.appendChild(td);
-                        tableBody.appendChild(tr);
-                        return;
-                    }
+                }
+            }
 
+
+            function updateTable(closestFeatures) {
+                // Update the number of results
+                const resultsCount = document.getElementById('resultsCount');
+                resultsCount.textContent = closestFeatures ? closestFeatures.length : 0;
+
+                if (!closestFeatures || closestFeatures.length === 0) {
                     const tableBody = document.querySelector("#locationsTable tbody");
-                    tableBody.innerHTML = ''; // Reset the table
-                    const template = document.getElementById('locationRowTemplate');
+                    tableBody.innerHTML = '';
+                    const tr = document.createElement('tr');
+                    const td = document.createElement('td');
+                    td.textContent = 'No locations found';
+                    td.colSpan = 4;
+                    td.style.textAlign = 'center';
+                    td.style.paddingTop = '20px';
+                    tr.appendChild(td);
+                    tableBody.appendChild(tr);
+                    return;
+                }
 
-                    closestFeatures.forEach(feature => {
-                        const clone = document.importNode(template.content, true);
+                const tableBody = document.querySelector("#locationsTable tbody");
+                tableBody.innerHTML = ''; // Reset the table
+                const template = document.getElementById('locationRowTemplate');
 
-                        // Get the specific data
-                        const name = feature.properties.name || "N/A";
-                        const tenant = feature.properties.tenant || "N/A";
-                        const opening_start = feature.properties.opening_start || "00:00";
-                        const opening_end = feature.properties.opening_end || "23:59";
-                        const address = feature.properties.address || "N/A";
-                        const productType = feature.properties.product_types || [];
-                        let productIds = feature.properties.products;
-                        const id = feature.properties.id || "";
+                closestFeatures.forEach(feature => {
+                    const clone = document.importNode(template.content, true);
 
-                        const product_types = feature.properties.product_types || [];
-                        const isHvo100 = product_types.includes(1);
-                        const isHvoBlend = product_types.includes(2);
+                    // Get the specific data
+                    const name = feature.properties.name || "N/A";
+                    const tenant = feature.properties.tenant || "N/A";
+                    const opening_start = feature.properties.opening_start || "00:00";
+                    const opening_end = feature.properties.opening_end || "23:59";
+                    const address = feature.properties.address || "N/A";
+                    const productType = feature.properties.product_types || [];
+                    let productIds = feature.properties.products;
+                    const id = feature.properties.id || "";
 
-                        // Inject the name
-                        clone.querySelector('.location-name').textContent = name;
-                        clone.querySelector('.location-tenant').textContent = tenant;
-                        clone.querySelector('.location-id').textContent = id;
+                    const product_types = feature.properties.product_types || [];
+                    const isHvo100 = product_types.includes(1);
+                    const isHvoBlend = product_types.includes(2);
 
-                        // Check if the location is open
-                        const isOpen = isLocationOpen(opening_start, opening_end);
+                    // Inject the name
+                    clone.querySelector('.location-name').textContent = name;
+                    clone.querySelector('.location-tenant').textContent = tenant;
+                    clone.querySelector('.location-id').textContent = id;
 
-                        // Inject the opening status
-                        const statusSvg = clone.querySelector('.location-status');
-                        statusSvg.setAttribute('fill', isOpen ? 'rgb(0, 160, 0)' : 'red');
+                    // Check if the location is open
+                    const isOpen = isLocationOpen(opening_start, opening_end);
 
-                        // Add the product badges
-                        const productsContainer = clone.querySelector('.location-products');
+                    // Inject the opening status
+                    const statusSvg = clone.querySelector('.location-status');
+                    statusSvg.setAttribute('fill', isOpen ? 'rgb(0, 160, 0)' : 'red');
 
-                        if (isHvo100) {
-                            const hvo100Badge = document.createElement('div');
-                            hvo100Badge.className = 'w-full';
-                            hvo100Badge.innerHTML = `
+                    // Add the product badges
+                    const productsContainer = clone.querySelector('.location-products');
+
+                    if (isHvo100) {
+                        const hvo100Badge = document.createElement('div');
+                        hvo100Badge.className = 'w-full';
+                        hvo100Badge.innerHTML = `
                                                         <button type="button" class="w-full min-mr-4 w-[80px] text-xs cursor-default rounded-full bg-indigo-600 px-2.5 py-1 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
                                                             HVO 100
                                                         </button>
                                                     `;
-                            productsContainer.appendChild(hvo100Badge);
-                        }
+                        productsContainer.appendChild(hvo100Badge);
+                    }
 
-                        if (isHvoBlend) {
-                            const hvoBlendBadge = document.createElement('div');
-                            hvoBlendBadge.className = 'w-full';
-                            hvoBlendBadge.innerHTML = `
+                    if (isHvoBlend) {
+                        const hvoBlendBadge = document.createElement('div');
+                        hvoBlendBadge.className = 'w-full';
+                        hvoBlendBadge.innerHTML = `
                                                         <button type="button" class="w-full min-mr-4 w-[80px] text-xs cursor-default rounded-full bg-indigo-600 px-2.5 py-1 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
                                                             HVO Blend
                                                         </button>
                                                     `;
-                            productsContainer.appendChild(hvoBlendBadge);
+                        productsContainer.appendChild(hvoBlendBadge);
+                    }
+
+                    // Add an event listener for zooming and showing a popup when the line is clicked
+                    clone.querySelector('tr').addEventListener('click', function() {
+                        const coordinates = feature.geometry.coordinates;
+                        flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds);
+                        highlightLocation(feature);
+                        hightLightLocationInTable(id);
+                    });
+
+                    // Add an event handler for the "Show Details" button
+                    clone.querySelector('.details-button').addEventListener('click', function(event) {
+                        event.stopPropagation(); // Prevent the click event from propagating to the cloned line
+                        const detailsRow = this.closest('tr').nextElementSibling;
+                        const detailsContent = detailsRow.querySelector('.details-content');
+                        const locationInfoSpan = detailsRow.querySelector('.details-location-info');
+                        if (productType.includes(1)) {
+                            productBadge = `<div class="mr-2 w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                        HVO 100
+                    </div>`;
+                        } else if (productType.includes(2)) {
+                            productBadge = `<div class="mr-2 w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                        HVO Blend
+                    </div>`;
+                        } else {
+                            productBadge = '';
                         }
 
-                        // Add an event listener for zooming and showing a popup when the line is clicked
-                        clone.querySelector('tr').addEventListener('click', function() {
-                            const coordinates = feature.geometry.coordinates;
-                            flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds);
-                            highlightLocation(feature);
-                            hightLightLocationInTable(id);
-                        });
+                        // Tableau de correspondance des noms de produits
+                        const productNames = {
+                            1: 'HVO 100',
+                            2: 'KlimaDiesel 90',
+                            3: 'NesteMY',
+                            4: 'Fuelmotion H',
+                            5: 'C.A.R.E Diesel',
+                            6: 'ROTH HVO100 Diesel'
+                        };
 
-                        // Add an event handler for the "Show Details" button
-                        clone.querySelector('.details-button').addEventListener('click', function(event) {
-                            event.stopPropagation(); // Prevent the click event from propagating to the cloned line
-                            const detailsRow = this.closest('tr').nextElementSibling;
-                            const detailsContent = detailsRow.querySelector('.details-content');
-                            const locationInfoSpan = detailsRow.querySelector('.details-location-info');
-                            if (productType.includes(1)) {
-                                productBadge = `<button type="button" class="mr-2 w-[80px] cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
-
-                        HVO 100
-                    </button>`;
-                            } else if (productType.includes(2)) {
-                                productBadge = `<button type="button" class="mr-2 w-[80px] cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
-                        HVO Blend
-                    </button>`;
-                            } else {
-                                productBadge = '';
+                        // Vérifier si productIds est déjà un tableau, sinon essayer de le convertir
+                        if (!Array.isArray(productIds)) {
+                            try {
+                                productIds = JSON.parse(productIds);
+                            } catch (e) {
+                                // Si la conversion échoue, utiliser un tableau vide par défaut
+                                productIds = [];
                             }
+                        }
 
-                            // Tableau de correspondance des noms de produits
-                            const productNames = {
-                                1: 'HVO 100',
-                                2: 'KlimaDiesel 90',
-                                3: 'NesteMY',
-                                4: 'Fuelmotion H',
-                                5: 'C.A.R.E Diesel',
-                                6: 'ROTH HVO100 Diesel'
-                            };
+                        // Convertir les IDs en noms
+                        const productNamesList = productIds
+                            .map(id => productNames[id])
+                            .filter(name => name !== undefined)
+                            .join(', ');
 
-                            // Vérifier si productIds est déjà un tableau, sinon essayer de le convertir
-                            if (!Array.isArray(productIds)) {
-                                try {
-                                    productIds = JSON.parse(productIds);
-                                } catch (e) {
-                                    // Si la conversion échoue, utiliser un tableau vide par défaut
-                                    productIds = [];
-                                }
-                            }
-
-                            // Convertir les IDs en noms
-                            const productNamesList = productIds
-                                .map(id => productNames[id])
-                                .filter(name => name !== undefined)
-                                .join(', ');
-
-                            // Update the details content
-                            locationInfoSpan.innerHTML = `
+                        // Update the details content
+                        locationInfoSpan.innerHTML = `
                                                         <div class="text-sm text-gray-800">
                                                             <div style="display: flex; align-items: center; justify-content: start; margin-bottom: 5px;">
                                                                 ${productBadge}
@@ -649,180 +642,285 @@
                                                         </div>
                                                     `;
 
-                            // Toggle the details content
-                            detailsRow.classList.toggle('hidden');
-                        });
-
-                        // Add the cloned line to the table
-                        tableBody.appendChild(clone);
+                        // Toggle the details content
+                        detailsRow.classList.toggle('hidden');
                     });
+
+                    // Add the cloned line to the table
+                    tableBody.appendChild(clone);
+                });
+            }
+
+
+            // Update markers on the map
+            function updateMarkers(closestFeatures) {
+
+
+                // Remove the layer if it already exists    
+                if (map.getLayer('locations-layer')) {
+                    map.removeLayer('locations-layer');
+                    map.removeSource('closest-features');
+                }
+                if (map.getLayer('highlighted-location')) {
+                    map.removeLayer('highlighted-location');
+                    map.removeSource('highlighted-location');
                 }
 
-
-                // Update markers on the map
-                function updateMarkers(closestFeatures) {
-
-
-                    // Remove the layer if it already exists    
-                    if (map.getLayer('locations-layer')) {
-                        map.removeLayer('locations-layer');
-                        map.removeSource('closest-features');
+                // Create a new source with the closest 20 features
+                map.addSource('closest-features', {
+                    'type': 'geojson',
+                    'data': {
+                        'type': 'FeatureCollection',
+                        'features': closestFeatures
                     }
-                    if (map.getLayer('highlighted-location')) {
-                        map.removeLayer('highlighted-location');
-                        map.removeSource('highlighted-location');
-                    }
+                });
 
-                    // Create a new source with the closest 20 features
-                    map.addSource('closest-features', {
-                        'type': 'geojson',
-                        'data': {
-                            'type': 'FeatureCollection',
-                            'features': closestFeatures
-                        }
-                    });
+                // Add a new layer for these features
+                map.addLayer({
+                    'id': 'locations-layer',
+                    'type': 'symbol',
+                    'source': 'closest-features',
+                    'layout': {
+                        'icon-image': 'blue-location',
+                        'text-field': ['get', 'name'],
+                        'text-size': 0.4,
+                        'icon-size': [
+                            'interpolate', ['linear'],
+                            ['zoom'],
+                            0, 0.6,
+                            22, 0.6
+                        ],
+                    },
+                    'filter': ['==', ['get', 'active'], 1] // Filter to display only the locations where 'active' is equal to 1
+                });
 
-                    // Add a new layer for these features
-                    map.addLayer({
-                        'id': 'locations-layer',
-                        'type': 'symbol',
-                        'source': 'closest-features',
-                        'layout': {
-                            'icon-image': 'custom-marker',
-                            'text-field': ['get', 'name'],
-                            'text-size': 0.4,
-                            'icon-size': [
-                                'interpolate', ['linear'],
-                                ['zoom'],
-                                0, 0.1,
-                                22, 0.1
-                            ],
-                        }
-                    });
+            }
 
+            function adjustMapView(features) {
+                if (features.length === 0) {
+                    // No features match the filter
+                    return;
                 }
 
-                function adjustMapView(features) {
-                    if (features.length === 0) {
-                        // No features match the filter
-                        return;
-                    }
-
-                    if (features.length === 1) {
-                        // If only one match is found, zoom to that location
-                        const coordinates = features[0].geometry.coordinates;
-                        const name = features[0].properties.name;
-                        const opening_start = features[0].properties.opening_start || "00:00";
-                        const opening_end = features[0].properties.opening_end || "23:59";
-                        const productType = e.features[0].properties.product_types || [];
-                        let productIds = e.features[0].properties.products;
-                        const id = features[0].properties.id;
-
-                        flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds);
-                        hightLightLocationInTable(id);
-                    } else {
-                        // Adjust the map bounds to include all the matches
-                        const bounds = getBounds(features);
-                        map.fitBounds(bounds, {
-                            padding: 50,
-                            maxZoom: 15 // Limit the zoom to avoid too much zooming
-                        });
-                    }
-                }
-
-                function highlightLocation(location) {
-                    // Remove the highlighted layer if it already exists
-                    if (map.getLayer('highlighted-location')) {
-                        map.removeLayer('highlighted-location');
-                        map.removeSource('highlighted-location');
-                    }
-
-                    // Create a new source with a single location
-                    map.addSource('highlighted-location', {
-                        'type': 'geojson',
-                        'data': {
-                            'type': 'FeatureCollection',
-                            'features': [location] // Ensure that location is a single feature
-                        }
-                    });
-
-                    // Add a new layer for the highlighted location
-                    map.addLayer({
-                        'id': 'highlighted-location',
-                        'type': 'symbol',
-                        'source': 'highlighted-location',
-                        'layout': {
-                            'icon-image': 'red-fuel-location', // Use the defined icon in your style from mapbox
-                            'icon-size': [
-                                'interpolate', ['linear'],
-                                ['zoom'],
-                                0, 0.5,
-                                22, 0.5
-                            ],
-                            'text-field': ['get', 'name'],
-                            'text-size': 0,
-                            'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
-                        },
-                        'paint': {
-                            'icon-color': '#FF0000' // Change the icon color to red
-                        }
-                    });
-                }
-
-
-                map.on('mouseenter', 'highlighted-location', function(e) {
-                    if (activePopup) activePopup.remove(); // Remove the active popup
-
-                    const coordinates = e.features[0].geometry.coordinates.slice();
-                    const name = e.features[0].properties.name;
-                    const opening_start = e.features[0].properties.opening_start || "00:00";
-                    const opening_end = e.features[0].properties.opening_end || "23:59";
+                if (features.length === 1) {
+                    // If only one match is found, zoom to that location
+                    const coordinates = features[0].geometry.coordinates;
+                    const name = features[0].properties.name;
+                    const opening_start = features[0].properties.opening_start || "00:00";
+                    const opening_end = features[0].properties.opening_end || "23:59";
                     const productType = e.features[0].properties.product_types || [];
                     let productIds = e.features[0].properties.products;
+                    const id = features[0].properties.id;
 
-                    // Vérification de la valeur de productType pour déterminer le type de badge à afficher
-                    let productBadge = '';
+                    flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds);
+                    hightLightLocationInTable(id);
+                } else {
+                    // Adjust the map bounds to include all the matches
+                    const bounds = getBounds(features);
+                    map.fitBounds(bounds, {
+                        padding: 50,
+                        maxZoom: 15 // Limit the zoom to avoid too much zooming
+                    });
+                }
+            }
 
-                    if (productType.includes(1)) {
-                        productBadge = `<button type="button" style="font-size:10px;" class="mr-2 w-[80px] cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+            function highlightLocation(location) {
+                // Remove the highlighted layer if it already exists
+                if (map.getLayer('highlighted-location')) {
+                    map.removeLayer('highlighted-location');
+                    map.removeSource('highlighted-location');
+                }
+
+                // Create a new source with a single location
+                map.addSource('highlighted-location', {
+                    'type': 'geojson',
+                    'data': {
+                        'type': 'FeatureCollection',
+                        'features': [location] // Ensure that location is a single feature
+                    }
+                });
+
+                // Add a new layer for the highlighted location
+                map.addLayer({
+                    'id': 'highlighted-location',
+                    'type': 'symbol',
+                    'source': 'highlighted-location',
+                    'layout': {
+                        'icon-image': 'red-location', // Use the defined icon in your style from mapbox
+                        'icon-size': [
+                            'interpolate', ['linear'],
+                            ['zoom'],
+                            0, 0.6,
+                            22, 0.6
+                        ],
+                        'text-field': ['get', 'name'],
+                        'text-size': 0,
+                        'text-font': ['Open Sans Bold', 'Arial Unicode MS Bold'],
+                    },
+                    'filter': ['==', ['get', 'active'], 1], // Filter to display only the locations where 'active' is equal to 1
+                    'paint': {
+                        'icon-color': '#FF0000' // Change the icon color to red
+                    }
+                });
+            }
+
+
+            map.on('mouseenter', 'highlighted-location', function(e) {
+                if (activePopup) activePopup.remove(); // Remove the active popup if it exists
+
+                const coordinates = e.features[0].geometry.coordinates.slice();
+                const name = e.features[0].properties.name;
+                const opening_start = e.features[0].properties.opening_start || "00:00";
+                const opening_end = e.features[0].properties.opening_end || "23:59";
+                const productType = e.features[0].properties.product_types || [];
+                let productIds = e.features[0].properties.products;
+                const address = e.features[0].properties.address;
+
+                let productBadge = '';
+
+                if (productType.includes(1)) {
+                    productBadge = `<div class="mr-2 w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+            HVO 100
+        </div>`;
+                } else if (productType.includes(2)) {
+                    productBadge = `<div class="mr-2 w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+            HVO Blend
+        </div>`;
+                }
+
+                const productNames = {
+                    1: 'HVO 100',
+                    2: 'KlimaDiesel 90',
+                    3: 'NesteMY',
+                    4: 'Fuelmotion H',
+                    5: 'C.A.R.E Diesel',
+                    6: 'ROTH HVO100 Diesel'
+                };
+
+                if (!Array.isArray(productIds)) {
+                    try {
+                        productIds = JSON.parse(productIds);
+                    } catch (e) {
+                        productIds = [];
+                    }
+                }
+
+                const productNamesList = productIds
+                    .map(id => productNames[id])
+                    .filter(name => name !== undefined)
+                    .join(', ');
+
+                const encodedAddress = encodeURIComponent(address);
+
+                const popupContent = `
+                    <div style="text-align: center; border-radius: 10px">
+                        <div style="font-size: 14px; font-weight: bold; margin-bottom:5px;">${name}</div>
+                        <div style="display: flex; align-items: center; justify-content: center;">
+                            ${productBadge}
+                            <div class="whitespace-nowrap  text-ellipsis">${productNamesList}</div>
+                        </div>
+                        <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
+                        <div style="margin-top: 5px;">
+                            <a href="https://www.google.com/maps/search/?api=1&query=${encodedAddress}" target="_blank" class="text-blue-600 underline">
+                                ${address}
+                            </a>
+                        </div>
+                    </div>
+                `;
+
+                activePopup = new mapboxgl.Popup({
+                        closeButton: false,
+                        closeOnClick: false,
+                        offset: [0, -20] // Offset to raise the popup by 20px
+                    })
+                    .setLngLat(coordinates)
+                    .setHTML(popupContent)
+                    .addTo(map);
+
+                activePopup.getElement().addEventListener('mouseenter', () => {
+                    mouseOverPopup = true;
+                });
+
+                activePopup.getElement().addEventListener('mouseleave', () => {
+                    mouseOverPopup = false;
+                    if (!mouseOverPopup && !mouseOverMarker) {
+                        activePopup.remove();
+                        activePopup = null;
+                        map.getCanvas().style.cursor = '';
+                    }
+                });
+
+                map.getCanvas().style.cursor = 'pointer';
+            });
+
+            let mouseOverMarker = false;
+            let mouseOverPopup = false;
+
+            map.on('mouseenter', 'highlighted-location', function() {
+                mouseOverMarker = true;
+            });
+
+            map.on('mouseleave', 'highlighted-location', function() {
+                mouseOverMarker = false;
+                if (!mouseOverPopup && activePopup) {
+                    activePopup.remove();
+                    activePopup = null;
+                    map.getCanvas().style.cursor = '';
+                }
+            });
+
+            map.on('mouseenter', 'locations-layer', function(e) {
+                if (activePopup) activePopup.remove(); // Remove the active popup
+
+                const coordinates = e.features[0].geometry.coordinates.slice();
+                const name = e.features[0].properties.name;
+                const opening_start = e.features[0].properties.opening_start || "00:00";
+                const opening_end = e.features[0].properties.opening_end || "23:59";
+                const productType = e.features[0].properties.product_types || [];
+                let productIds = e.features[0].properties.products;
+                // Vérification de la valeur de productType pour déterminer le type de badge à afficher
+                let productBadge = '';
+
+                if (productType.includes(1)) {
+                    productBadge = `<div class="mr-2 w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
 
                         HVO 100
-                    </button>`;
-                    } else if (productType.includes(2)) {
-                        productBadge = `<button type="button" style="font-size:10px;" class="mr-2 w-[80px] cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                    </div>`;
+                } else if (productType.includes(2)) {
+                    productBadge = `<div class="mr-2 w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
                         HVO Blend
-                    </button>`;
+                    </div>`;
+                }
+
+                // Tableau de correspondance des noms de produits
+                const productNames = {
+                    1: 'HVO 100',
+                    2: 'KlimaDiesel 90',
+                    3: 'NesteMY',
+                    4: 'Fuelmotion H',
+                    5: 'C.A.R.E Diesel',
+                    6: 'ROTH HVO100 Diesel'
+                };
+
+
+                // Vérifier si productIds est déjà un tableau, sinon essayer de le convertir
+                if (!Array.isArray(productIds)) {
+                    try {
+                        productIds = JSON.parse(productIds);
+                    } catch (e) {
+                        // Si la conversion échoue, utiliser un tableau vide par défaut
+                        productIds = [];
                     }
+                }
 
-                    // Tableau de correspondance des noms de produits
-                    const productNames = {
-                        1: 'HVO 100',
-                        2: 'KlimaDiesel 90',
-                        3: 'NesteMY',
-                        4: 'Fuelmotion H',
-                        5: 'C.A.R.E Diesel',
-                        6: 'ROTH HVO100 Diesel'
-                    };
+                // Convertir les IDs en noms
+                const productNamesList = productIds
+                    .map(id => productNames[id])
+                    .filter(name => name !== undefined)
+                    .join(', ');
 
-
-                    // Vérifier si productIds est déjà un tableau, sinon essayer de le convertir
-                    if (!Array.isArray(productIds)) {
-                        try {
-                            productIds = JSON.parse(productIds);
-                        } catch (e) {
-                            // Si la conversion échoue, utiliser un tableau vide par défaut
-                            productIds = [];
-                        }
-                    }
-
-                    // Convertir les IDs en noms
-                    const productNamesList = productIds
-                        .map(id => productNames[id])
-                        .filter(name => name !== undefined)
-                        .join(', ');
-
-                    // Créer le contenu HTML pour le popup
-                    const popupContent = `
+                // Créer le contenu HTML pour le popup
+                const popupContent = `
                                             <div style="text-align: center; border-radius: 10px">
                                                  <div style="font-size: 14px; font-weight: bold; margin-bottom:5px;">${name}</div>
                                                 <div style="display: flex; align-items: center; justify-content: center;">
@@ -833,202 +931,98 @@
                                             </div>
                                         `;
 
-                    // Show a popup on hover with custom content 
-                    activePopup = new mapboxgl.Popup({
-                            closeButton: false,
-                            closeOnClick: false,
-                            offset: [0, -20] // Offset to raise the popup by 20px
-                        })
-                        .setLngLat(coordinates)
-                        .setHTML(popupContent)
-                        .addTo(map);
+                activePopup = new mapboxgl.Popup({
+                        closeButton: false,
+                        closeOnClick: false,
+                        offset: [0, -20]
+                    })
+                    .setLngLat(coordinates)
+                    .setHTML(popupContent)
+                    .addTo(map);
 
-                    // Add event listeners to keep the popup open
-                    activePopup.getElement().addEventListener('mouseenter', () => {
-                        mouseOverPopup = true;
-                    });
-
-                    activePopup.getElement().addEventListener('mouseleave', () => {
-                        mouseOverPopup = false;
-                        if (!mouseOverPopup && !mouseOverMarker) {
-                            activePopup.remove();
-                            activePopup = null;
-                            map.getCanvas().style.cursor = '';
-                        }
-                    });
-
-                    map.getCanvas().style.cursor = 'pointer';
+                activePopup.getElement().addEventListener('mouseenter', () => {
+                    mouseOverPopup = true;
                 });
 
-                let mouseOverMarker = false;
-
-                map.on('mouseenter', 'highlighted-location', function() {
-                    mouseOverMarker = true;
-                });
-
-                map.on('mouseleave', 'highlighted-location', function() {
-                    mouseOverMarker = false;
-                    if (!mouseOverPopup && activePopup) {
+                activePopup.getElement().addEventListener('mouseleave', () => {
+                    mouseOverPopup = false;
+                    if (!mouseOverPopup && !mouseOverMarker) {
                         activePopup.remove();
                         activePopup = null;
                         map.getCanvas().style.cursor = '';
                     }
                 });
 
-                map.on('mouseenter', 'locations-layer', function(e) {
-                    if (activePopup) activePopup.remove(); // Remove the active popup
+                map.getCanvas().style.cursor = 'pointer';
+            });
 
-                    const coordinates = e.features[0].geometry.coordinates.slice();
-                    const name = e.features[0].properties.name;
-                    const opening_start = e.features[0].properties.opening_start || "00:00";
-                    const opening_end = e.features[0].properties.opening_end || "23:59";
-                    const productType = e.features[0].properties.product_types || [];
-                    let productIds = e.features[0].properties.products;
-                    // Vérification de la valeur de productType pour déterminer le type de badge à afficher
-                    let productBadge = '';
 
-                    if (productType.includes(1)) {
-                        productBadge = `<button type="button" style="font-size:10px;" class="mr-2 w-[80px] cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+            map.on('mouseenter', 'locations-layer', function() {
+                mouseOverMarker = true;
+            });
+
+            map.on('mouseleave', 'locations-layer', function() {
+                mouseOverMarker = false;
+                if (!mouseOverPopup && activePopup) {
+                    activePopup.remove();
+                    activePopup = null;
+                    map.getCanvas().style.cursor = '';
+                }
+            });
+
+            // Show a popup and zoom to a specific location
+            function flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds) {
+
+                map.flyTo({
+                    center: coordinates,
+                    zoom: 14
+                });
+
+                if (activePopup) activePopup.remove();
+
+
+                // Vérification de la valeur de productType pour déterminer le type de badge à afficher
+                let productBadge = '';
+
+                if (productType.includes(1)) {
+                    productBadge = `<div class="mr-2 w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
 
                         HVO 100
-                    </button>`;
-                    } else if (productType.includes(2)) {
-                        productBadge = `<button type="button" style="font-size:10px;" class="mr-2 w-[80px] cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                    </div>`;
+                } else if (productType.includes(2)) {
+                    productBadge = `<div class="mr-2 w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
                         HVO Blend
-                    </button>`;
+                    </div>`;
+                }
+
+                // Tableau de correspondance des noms de produits
+                const productNames = {
+                    1: 'HVO 100',
+                    2: 'KlimaDiesel 90',
+                    3: 'NesteMY',
+                    4: 'Fuelmotion H',
+                    5: 'C.A.R.E Diesel',
+                    6: 'ROTH HVO100 Diesel'
+                };
+
+                // Vérifier si productIds est déjà un tableau, sinon essayer de le convertir
+                if (!Array.isArray(productIds)) {
+                    try {
+                        productIds = JSON.parse(productIds);
+                    } catch (e) {
+                        // Si la conversion échoue, utiliser un tableau vide par défaut
+                        productIds = [];
                     }
+                }
 
-                    // Tableau de correspondance des noms de produits
-                    const productNames = {
-                        1: 'HVO 100',
-                        2: 'KlimaDiesel 90',
-                        3: 'NesteMY',
-                        4: 'Fuelmotion H',
-                        5: 'C.A.R.E Diesel',
-                        6: 'ROTH HVO100 Diesel'
-                    };
+                // Convertir les IDs en noms
+                const productNamesList = productIds
+                    .map(id => productNames[id])
+                    .filter(name => name !== undefined)
+                    .join(', ');
 
-
-                    // Vérifier si productIds est déjà un tableau, sinon essayer de le convertir
-                    if (!Array.isArray(productIds)) {
-                        try {
-                            productIds = JSON.parse(productIds);
-                        } catch (e) {
-                            // Si la conversion échoue, utiliser un tableau vide par défaut
-                            productIds = [];
-                        }
-                    }
-
-                    // Convertir les IDs en noms
-                    const productNamesList = productIds
-                        .map(id => productNames[id])
-                        .filter(name => name !== undefined)
-                        .join(', ');
-
-                    // Créer le contenu HTML pour le popup
-                    const popupContent = `
-                                            <div style="text-align: center; border-radius: 10px">
-                                                 <div style="font-size: 14px; font-weight: bold; margin-bottom:5px;">${name}</div>
-                                                <div style="display: flex; align-items: center; justify-content: center;">
-                                                    ${productBadge}
-                                                    <div class="whitespace-nowrap  text-ellipsis">${productNamesList}</div>
-                                                </div>
-                                                <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
-                                            </div>
-                                        `;
-
-                    activePopup = new mapboxgl.Popup({
-                            closeButton: false,
-                            closeOnClick: false,
-                            offset: [0, -20]
-                        })
-                        .setLngLat(coordinates)
-                        .setHTML(popupContent)
-                        .addTo(map);
-
-                    activePopup.getElement().addEventListener('mouseenter', () => {
-                        mouseOverPopup = true;
-                    });
-
-                    activePopup.getElement().addEventListener('mouseleave', () => {
-                        mouseOverPopup = false;
-                        if (!mouseOverPopup && !mouseOverMarker) {
-                            activePopup.remove();
-                            activePopup = null;
-                            map.getCanvas().style.cursor = '';
-                        }
-                    });
-
-                    map.getCanvas().style.cursor = 'pointer';
-                });
-
-
-                map.on('mouseenter', 'locations-layer', function() {
-                    mouseOverMarker = true;
-                });
-
-                map.on('mouseleave', 'locations-layer', function() {
-                    mouseOverMarker = false;
-                    if (!mouseOverPopup && activePopup) {
-                        activePopup.remove();
-                        activePopup = null;
-                        map.getCanvas().style.cursor = '';
-                    }
-                });
-
-                // Show a popup and zoom to a specific location
-                function flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds) {
-
-                    map.flyTo({
-                        center: coordinates,
-                        zoom: 14
-                    });
-
-                    if (activePopup) activePopup.remove();
-
-
-                    // Vérification de la valeur de productType pour déterminer le type de badge à afficher
-                    let productBadge = '';
-
-                    if (productType.includes(1)) {
-                        productBadge = `<button type="button" style="font-size:10px;" class="mr-2 w-[80px] cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
-
-                        HVO 100
-                    </button>`;
-                    } else if (productType.includes(2)) {
-                        productBadge = `<button type="button" style="font-size:10px;" class="mr-2 w-[80px] cursor-default rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
-                        HVO Blend
-                    </button>`;
-                    }
-
-                    // Tableau de correspondance des noms de produits
-                    const productNames = {
-                        1: 'HVO 100',
-                        2: 'KlimaDiesel 90',
-                        3: 'NesteMY',
-                        4: 'Fuelmotion H',
-                        5: 'C.A.R.E Diesel',
-                        6: 'ROTH HVO100 Diesel'
-                    };
-
-                    // Vérifier si productIds est déjà un tableau, sinon essayer de le convertir
-                    if (!Array.isArray(productIds)) {
-                        try {
-                            productIds = JSON.parse(productIds);
-                        } catch (e) {
-                            // Si la conversion échoue, utiliser un tableau vide par défaut
-                            productIds = [];
-                        }
-                    }
-
-                    // Convertir les IDs en noms
-                    const productNamesList = productIds
-                        .map(id => productNames[id])
-                        .filter(name => name !== undefined)
-                        .join(', ');
-
-                    // Créer le contenu HTML pour le popup
-                    const popupContent = `
+                // Créer le contenu HTML pour le popup
+                const popupContent = `
                                          <div style="text-align: center; border-radius: 10px">
                                                  <div style="font-size: 14px; font-weight: bold; margin-bottom:5px;">${name}</div>
                                                 <div style="display: flex; align-items: center; justify-content: center;">
@@ -1039,129 +1033,123 @@
                                             </div>
                                         `;
 
-                    activePopup = new mapboxgl.Popup({
-                            closeButton: true,
-                            closeOnClick: false,
-                            offset: [0, -20]
+                activePopup = new mapboxgl.Popup({
+                        closeButton: true,
+                        closeOnClick: false,
+                        offset: [0, -20]
 
-                        })
-                        .setLngLat(coordinates)
-                        .setHTML(popupContent)
-                        .addTo(map);
-                }
-                // Hide the popup if the user clicks elsewhere
-                map.on('click', function(e) {
-                    if (activePopup) {
-                        const features = map.queryRenderedFeatures(e.point, {
-                            layers: ['locations-layer']
-                        });
-
-                        if (!features.length) {
-                            activePopup.remove();
-                            activePopup = null;
-                        }
-                    }
-                });
-
-                map.on('click', 'locations-layer', function(e) {
-                    const clickedFeature = e.features[0]; // Get the clicked feature
-                    const coordinates = clickedFeature.geometry.coordinates;
-                    const name = clickedFeature.properties.name;
-                    const opening_start = e.features[0].properties.opening_start || "00:00";
-                    const opening_end = e.features[0].properties.opening_end || "23:59";
-                    const productType = e.features[0].properties.product_types || [];
-                    let productIds = e.features[0].properties.products;
-                    const id = clickedFeature.properties.id;
-
-
-                    // Zoom to the location and show a popup
-                    flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds);
-
-                    // Move the table line to the top
-                    hightLightLocationInTable(id);
-                    highlightLocation(clickedFeature);
-
-                });
-
-
-
-                const debouncedUpdateMarkersAndTable = debounce(updateMarkersAndTable, 1000);
-
-                // Listen for input on the search bar
-                document.getElementById('searchBar').addEventListener('input', debouncedUpdateMarkersAndTable);
-
-                document.getElementById('resetButton').addEventListener('click', function(e) {
-                    reset();
-                });
-                document.getElementById('searchAreaButton').addEventListener('click', function(e) {
-                    const unzoom = false;
-                    updateMarkersAndTable(unzoom);
-                });
-
-                function reset() {
-                    document.getElementById('searchBar').value = '';
-                    const unzoom = true;
-                    updateMarkersAndTable(unzoom);
-                }
-                document.addEventListener('filterChanged', () => {
-                    const unzoom = true;
-                    updateMarkersAndTable(unzoom);
-                });
-
-                // Function to calculate the distance between two points
-                function calculateDistance(center, coordinates) {
-                    return turf.distance(
-                        turf.point([center.lng, center.lat]),
-                        turf.point(coordinates)
-                    );
-                }
-
-                // Function to get the bounds (bounds) of a set of features
-                function getBounds(features) {
-                    const bounds = new mapboxgl.LngLatBounds();
-                    features.forEach(feature => {
-                        bounds.extend(feature.geometry.coordinates);
-                    });
-                    return bounds;
-                }
-
-                function hightLightLocationInTable(id) {
-                    const tableBody = document.querySelector("#locationsTable tbody");
-                    const rows = Array.from(tableBody.querySelectorAll('tr'));
-
-                    const targetRow = rows.find(row => {
-                        const locationIdElement = row.querySelector('.location-id');
-                        if (!locationIdElement) {
-                            return false;
-                        }
-                        return locationIdElement.textContent.trim() === id;
+                    })
+                    .setLngLat(coordinates)
+                    .setHTML(popupContent)
+                    .addTo(map);
+            }
+            // Hide the popup if the user clicks elsewhere
+            map.on('click', function(e) {
+                if (activePopup) {
+                    const features = map.queryRenderedFeatures(e.point, {
+                        layers: ['locations-layer']
                     });
 
-                    if (targetRow) {
-                        rows.forEach(row => row.classList.remove('highlight'));
-
-                        targetRow.classList.add('highlight');
-
-                        targetRow.scrollIntoView({
-                            behavior: 'smooth',
-                            block: 'center',
-                            inline: 'nearest'
-                        });
+                    if (!features.length) {
+                        activePopup.remove();
+                        activePopup = null;
                     }
                 }
+            });
 
-                function isLocationOpen(opening_start, opening_end) {
-                    const currentTime = new Date(); // Get the current time
-                    const currentHours = currentTime.getHours().toString().padStart(2, '0'); // Current hours
-                    const currentMinutes = currentTime.getMinutes().toString().padStart(2, '0'); // Current minutes
+            map.on('click', 'locations-layer', function(e) {
+                const clickedFeature = e.features[0]; // Get the clicked feature
+                const coordinates = clickedFeature.geometry.coordinates;
+                const name = clickedFeature.properties.name;
+                const opening_start = e.features[0].properties.opening_start || "00:00";
+                const opening_end = e.features[0].properties.opening_end || "23:59";
+                const productType = e.features[0].properties.product_types || [];
+                let productIds = e.features[0].properties.products;
+                const id = clickedFeature.properties.id;
 
-                    const currentTimeString = `${currentHours}:${currentMinutes}`;
 
-                    return currentTimeString >= opening_start && currentTimeString <= opening_end;
-                }
+                // Zoom to the location and show a popup
+                flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds);
 
+                // Move the table line to the top
+                hightLightLocationInTable(id);
+                highlightLocation(clickedFeature);
 
             });
+
+
+
+            const debouncedUpdateMarkersAndTable = debounce(updateMarkersAndTable, 1000);
+
+            // Listen for input on the search bar
+            document.getElementById('searchBar').addEventListener('input', debouncedUpdateMarkersAndTable);
+
+            document.getElementById('resetButton').addEventListener('click', function(e) {
+                reset();
+            });
+            document.getElementById('searchAreaButton').addEventListener('click', function(e) {
+                updateMarkersAndTable();
+            });
+
+            function reset() {
+                document.getElementById('searchBar').value = '';
+                updateMarkersAndTable();
+            }
+            document.addEventListener('filterChanged', () => {
+                updateMarkersAndTable();
+            });
+
+            // Function to calculate the distance between two points
+            function calculateDistance(center, coordinates) {
+                return turf.distance(
+                    turf.point([center.lng, center.lat]),
+                    turf.point(coordinates)
+                );
+            }
+
+            // Function to get the bounds (bounds) of a set of features
+            function getBounds(features) {
+                const bounds = new mapboxgl.LngLatBounds();
+                features.forEach(feature => {
+                    bounds.extend(feature.geometry.coordinates);
+                });
+                return bounds;
+            }
+
+            function hightLightLocationInTable(id) {
+                const tableBody = document.querySelector("#locationsTable tbody");
+                const rows = Array.from(tableBody.querySelectorAll('tr'));
+
+                const targetRow = rows.find(row => {
+                    const locationIdElement = row.querySelector('.location-id');
+                    if (!locationIdElement) {
+                        return false;
+                    }
+                    return locationIdElement.textContent.trim() === id;
+                });
+
+                if (targetRow) {
+                    rows.forEach(row => row.classList.remove('highlight'));
+
+                    targetRow.classList.add('highlight');
+
+                    targetRow.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center',
+                        inline: 'nearest'
+                    });
+                }
+            }
+
+            function isLocationOpen(opening_start, opening_end) {
+                const currentTime = new Date(); // Get the current time
+                const currentHours = currentTime.getHours().toString().padStart(2, '0'); // Current hours
+                const currentMinutes = currentTime.getMinutes().toString().padStart(2, '0'); // Current minutes
+
+                const currentTimeString = `${currentHours}:${currentMinutes}`;
+
+                return currentTimeString >= opening_start && currentTimeString <= opening_end;
+            }
 
         });
 
