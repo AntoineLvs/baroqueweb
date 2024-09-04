@@ -54,13 +54,9 @@ class CreateOrder extends Component
 
 
         $this->allProducts = Product::all();
-
         $this->product_units = ProductUnit::all();
-
         $this->users = User::all();
-
         $this->contact_person = Auth::user()->id;
-
         $this->customer_tenants = Tenant::where('id', '!=', Auth::user()->tenant_id)->get();
 
 
