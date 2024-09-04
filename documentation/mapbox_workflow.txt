@@ -10,3 +10,4 @@ Insert Mapbox workflow here and create a guideline for
 4. Update the Mapbox Data Accordingly to the Changes from 1-3
 
 
+artisan queue:work --queue=mapbox_create

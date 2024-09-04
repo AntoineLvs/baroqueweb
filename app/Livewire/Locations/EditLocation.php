@@ -63,7 +63,7 @@ class EditLocation extends Component
 
         $data = $this->validate([
             'name' => 'required|string|max:100',
-            'description' => 'string|max:500',
+            'description' => 'nullable|string|max:500',
             'location_type_id' => 'nullable',
             'service_id' => 'nullable',
             'product_id' => 'nullable',
@@ -109,7 +109,7 @@ class EditLocation extends Component
     {
         $selected = json_decode($request->get('selected', ''), true);
 
-        
+
 
         return Product::query()
             ->when(
