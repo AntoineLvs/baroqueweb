@@ -49,7 +49,7 @@
               <div class="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
                 <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                   <label for="description" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                    Description
+                    Description x
                   </label>
                   <div class="mt-1 sm:mt-0 sm:col-span-2">
                     <div class="mt-1 sm:mt-0 sm:col-span-2">
@@ -57,7 +57,7 @@
 
                       <div class="form-group{{ $errors->has('description') ? ' has-danger' : '' }}">
 
-                        <input type="text" name="description" id="description" class="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('description') }}" value="{{ old('description', $location->description) }}" required autofocus>
+                        <input type="text" name="description" id="description" class="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('description') }}" value="{{ old('description', $location->description) }}" >
 
                       </div>
                     </div>

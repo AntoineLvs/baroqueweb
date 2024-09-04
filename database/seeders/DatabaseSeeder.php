@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
             TenantTypeSeeder::class,
             TenantSeeder::class,
             UserSeeder::class,
-            ProjectTypeSeeder::class,
+        
             ProductTypeSeeder::class,
             ProductUnitSeeder::class,
             LocationTypeSeeder::class,
