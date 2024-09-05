@@ -1,6 +1,6 @@
-<div x-data="{ 
-        isHidden: false, // Ajout d'une variable pour gérer la visibilité
-    }" class="select-menu flex flex-col md:flex-row md:mt-32 mt-18 ml-5">
+<div x-data="{ isHidden: false, isMobile: window.innerWidth <= 640 }"
+    @resize.window="isMobile = window.innerWidth <= 640"
+    class=" select-menu flex flex-col md:flex-row md:mt-32 mt-18 ml-5">
 
     <div x-data="{ 
             showResultClass: @entangle('showResultClass'), 
@@ -25,7 +25,7 @@
         </div>
 
         <!-- content of the search bar -->
-        <div x-show="!isHidden" x-transition x-cloak class="mx-auto mt-8 md:mt-4 mr-4 ml-4">
+        <div x-transition x-cloak class="mx-auto mt-8 md:mt-4 mr-4 ml-4">
             <div class="w-full flex flex-col items-center space-y-4">
                 <div class="w-full">
                     <div class="animated">
@@ -121,7 +121,7 @@
                     </table>
 
                     <template id="locationRowTemplate">
-                        <tr class="tile-hover cursor-pointer">
+                        <tr class="tile-hover cursor-pointer" @click="if (isMobile) { isHidden = true }">
                             <td class="pr-2 py-4 whitespace-no-wrap border-b border-gray-300">
                                 <div class="flex items-center justify-between">
                                     <div class="ml-2">
@@ -308,9 +308,9 @@
 
         let activePopup = null; // to manage the active popup
         let lastCenter = map.getCenter(); // stock the initial center
-        const updateThreshold = 50; // Minimal distance to consider that the map has moved
         let currentCenter = map.getCenter(); // Sotck the current center
         let mouseOverPopup = false;
+        let mouseOverMarker = false;
 
         map.on('load', function() {
             map.addSource('your-tileset-source', {
@@ -536,6 +536,8 @@
                     const productType = feature.properties.product_types || [];
                     let productIds = feature.properties.products;
                     const id = feature.properties.id || "";
+                    const serviceType = feature.properties.service_types || [];
+                    let serviceIds = feature.properties.services;
 
                     const product_types = feature.properties.product_types || [];
                     const isHvo100 = product_types.includes(1);
@@ -581,7 +583,7 @@
                     // Add an event listener for zooming and showing a popup when the line is clicked
                     clone.querySelector('tr').addEventListener('click', function() {
                         const coordinates = feature.geometry.coordinates;
-                        flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds);
+                        flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds, address)
                         highlightLocation(feature);
                         hightLightLocationInTable(id);
                     });
@@ -593,52 +595,78 @@
                         const detailsContent = detailsRow.querySelector('.details-content');
                         const locationInfoSpan = detailsRow.querySelector('.details-location-info');
                         if (productType.includes(1)) {
-                            productBadge = `<div class="mr-2 w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                            productBadge = `<div class="mr-2 text-center min-w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
                         HVO 100
                     </div>`;
                         } else if (productType.includes(2)) {
-                            productBadge = `<div class="mr-2 w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                            productBadge = `<div class="mr-2 text-center min-w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
                         HVO Blend
                     </div>`;
                         } else {
                             productBadge = '';
                         }
 
-                        // Tableau de correspondance des noms de produits
+                        // Table of product names
                         const productNames = {
                             1: 'HVO 100',
-                            2: 'KlimaDiesel 90',
+                            2: 'KlimaDiesel-90',
                             3: 'NesteMY',
                             4: 'Fuelmotion H',
                             5: 'C.A.R.E Diesel',
                             6: 'ROTH HVO100 Diesel'
                         };
 
-                        // Vérifier si productIds est déjà un tableau, sinon essayer de le convertir
+                        // Check if productIds is an array, otherwise try to parse it
                         if (!Array.isArray(productIds)) {
                             try {
                                 productIds = JSON.parse(productIds);
                             } catch (e) {
-                                // Si la conversion échoue, utiliser un tableau vide par défaut
+                                // If the conversion fails, use an empty array as default
                                 productIds = [];
                             }
                         }
 
-                        // Convertir les IDs en noms
+                        // Convert product IDs to names
                         const productNamesList = productIds
                             .map(id => productNames[id])
                             .filter(name => name !== undefined)
                             .join(', ');
 
-                        // Update the details content
+
+                        if (serviceType.includes(1)) {
+                            serviceBadge = `Vacuum cleaner`;
+                        } else if (serviceType.includes(2)) {
+                            serviceBadge = `Wash station`;
+                        } else if (serviceType.includes(3)) {
+                            serviceBadge = `Tire pressure`;
+                        } else {
+                            serviceBadge = '';
+                        }
+
+                        // Update the details content 
                         locationInfoSpan.innerHTML = `
                                                         <div class="text-sm text-gray-800">
                                                             <div style="display: flex; align-items: center; justify-content: start; margin-bottom: 5px;">
                                                                 ${productBadge}
-                                                                <div class="whitespace-nowrap  text-ellipsis"> ${productNamesList}</div>
+                                                                <div> ${productNamesList}</div>
+                                                            </div>
+                                                            <div style="display: flex; align-items: center; justify-content: start; margin-bottom: 5px;">
+                                                                Services available : ${serviceBadge}             
                                                             </div>
                                                             <div style="margin-bottom: 5px;">Open hours : ${opening_start} - ${opening_end}</div>
-                                                            <div style="margin-bottom: 5px;">Address : <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}" target="_blank" class="text-blue-600 underline">${address}</a></div>
+                                                            <div style="margin-bottom: 5px;" class="hover:text-indigo-600 hover:cursor-pointer hover:bg-gray-100" data-toggle="tooltip" data-placement="bottom" title="Copy address">
+                                                                <p style="display: inline;">
+                                                                    Address: ${address}
+                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="hover:text-indigo-600 h-5 w-5 text-gray-500" style="display: inline; vertical-align: middle;">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+                                                                    </svg>
+                                                                </p>                                                   
+                                                            </div>
+                                                            <div class="w-full flex flex-col items-end justify-center">
+                                                                <div style="margin-bottom: 5px;" class="items-end text-center mr-2 rounded-full bg-indigo-600 px-3 py-1 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                                                                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}" target="_blank" class="text-white">Route Starten</a>
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     `;
 
@@ -683,7 +711,7 @@
                     'layout': {
                         'icon-image': 'blue-location',
                         'text-field': ['get', 'name'],
-                        'text-size': 0.4,
+                        'text-size': 0,
                         'icon-size': [
                             'interpolate', ['linear'],
                             ['zoom'],
@@ -711,8 +739,9 @@
                     const productType = e.features[0].properties.product_types || [];
                     let productIds = e.features[0].properties.products;
                     const id = features[0].properties.id;
+                    const address = features[0].properties.address;
 
-                    flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds);
+                    flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds, address);
                     hightLightLocationInTable(id);
                 } else {
                     // Adjust the map bounds to include all the matches
@@ -779,18 +808,18 @@
                 let productBadge = '';
 
                 if (productType.includes(1)) {
-                    productBadge = `<div class="mr-2 w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                    productBadge = `<div class="mr-2 text-center w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
             HVO 100
         </div>`;
                 } else if (productType.includes(2)) {
-                    productBadge = `<div class="mr-2 w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                    productBadge = `<div class="mr-2 text-center w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
             HVO Blend
         </div>`;
                 }
 
                 const productNames = {
                     1: 'HVO 100',
-                    2: 'KlimaDiesel 90',
+                    2: 'KlimaDiesel-90',
                     3: 'NesteMY',
                     4: 'Fuelmotion H',
                     5: 'C.A.R.E Diesel',
@@ -817,14 +846,10 @@
                         <div style="font-size: 14px; font-weight: bold; margin-bottom:5px;">${name}</div>
                         <div style="display: flex; align-items: center; justify-content: center;">
                             ${productBadge}
-                            <div class="whitespace-nowrap  text-ellipsis">${productNamesList}</div>
+                            <div>${productNamesList}</div>
                         </div>
                         <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
-                        <div style="margin-top: 5px;">
-                            <a href="https://www.google.com/maps/search/?api=1&query=${encodedAddress}" target="_blank" class="text-blue-600 underline">
-                                ${address}
-                            </a>
-                        </div>
+                        <p class="cursor-pointer underline text-indigo-600" @click="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}', '_blank')">${address}</p>
                     </div>
                 `;
 
@@ -862,11 +887,13 @@
 
             map.on('mouseleave', 'highlighted-location', function() {
                 mouseOverMarker = false;
-                if (!mouseOverPopup && activePopup) {
-                    activePopup.remove();
-                    activePopup = null;
-                    map.getCanvas().style.cursor = '';
-                }
+                setTimeout(function() {
+                    if (!mouseOverPopup && activePopup) {
+                        activePopup.remove();
+                        activePopup = null;
+                        map.getCanvas().style.cursor = '';
+                    }
+                }, 500);
             });
 
             map.on('mouseenter', 'locations-layer', function(e) {
@@ -878,74 +905,76 @@
                 const opening_end = e.features[0].properties.opening_end || "23:59";
                 const productType = e.features[0].properties.product_types || [];
                 let productIds = e.features[0].properties.products;
-                // Vérification de la valeur de productType pour déterminer le type de badge à afficher
+                const address = e.features[0].properties.address;
+
+                // Verificatin of the value of productType to determine the type of badge to display
                 let productBadge = '';
-
                 if (productType.includes(1)) {
-                    productBadge = `<div class="mr-2 w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
-
-                        HVO 100
-                    </div>`;
+                    productBadge = `<div class="mr-2 text-center w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">HVO 100</div>`;
                 } else if (productType.includes(2)) {
-                    productBadge = `<div class="mr-2 w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
-                        HVO Blend
-                    </div>`;
+                    productBadge = `<div class="mr-2 text-center w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">HVO Blend</div>`;
                 }
 
-                // Tableau de correspondance des noms de produits
+                // Product name table
                 const productNames = {
                     1: 'HVO 100',
-                    2: 'KlimaDiesel 90',
+                    2: 'KlimaDiesel-90',
                     3: 'NesteMY',
                     4: 'Fuelmotion H',
                     5: 'C.A.R.E Diesel',
                     6: 'ROTH HVO100 Diesel'
                 };
 
-
-                // Vérifier si productIds est déjà un tableau, sinon essayer de le convertir
+                // Check if productIds is an array, otherwise try to convert it
                 if (!Array.isArray(productIds)) {
                     try {
                         productIds = JSON.parse(productIds);
                     } catch (e) {
-                        // Si la conversion échoue, utiliser un tableau vide par défaut
                         productIds = [];
                     }
                 }
 
-                // Convertir les IDs en noms
+                // Convert IDs to names
                 const productNamesList = productIds
                     .map(id => productNames[id])
                     .filter(name => name !== undefined)
                     .join(', ');
 
-                // Créer le contenu HTML pour le popup
-                const popupContent = `
-                                            <div style="text-align: center; border-radius: 10px">
-                                                 <div style="font-size: 14px; font-weight: bold; margin-bottom:5px;">${name}</div>
-                                                <div style="display: flex; align-items: center; justify-content: center;">
-                                                    ${productBadge}
-                                                    <div class="whitespace-nowrap  text-ellipsis">${productNamesList}</div>
-                                                </div>
-                                                <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
-                                            </div>
-                                        `;
+                const encodedAddress = encodeURIComponent(address);
 
+
+                // Create the HTML content for the popup
+                const popupContent = `
+        <div style="text-align: center; border-radius: 10px">
+            <div style="font-size: 14px; font-weight: bold; margin-bottom:5px;">${name}</div>
+            <div style="display: flex; align-items: center; justify-content: center;">
+                ${productBadge}
+                <div>${productNamesList}</div>
+            </div>
+            <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
+                                     <p class="cursor-pointer underline text-indigo-600" @click="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}', '_blank')">${address}</p>
+
+        </div>
+    `;
+
+                // Display the popup with the content
                 activePopup = new mapboxgl.Popup({
                         closeButton: false,
                         closeOnClick: false,
-                        offset: [0, -20]
+                        offset: [0, -20] // Offset from the top
                     })
                     .setLngLat(coordinates)
                     .setHTML(popupContent)
                     .addTo(map);
 
+                // Keep the popup open when the mouse is over
                 activePopup.getElement().addEventListener('mouseenter', () => {
-                    mouseOverPopup = true;
+                    mouseOverPopup = true; // The mouse is over the popup
                 });
 
+                // Close the popup when the mouse leaves the popup
                 activePopup.getElement().addEventListener('mouseleave', () => {
-                    mouseOverPopup = false;
+                    mouseOverPopup = false; // The mouse left the popup
                     if (!mouseOverPopup && !mouseOverMarker) {
                         activePopup.remove();
                         activePopup = null;
@@ -956,22 +985,25 @@
                 map.getCanvas().style.cursor = 'pointer';
             });
 
-
+            // Keep the popup open while the mouse is over the marker
             map.on('mouseenter', 'locations-layer', function() {
                 mouseOverMarker = true;
             });
 
+            // Close the popup when the mouse leaves the marker, if it's not on the popup
             map.on('mouseleave', 'locations-layer', function() {
                 mouseOverMarker = false;
-                if (!mouseOverPopup && activePopup) {
-                    activePopup.remove();
-                    activePopup = null;
-                    map.getCanvas().style.cursor = '';
-                }
+                setTimeout(function() {
+                    if (!mouseOverPopup && activePopup) {
+                        activePopup.remove();
+                        activePopup = null;
+                        map.getCanvas().style.cursor = '';
+                    }
+                }, 500);
             });
 
             // Show a popup and zoom to a specific location
-            function flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds) {
+            function flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds, address) {
 
                 map.flyTo({
                     center: coordinates,
@@ -981,55 +1013,59 @@
                 if (activePopup) activePopup.remove();
 
 
-                // Vérification de la valeur de productType pour déterminer le type de badge à afficher
+                // Check the value of productType to determine the type of badge to display
                 let productBadge = '';
 
                 if (productType.includes(1)) {
-                    productBadge = `<div class="mr-2 w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                    productBadge = `<div class="mr-2 text-center w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
 
                         HVO 100
                     </div>`;
                 } else if (productType.includes(2)) {
-                    productBadge = `<div class="mr-2 w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                    productBadge = `<div class="mr-2 text-center w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
                         HVO Blend
                     </div>`;
                 }
 
-                // Tableau de correspondance des noms de produits
+                // Product name mapping
                 const productNames = {
                     1: 'HVO 100',
-                    2: 'KlimaDiesel 90',
+                    2: 'KlimaDiesel-90',
                     3: 'NesteMY',
                     4: 'Fuelmotion H',
                     5: 'C.A.R.E Diesel',
                     6: 'ROTH HVO100 Diesel'
                 };
 
-                // Vérifier si productIds est déjà un tableau, sinon essayer de le convertir
+                // Check if productIds is an array, otherwise try to convert it
                 if (!Array.isArray(productIds)) {
                     try {
                         productIds = JSON.parse(productIds);
                     } catch (e) {
-                        // Si la conversion échoue, utiliser un tableau vide par défaut
+                        // If the conversion fails, use an empty array as default
                         productIds = [];
                     }
                 }
 
-                // Convertir les IDs en noms
+                // Convert IDs to names
                 const productNamesList = productIds
                     .map(id => productNames[id])
                     .filter(name => name !== undefined)
                     .join(', ');
 
-                // Créer le contenu HTML pour le popup
+                const encodedAddress = encodeURIComponent(address);
+
+                // Create the HTML content for the popup
                 const popupContent = `
                                          <div style="text-align: center; border-radius: 10px">
                                                  <div style="font-size: 14px; font-weight: bold; margin-bottom:5px;">${name}</div>
                                                 <div style="display: flex; align-items: center; justify-content: center;">
                                                     ${productBadge}
-                                                    <div class="whitespace-nowrap  text-ellipsis">${productNamesList}</div>
+                                                    <div>${productNamesList}</div>
                                                 </div>
                                                 <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
+                                                <p class="cursor-pointer underline text-indigo-600" @click="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}', '_blank')">${address}</p>
+
                                             </div>
                                         `;
 
@@ -1066,10 +1102,11 @@
                 const productType = e.features[0].properties.product_types || [];
                 let productIds = e.features[0].properties.products;
                 const id = clickedFeature.properties.id;
+                const address = e.features[0].properties.address || '';
 
 
                 // Zoom to the location and show a popup
-                flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds);
+                flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds, address);
 
                 // Move the table line to the top
                 hightLightLocationInTable(id);
