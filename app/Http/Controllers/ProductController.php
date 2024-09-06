@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ProductRequest;
 use App\Models\BaseProduct;
 use App\Models\Document;
+use App\Models\OrderedProduct;
 use App\Models\Product;
 use App\Models\ProductType;
 use App\Models\ProductUnit;
@@ -20,7 +21,9 @@ class ProductController extends Controller
     public function index(): View
     {
 
-        $products = Product::latest()->paginate(10);
+        // Zeigt nur nicht gelöschte Produkte an
+
+        $products = Product::whereNull('deleted_at')->latest()->paginate(10);
         $base_product = BaseProduct::all();
         return view('products.index', compact('products', 'base_product'));
 
@@ -35,8 +38,8 @@ class ProductController extends Controller
         $base_products = BaseProduct::all();
         $product_units = ProductUnit::all();
         $standards = Standard::all();
-        
-    
+
+
         return view('products.create', compact('product_types', 'product_units', 'base_products', 'standards'));
     }
 
@@ -73,12 +76,15 @@ class ProductController extends Controller
      */
     public function edit(Product $product): View
     {
+
         $product_types = ProductType::all();
+        $base_products = BaseProduct::all();
         $product_units = ProductUnit::all();
         $standards = Standard::all();
-    
-    
-        return view('products.edit', compact('product', 'product_types', 'product_units', 'standards'));
+
+
+
+        return view('products.edit', compact('product', 'product_types', 'base_products', 'product_units', 'standards'));
     }
 
     /**
@@ -96,19 +102,20 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Product $product): RedirectResponse
+    public function destroy(Product $product)
     {
-
-        if ($product->document_id) {
-            $this->destroyDocument($product);
+        // Überprüfen, ob das Produkt in irgendeiner Order verwendet wird
+        if (OrderedProduct::where('product_id', $product->id)->exists()) {
+            return redirect()->route('products.index')
+                ->with('message', 'This product cannot be deleted because it is part of an existing order.');
         }
 
+        // Produkt löschen
         $product->delete();
 
-        return redirect()
-            ->route('products.index')
-            ->with('message', '' . $product->name . ' was deleted successfully.');
-        }
+        return redirect()->route('products.index')
+            ->with('message', 'Product was successfully deleted.');
+    }
 
     public function destroyDocument(Product $product): RedirectResponse
     {

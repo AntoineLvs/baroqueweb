@@ -6,7 +6,7 @@
 
     <div>
       <h3 class="text-lg leading-6 font-medium text-gray-900">
-        General Informations
+        Allgemeine Informationen
       </h3>
       <p class="mt-1 max-w-2xl text-sm text-gray-500">
         Provide some general informations about your product.
@@ -17,38 +17,41 @@
 
 
 
-      <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+      <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 mt-4 pb-4">
         <label for="type" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-          Base Product
+          Ausgangsprodukt
         </label>
         <div class="mt-1 sm:mt-0 sm:col-span-2">
-          <div class="mt-1 sm:mt-0 sm:col-span-2">
-            <select wire:model.live="base_product_id" id="base_product_id" class="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md" required>
-              <option value="">-- Choose Product Type first --</option>
+          <div class="mt-1 sm:mt-0 sm:col-span-2 w-full md:w-64">
 
-              @foreach ($base_products as $base_product)
-              <option value="{{ $base_product->id }}">{{ $base_product->name }}</option>
-              @endforeach
+              <select wire:model.live="base_product_id" id="base_product_id" class="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md" required>
+                  <option value="">-- Choose Product Type first --</option>
 
-            </select>
+                      @foreach ($base_products as $base_product)
+                          <option value="{{ $base_product->id }}">{{ $base_product->name }}</option>
+                      @endforeach
 
+              </select>
           </div>
         </div>
       </div>
 
 
-      @if ($base_product_id == '2')
-      <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 overflow-hidden" style="max-height: 100px; transition: max-height 0.4s ease-in-out;">
+
+
+@if($base_product_id == 2)
+      <div class="pt-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 overflow-hidden" style="max-height: 100px; transition: max-height 0.4s ease-in-out;">
         <label for="blend_percent" class="block font-medium text-sm text-gray-700">
-          Please indicate your specific blend percent (%)
+          Bitte die genauen Prozent des HVO-Anteils angeben(%)
         </label>
         <div class="mt-1 sm:mt-0 sm:col-span-2">
-          <div class="mt-1 sm:mt-0 sm:col-span-2">
-            <input wire:model.live="blend_percent" id="blend_percent" class="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md" type="number">
+          <div class="pt-2 pb-2 pr-8 sm:mt-0 sm:col-span-2 w-full md:w-64"">
+
+              <x-number class="w-40" wire:model.live="blend_percent" id="blend_percent" min="1" max="99" />
+
           </div>
         </div>
-      </div>
-      @endif
+      </div> @endif
 
 
 
@@ -57,7 +60,7 @@
     <div class="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
       <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
         <label for="name" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-          Name
+         Produkt-Name (öffentlich sichtbar)
         </label>
         <div class="mt-1 sm:mt-0 sm:col-span-2">
           <div class="mt-1 sm:mt-0 sm:col-span-2">
@@ -70,7 +73,7 @@
     <div class="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
       <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
         <label for="data" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-          Add more informations (max. 120 chars)
+          Weitere Produkt-Details
         </label>
         <div class="mt-1 sm:mt-0 sm:col-span-2">
           <div class="mt-1 sm:mt-0 sm:col-span-2">
@@ -83,11 +86,11 @@
     <div class="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
       <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
         <label for="unit" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-          Product Unit
+          Produkt-Einheit
         </label>
         <div class="mt-1 sm:mt-0 sm:col-span-2">
           <div class="mt-1 sm:mt-0 sm:col-span-2">
-            <select name="product_unit_id" id="product_unit_id" class="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md" required>
+            <select wire:model="product_unit_id" name="product_unit_id" id="product_unit_id" class="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md" >
               <option value="">-- Please choose --</option>
               @foreach ($product_units as $product_unit)
               @if($product_unit['id'] == old('document'))

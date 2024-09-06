@@ -10,11 +10,17 @@ use Livewire\Component;
 class SearchProducts extends Component
 {
     public $searchTerm;
-    public $selectedManufacturer = null;
-    public $selectedVehicle = null;
-    public $selectedEngine = null;
 
-    public function render()
+    public $products;
+
+    function mount($products)
+    {
+        $this->products = $products;
+    }
+
+
+
+    function render()
     {
 
 
@@ -26,7 +32,8 @@ class SearchProducts extends Component
         ]);
     }
 
-    private function getReleases()
+    private
+    function getReleases()
     {
         $query = Release::query();
 
@@ -48,7 +55,8 @@ class SearchProducts extends Component
         return $query->get();
     }
 
-    public function search()
+    public
+    function search()
     {
         // This method gets called when the form is submitted.
         // Livewire's reactivity automatically updates the results.

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Mail\ProductOffer;
+namespace App\Mail\Order;
 
 use App\Models\ProductOfferInquiry;
 use Illuminate\Bus\Queueable;

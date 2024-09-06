@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Mail\ProductOffer;
+namespace App\Mail\Order;
 
 use App\Models\ProductOfferInquiry;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class NewProductInquiryMail extends Mailable
+class ProductInquiryCanceledMail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -31,6 +31,6 @@ class NewProductInquiryMail extends Mailable
 
         //ddd($this->product_offer_inquiry->offer($this->product_offer_inquiry->public_product_offer_id)->products);
 
-        return $this->subject('New Product Inquiry # '.$this->product_offer_inquiry->id)->markdown('emails.product-inquiry.new-product-inquiry');
+        return $this->subject('New Product Inquiry # '.$this->product_offer_inquiry->id)->markdown('emails.product-inquiry.product-inquiry-canceled');
     }
 }

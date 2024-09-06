@@ -13,7 +13,7 @@
         <div class="px-4 sm:px-6 lg:px-8">
             <div class="sm:flex sm:items-center">
                 <div class="sm:flex-auto">
-                    <h1 class="text-base font-semibold leading-6 text-gray-900">Product Übersicht</h1>
+                    <h1 class="text-base font-semibold leading-6 text-gray-900">Produktübersicht</h1>
                 </div>
 
             </div>
@@ -31,17 +31,19 @@
                                     <th scope="col"
                                         class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Produkt
                                     </th>
+
+                                    <th scope="col"
+                                        class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Typ
+                                    </th>
                                     <th scope="col"
                                         class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Händler
                                     </th>
                                     <th scope="col"
                                         class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Info
                                     </th>
-                                    <th scope="col"
-                                        class="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">Info
-                                    </th>
+
                                     <th scope="col" class="relative py-3.5 pl-3 pr-4 sm:pr-6">
-                                        <span class="sr-only">Edit</span>
+                                        <span class="sr-only">Anfragen</span>
                                     </th>
                                 </tr>
                                 </thead>
@@ -57,16 +59,18 @@
                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                 {{ $product->name }}
                                             </td>
+
+                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                                                {{ $product->base_product->product_type->name }}
+                                            </td>
                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
 
                                                 ({{ $product->tenant->id }}) {{ $product->tenant->name }}
                                             </td>
                                             <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                               x
+                                                {{ $product->infos }}
                                             </td>
-                                            <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                x
-                                            </td>
+
                                             <td class="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
                                                 <a href="{{ route('orders.public-product-request', ['product' => $product ]) }}" class="text-indigo-600 hover:text-indigo-900">Anfragen<span
                                                         class="sr-only"> Anfragen </span></a>

@@ -18,9 +18,10 @@ class BaseProduct extends Model
 
     public function product_type()
     {
-
         return $this->belongsTo(ProductType::class);
     }
+
+
 
     public function getImagePathAttribute()
   {

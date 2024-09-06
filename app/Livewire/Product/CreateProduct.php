@@ -20,14 +20,14 @@ class CreateProduct extends Component
     public $name;
     public $data;
 
-
     public $product_type_id;
     public $product_types;
+
     public $value;
     public $document_id;
 
     public $base_products;
-    public $base_product_id;
+    public $base_product_id =1;
 
     public $standards;
     public $standard_id;
@@ -40,62 +40,49 @@ class CreateProduct extends Component
     public $product_unit_id = 1;
     public $product_units;
 
-    public $selectedProductType;
+    public $selectedBaseProduct;
 
     public $document_type = 1;
 
-    public $blend_percent = 0;
+    public $blend_percent;
     public $blendPercentVisible = false;
 
 
-    public function mount($base_products, $product_units, $standards)
+    public function mount($base_products, $product_units)
     {
         $this->base_products = $base_products;
         $this->product_units = $product_units;
-        $this->standards = $standards;
+
     }
 
-    public function updatedSelectedBaseProduct()
-    {
-        if ($this->product_type_id == '1') {
-            if ($this->base_product_id == '1') {
-                // Show input to fill blend_percent for Indivudual Blend percent
-                $this->blendPercentVisible = true;
-            } else {
-                // Don't show the input, and add the original blend_percent value to blend_percent
-                $baseProduct = BaseProduct::find($this->base_product_id);
-                if ($baseProduct) {
-                    $this->blend_percent = $baseProduct->blend_percent;
-                } else {
-                    $this->blend_percent = 0;
-                }
-                $this->blendPercentVisible = false;
-            }
-        } else {
-            // Don't show input if Product type isn't HVO -> no blend_percent
-            $this->blend_percent = 0;
-            $this->blendPercentVisible = false;
-        }
-    }
 
 
     public function submit()
     {
         $data = $this->validate([
             'name' => 'required|string|max:100',
-            'data' => 'string|max:500',
-            //'product_type_id' => 'required',
-            'product_unit_id' => 'required',
-            'base_product_id' => 'required',
-            'standard_id' => 'required',
-            'blend_percent' => 'nullable',
+            'data' => 'nullable|string|max:300',
+            'product_unit_id' => 'required|integer',
+            'base_product_id' => 'required|integer',
+            'blend_percent' => 'nullable|integer',
 
         ]);
 
-        // Créez le produit
+        // Hole das BaseProduct-Modell basierend auf der base_product_id
+        $baseProduct = BaseProduct::find($this->base_product_id);
+
+        // Falls ein BaseProduct gefunden wurde, weise den product_type_id zu
+        if ($baseProduct) {
+            $data['product_type_id'] = $baseProduct->product_type_id;
+        } else {
+            // Fehlermeldung oder Standard-Logik für den Fall, dass das BaseProduct nicht gefunden wird
+            return redirect()->back()->withErrors(['base_product_id' => 'Invalid base product selected.']);
+        }
+
+        // Create the Product
         $product = Product::create($data);
 
-        // Sauvegardez le produit pour obtenir son ID généré automatiquement
+
         $product->save();
 
 

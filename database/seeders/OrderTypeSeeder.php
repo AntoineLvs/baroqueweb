@@ -22,17 +22,19 @@ class OrderTypeSeeder extends Seeder
             [
                 'id' => '1',
                 'name' => "Anfrage",
-
+                'color' => "yellow",
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s')
             ],
             [
                 'id' => '2',
                 'name' => "Angebot",
+                'color' => "green",
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s')
             ],
             [
                 'id' => '3',
                 'name' => "Bestellung",
+                'color' => "blue",
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s')
             ],
 

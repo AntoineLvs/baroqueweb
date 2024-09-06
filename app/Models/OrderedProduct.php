@@ -12,7 +12,12 @@ class OrderedProduct extends Model
     use BelongsToTenant, HasFactory;
 
     protected $fillable = [
-        'order_id', 'quantity',
+        'order_id',
+        'product_id',
+        'product_quantity',
+        'product_price',
+        'product_tax',
+        'total_amount',
     ];
 
     public function order()

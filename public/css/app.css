@@ -1565,6 +1565,9 @@ h1, h2, h3, h4, h5, h6, p, span {
 .w-4 {
   width: 1rem;
 }
+.w-40 {
+  width: 10rem;
+}
 .w-48 {
   width: 12rem;
 }
@@ -8059,6 +8062,10 @@ input[type="number"].appearance-number-none {
 
   .md\:w-10 {
     width: 2.5rem;
+  }
+
+  .md\:w-64 {
+    width: 16rem;
   }
 
   .md\:w-auto {
