@@ -45,9 +45,6 @@ use App\Livewire\Auth\Verify;
 use App\Models\Engine;
 use App\Models\Manufacturer;
 
-
-
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -65,7 +62,7 @@ Route::get('/email/verify', function () {
     return view('auth.verify');
 })->middleware('auth')->name('verification.notice');
 
-/////// ORIGN
+/////// ORIGIN
 
 Route::view('/', 'home')->name('home');
 Route::view('check', 'check')->name('check');
@@ -76,63 +73,6 @@ Route::get('/get/services', [\App\Livewire\Locations\CreateLocation::class, 'get
 Route::get('/get/products', [\App\Livewire\Locations\EditLocation::class, 'getProducts'])->name('get.products');
 Route::get('/get/services', [\App\Livewire\Locations\EditLocation::class, 'getServices'])->name('get.services');
 
-// FIND ENGINES
-
-Route::get('/check/engines', function (Request $request) {
-    // getting initial selected values
-    $selected = json_decode($request->get('selected', ''), true);
-
-    return Engine::query()
-        // searching when type in the select input
-        ->when(
-            $search = $request->get('search'),
-            fn ($query) => $query->where('name', 'like', "%{$search}%")
-        )
-        ->when(!$search && $selected, function ($query) use ($selected) {
-            // selecting the initial selected values
-            $query->whereIn('id', $selected)
-                // or selecting the other users ordered by creation date
-                ->orWhere(function ($query) use ($selected) {
-                    $query->whereNotIn('id', $selected)
-                        ->orderBy('created_at');
-                });
-        })
-        ->limit(25)
-        ->get()
-        ->map(function (Engine $engine) {
-            return [
-                'id' => $engine->id,
-                // Kombinieren von 'name' und 'data' für das Label
-                'label' => "{$engine->name} - Hersteller: {$engine->manufacturer->name}"
-            ];
-        });
-})->name('api.engines');
-// FIND MANUFACTURERS
-
-Route::get('/check/manufacturers', function (Request $request) {
-    // getting initial selected values
-    $selected = json_decode($request->get('selected', ''), true);
-
-    return Manufacturer::query()
-        // searching when type in the select input
-        ->when(
-            $search = $request->get('search'),
-            fn ($query) => $query->where('name', 'like', "%{$search}%")
-        )
-        ->when(!$search && $selected, function ($query) use ($selected) {
-            // selecting the initial selected values
-            $query->whereIn('id', $selected)
-                // or selecting the other users ordered by creation date
-                ->orWhere(function ($query) use ($selected) {
-                    $query->whereNotIn('id', $selected)
-                        ->orderBy('created_at');
-                });
-        })
-        ->limit(65)
-        ->get()
-        // mapping to the expected format
-        ->map(fn (Manufacturer $manufacturer) => $manufacturer->only('id', 'name'));
-})->name('api.manufacturers');
 
 
 Route::middleware('guest')->group(function () {

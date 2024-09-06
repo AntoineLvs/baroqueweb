@@ -19,7 +19,10 @@ class ProductFinderController extends Controller
     public function index(): View
     {
 
-        $products = Product::withoutGlobalScope(TenantScope::class)->get()->all();
+        $products = Product::withoutGlobalScope(TenantScope::class)
+            ->where('active', 1)
+            ->get();
+
 
         return view('product-finder.index', ['products' => $products]);
     }
@@ -44,26 +47,7 @@ class ProductFinderController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Register  $register
-     */
-    public function show($offer): View
-    {
 
-        $product_offer = PublicProductOffer::withoutGlobalScope(TenantScope::class)->find($offer);
-
-        return view('hub.show-offer', ['offer' => $product_offer]);
-    }
-
-    public function showInquiry($inquiry): View
-    {
-
-        $inquiry = ProductOfferInquiry::withoutGlobalScope(TenantScope::class)->find($inquiry);
-
-        return view('hub.show-inquiry', ['inquiry' => $inquiry]);
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -91,29 +75,7 @@ class ProductFinderController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function addToBucket($offer)
-    {
 
-        $product_offer = PublicProductOffer::withoutGlobalScope(TenantScope::class)->find($offer);
-        // ddd($product_offer->products);
-
-        $tenant_id = auth()->user()->Tenant->id;
-
-        if (Bucket::where('tenant_id', $tenant_id)->first() == null) {
-            $bucket = new Bucket;
-            $bucket->save();
-        } else {
-            $bucket = Bucket::where('tenant_id', $tenant_id)->first();
-        }
-
-        $bucket_entry = new BucketEntry;
-        $bucket_entry->bucket_id = $bucket->id;
-        $bucket_entry->product_offer_id = $product_offer->id;
-        $bucket_entry->save();
-
-        //  return view('hub.index');
-        return back()->with('message', 'Offer was added to bucket.');
-    }
 
     /**
      * Remove the specified resource from storage.
@@ -148,4 +110,6 @@ class ProductFinderController extends Controller
 
         return view('hub.show-profile', ['tenant' => $tenant]);
     }
+
+
 }

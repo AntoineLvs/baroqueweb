@@ -84,6 +84,7 @@
                 <div>
                   @livewire('product.edit-product',
                   ['product' => $product ,
+                    'base_products' => $base_products,
                   'product_types' => $product_types,
                   'product_units' => $product_units,
                   'standards' => $standards,

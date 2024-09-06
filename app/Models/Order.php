@@ -31,6 +31,7 @@ class Order extends Model
         'customer_country',
         'customer_order_notice',
 
+
         # General fields
         'order_notice',
         'date_valid',
@@ -53,12 +54,12 @@ class Order extends Model
 
     public function type()
     {
-        return $this->hasOne(OrderType::class);
+        return $this->belongsTo(OrderType::class, 'order_type_id');
     }
 
 
 
-    public function products()
+    public function orderedProducts()
     {
         return $this->hasMany(OrderedProduct::class);
     }

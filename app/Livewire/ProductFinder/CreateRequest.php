@@ -3,13 +3,16 @@
 namespace App\Livewire\ProductFinder;
 
 use App\Models\Order;
+use App\Models\OrderedProduct;
 use App\Models\Product;
 use App\Models\ProductUnit;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 
 class CreateRequest extends Component
 {
     public $product;
+
 
     // Order-related fields
     public $tenant_id = 1;
@@ -80,8 +83,19 @@ class CreateRequest extends Component
         ]);
 
         $order = Order::create($data);
-
         $order->save();
+
+        // OrderedProducts für jedes Produkt erstellen
+
+        $ordered_product = OrderedProduct::create([
+            'tenant_id' => 1,
+            'order_id' => $order->id,
+            'product_id' => $this->product->id,
+            'product_quantity' => $this->request_quantity,
+            'product_unit_id' => $this->product_unit_id,
+        ]);
+
+        $ordered_product->save();
 
         $message = 'Ihre Anfrage wurde erfolgreich übermittelt. ';
 
@@ -96,5 +110,28 @@ class CreateRequest extends Component
             'product' => $this->product,
             'product_units' => $this->product_units,
         ]);
+    }
+
+    public function fillWithSampleData()
+    {
+        // Order-related fields
+        $this->request_quantity = 2500;
+
+        // Customer-related fields
+        $this->customer_tenant_id = 1;
+        $this->customer_company_name = 'Musterfirma GmbH';
+        $this->customer_email = 'muster@email.com';
+        $this->customer_phone = '+49 123 456 789';
+        $this->customer_contact_firstname = 'Max';
+        $this->customer_contact_lastname = 'Mustermann';
+        $this->customer_street = 'Musterstraße 1';
+        $this->customer_zip = '12345';
+        $this->customer_city = 'Musterstadt';
+        $this->customer_country = 'Deutschland';
+        $this->customer_order_notice = 'Bitte die Lieferung so schnell wie möglich durchführen.';
+
+        // General fields
+        $this->order_notice = 'Dringende Anfrage.';
+
     }
 }

@@ -7,6 +7,10 @@
         <div class="mx-auto max-w-2xl text-center">
             <h2 class="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Product Request</h2>
             <p class="mt-2 text-lg leading-8 text-gray-600">Aute magna irure deserunt veniam aliqua magna enim voluptate.</p>
+
+            <button type="button" wire:click="fillWithSampleData" class="btn btn-primary">
+                Mit Musterdaten ausfüllen
+            </button>
         </div>
 
 
@@ -83,8 +87,9 @@
 
 
         <form wire:submit="save" class="mx-auto mt-16 max-w-xl sm:mt-20">
-            <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+            @csrf
 
+            <div class="grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
 
                 <!-- Quantity -->
                 <div>

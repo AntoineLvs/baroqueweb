@@ -22,13 +22,14 @@ class OrderStatusSeeder extends Seeder
             [
                 'id' => '1',
                 'name' => "Anfrage erstellt",
+                'color' => "green",
 
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s')
             ],
             [
                 'id' => '2',
                 'name' => "Anfrage bearbeitet",
-
+                'color' => "yellow",
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s')
             ],
 
@@ -36,21 +37,25 @@ class OrderStatusSeeder extends Seeder
             [
                 'id' => '20',
                 'name' => "Angebot erstellt",
+                'color' => "green",
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s')
             ],
             [
                 'id' => '21',
                 'name' => "Angebot abgelehnt",
+                'color' => "red",
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s')
             ],
             [
                 'id' => '30',
                 'name' => "Bestellung ausgelöst",
+                'color' => "blue",
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s')
             ],
             [
                 'id' => '39',
                 'name' => "Bestellung abgeschlossen",
+                'color' => "green",
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s')
             ],
 

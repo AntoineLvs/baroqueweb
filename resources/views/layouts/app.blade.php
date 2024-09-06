@@ -22,10 +22,10 @@
                     <div class="pr-16 sm:text-center sm:px-16">
                         <p class="font-medium text-white">
                             <span class="md:hidden">
-                                You are impersonating {{auth()->user()->name}} -> user({{auth()->user()->id}}) / tenant({{auth()->user()->tenant->id}})
+                                You are impersonating {{auth()->user()->name}} -> user({{auth()->user()->id}}) / tenant({{auth()->user()->tenant->id}}, {{auth()->user()->tenant->name}})
                             </span>
                             <span class="hidden md:inline">
-                                You are impersonating {{auth()->user()->name}} -> user({{auth()->user()->id}}) / tenant({{auth()->user()->tenant->id}})
+                                You are impersonating {{auth()->user()->name}} -> user({{auth()->user()->id}}) / tenant({{auth()->user()->tenant->id}}, {{auth()->user()->tenant->name}})
                             </span>
                             <span class="block sm:ml-2 sm:inline-block">
                                 <a href="{{route('leave-impersonation')}}" class="text-white font-bold underline">

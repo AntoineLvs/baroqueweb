@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('order_types', function (Blueprint $table) {
             $table->id();
             $table->text('name')->nullable();
+            $table->text('color')->nullable();
             $table->timestamps();
 
         });

@@ -77,7 +77,7 @@
                                                         </th>
                                                         <th scope="col"
                                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                                            Infos
+                                                            Details
                                                         </th>
                                                         <th scope="col"
                                                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -127,8 +127,7 @@
                                                                         <div class="text-sm text-gray-500">
 
                                                                             @if ( $product->base_product_id)
-                                                                                Base
-                                                                                Product:: {{ $product->base_product($product->base_product_id)->name }}
+                                                                                {{ $product->base_product->name }}
                                                                             @endif
 
 
@@ -146,9 +145,10 @@
 
                                                             <td class="px-6 py-4 whitespace-nowrap">
                                                                 <div
-                                                                    class="text-sm text-gray-900">{{ $product->product_type->name}}</div>
-                                                                <div class="text-sm text-gray-500">
-                                                                    PTID: {{ $product->product_type_id }}</div>
+                                                                    class="text-sm text-gray-900">{{ $product->product_type->name}}
+                                                                   @if($product->blend_percent) ({{ $product->blend_percent}} %) @endif
+                                                                </div>
+
                                                             </td>
 
                                                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">

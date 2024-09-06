@@ -28,34 +28,34 @@ class EditProduct extends Component
     public $standards;
     public $standard_id;
 
-    public $baseProducts = [];
+    public $base_products;
     public $base_product_id;
 
 
     public $product;
 
     public $blendPercentVisible = false;
-    public $base_products;
 
 
 
-    public function mount(Product $product, $product_types, $product_units)
+    public function mount(Product $product, $product_types, $base_products, $product_units)
     {
       $this->product_types = $product_types;
       $this->product_units = $product_units;
 
       $this->product = $product;
 
+      $this->blend_percent = $product->blend_percent;
+
       $this->product_type_id = $product->product_type_id;
       $this->product_unit_id = $product->product_unit_id;
       $this->standard_id = $product->standard_id;
 
-
       $this->name = $product->name;
       $this->data = $product->data;
 
-      $this->baseProducts = BaseProduct::all();
-      $this->base_product_id = BaseProduct::where('id', $product->base_product_id)->get()->first()->id;
+      $this->base_products = $base_products;
+      $this->base_product_id = $product->base_product_id;
     }
     public function updatedSelectedBaseProduct()
     {
@@ -95,12 +95,12 @@ class EditProduct extends Component
     {
       $data = $this->validate([
         'name' => 'required|string|max:100',
-        'data' => 'string|max:500',
+        'data' => 'nullable|string|max:500',
         'product_type_id' => 'required',
         'product_unit_id' => 'required',
         'base_product_id' => 'required',
         'standard_id' => 'nullable',
-        'blend_percent' => 'nullable',
+        'blend_percent' => 'nullable|numeric',
 
       ]);
 
@@ -126,14 +126,7 @@ class EditProduct extends Component
 
     public function render()
     {
-      $this->product_types = ProductType::all();
-      if ($this->product_type_id) {
-        $this->base_products = BaseProduct::where('product_type_id', $this->product_type_id)->get();
-        $this->standards = Standard::where('product_type_id', $this->product_type_id)->get();
-      } else {
-        $this->base_products = [];
-        $this->standards = [];
-      }
+
 
       return view('livewire.product.edit-product', [
         'product_types' => $this->product_types,

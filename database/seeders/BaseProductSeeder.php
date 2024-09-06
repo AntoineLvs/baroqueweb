@@ -27,7 +27,7 @@ class BaseProductSeeder extends Seeder
             [
                 'id' => '2',
                 'name' => "HVO Blend",
-                'product_type_id' => '1',
+                'product_type_id' => '2',
                 'blend_percent' => null,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s')
             ],

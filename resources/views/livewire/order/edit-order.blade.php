@@ -44,7 +44,7 @@
 
                     <select wire:model.live="order_status_id" id="order_status_id"
                             class="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md"
-                            >
+                    >
                         <option value="">-- Please choose --</option>
                         @foreach ($order_statuses as $order_status)
                             @if($order_type)
@@ -73,7 +73,7 @@
                 <div class="mt-1 sm:mt-0 sm:col-span-2">
                     <input type="text" wire:model="customer_company_name" id="customer_company_name"
                            class="max-w-lg block w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
-                           >
+                    >
 
                     @error('customer_company_name') <span class="text-sm text-red-500 mt-2">{{ $message }}</span> @enderror
                 </div>
@@ -272,6 +272,7 @@
                         <table class="min-w-full divide-y divide-gray-300">
                             <thead class="bg-gray-50">
                             <tr>
+
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Quantity</th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price / Unit</th>
@@ -282,15 +283,17 @@
                             </thead>
                             <tbody class="divide-y divide-gray-200 bg-white">
 
-                            @foreach($ordered_products as $index => $ordered_product)
+                            @foreach($ordered_products as $ordered_product)
                                 <tr>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $ordered_product['product']['name'] }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $ordered_product['product_quantity'] }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $ordered_product['product_price'] }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $ordered_product['product_tax'] }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $ordered_product['total_amount'] }}</td>
+
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ $ordered_product->product->name }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $ordered_product->product_quantity }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $ordered_product->product_price }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $ordered_product->product_tax }}</td>
+                                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $ordered_product->total_amount }}</td>
+
                                     <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                        <button type="button" wire:click="removeProduct({{ $index }})"
+                                        <button type="button" wire:click="removeProduct({{ $ordered_product->product_id }})"
                                                 class="text-red-600 hover:text-red-900">Remove</button>
                                     </td>
                                 </tr>
@@ -301,9 +304,7 @@
                             </tbody>
                         </table>
 
-
                     </div>
-
 
                     @if (session()->has('message'))
 
@@ -330,7 +331,7 @@
                        class="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Cancel</a>
                     <button type="submit"
                             class="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                        Create Order
+                        Aktualisieren
                     </button>
                 </div>
             </div>
