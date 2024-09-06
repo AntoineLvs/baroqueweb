@@ -6,7 +6,7 @@
             showResultClass: @entangle('showResultClass'), 
             openHeight: '0px',
             isHvo100: true,
-            isHvoBlend: false, 
+            isHvoBlend: true, 
             test() {
                 setTimeout(() => {
                     $dispatch('filterChanged');
@@ -634,11 +634,11 @@
 
 
                         if (serviceType.includes(1)) {
-                            serviceBadge = `Vacuum cleaner`;
+                            serviceBadge = `Services available : Vacuum cleaner`;
                         } else if (serviceType.includes(2)) {
-                            serviceBadge = `Wash station`;
+                            serviceBadge = `Services available : Wash station`;
                         } else if (serviceType.includes(3)) {
-                            serviceBadge = `Tire pressure`;
+                            serviceBadge = `Services available : Tire pressure`;
                         } else {
                             serviceBadge = '';
                         }
@@ -651,20 +651,36 @@
                                                                 <div> ${productNamesList}</div>
                                                             </div>
                                                             <div style="display: flex; align-items: center; justify-content: start; margin-bottom: 5px;">
-                                                                Services available : ${serviceBadge}             
+                                                                ${serviceBadge}             
                                                             </div>
                                                             <div style="margin-bottom: 5px;">Open hours : ${opening_start} - ${opening_end}</div>
-                                                            <div style="margin-bottom: 5px;" class="hover:text-indigo-600 hover:cursor-pointer hover:bg-gray-100" data-toggle="tooltip" data-placement="bottom" title="Copy address">
-                                                                <p style="display: inline;">
-                                                                    Address: ${address}
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="hover:text-indigo-600 h-5 w-5 text-gray-500" style="display: inline; vertical-align: middle;">
-                                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
-                                                                    </svg>
-                                                                </p>                                                   
+                                                            <div style="margin-bottom: 5px;" class="text-gray-500 hover:text-indigo-600 hover:cursor-pointer hover:bg-gray-100" data-toggle="tooltip" data-placement="bottom" title="Copy address">
+                                                                <div x-data="{ showMsg: false }">
+                                                                    <p style="display: inline; cursor: pointer;" @click="
+                                                                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                                                                            navigator.clipboard.writeText('${address}').then(() => {
+                                                                                showMsg = true;
+                                                                                setTimeout(() => showMsg = false, 1000);
+                                                                            }).catch(err => console.error('Failed to copy text: ', err));
+                                                                        } else {
+                                                                            console.error('Clipboard API not supported');
+                                                                        }
+                                                                    ">
+                                                                        <span>Address : ${address}</span>
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5" style="display: inline; vertical-align: middle;">
+                                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+                                                                        </svg>
+                                                                    </p>
+
+                                                                    <!-- Message "Copied to clipboard" -->
+                                                                    <div x-show="showMsg" @click.away="showMsg = false" class="fixed bottom-3 right-3 z-20 max-w-sm overflow-hidden bg-green-100 border border-green-300 rounded">
+                                                                        <p class="p-3 flex items-center justify-center text-green-600">Copied to Clipboard</p>
+                                                                    </div>
+                                                                </div>
                                                             </div>
-                                                            <div class="w-full flex flex-col items-end justify-center">
-                                                                <div style="margin-bottom: 5px;" class="items-end text-center mr-2 rounded-full bg-indigo-600 px-3 py-1 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
-                                                                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}" target="_blank" class="text-white">Route Starten</a>
+                                                            <div class="w-full flex flex-col items-start justify-center">
+                                                                <div style="margin-bottom: 5px;" class="items-start text-center rounded-md bg-white px-3 py-2 hover:cursor-pointer text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100 whitespace-nowrap overflow-hidden text-ellipsis">
+                                                                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}" target="_blank">Routenplaner</a>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -809,12 +825,12 @@
 
                 if (productType.includes(1)) {
                     productBadge = `<div class="mr-2 text-center w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
-            HVO 100
-        </div>`;
+                                        HVO 100
+                                    </div>`;
                 } else if (productType.includes(2)) {
                     productBadge = `<div class="mr-2 text-center w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
-            HVO Blend
-        </div>`;
+                                        HVO Blend
+                                    </div>`;
                 }
 
                 const productNames = {
@@ -849,7 +865,14 @@
                             <div>${productNamesList}</div>
                         </div>
                         <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
-                        <p class="cursor-pointer underline text-indigo-600" @click="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}', '_blank')">${address}</p>
+                        <div style="margin-top: 5px;" class="text-gray-500 hover:text-indigo-600 hover:cursor-pointer hover:bg-gray-100" data-toggle="tooltip" data-placement="bottom" title="Open On Google Maps">
+                            <p style="display: inline; cursor: pointer;" @click="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}', '_blank')">
+                                <span>Google Maps Routenplaner</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4" style="display: inline; vertical-align: middle;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                                </svg>
+                            </p>
+                        </div>
                     </div>
                 `;
 
@@ -868,33 +891,35 @@
 
                 activePopup.getElement().addEventListener('mouseleave', () => {
                     mouseOverPopup = false;
-                    if (!mouseOverPopup && !mouseOverMarker) {
-                        activePopup.remove();
-                        activePopup = null;
-                        map.getCanvas().style.cursor = '';
-                    }
+                    setTimeout(isPopup, 10)
+
+
                 });
 
                 map.getCanvas().style.cursor = 'pointer';
-            });
 
-            let mouseOverMarker = false;
-            let mouseOverPopup = false;
+                map.on('mouseenter', 'highlighted-location', function() {
+                    mouseOverMarker = true;
 
-            map.on('mouseenter', 'highlighted-location', function() {
-                mouseOverMarker = true;
-            });
+                });
 
-            map.on('mouseleave', 'highlighted-location', function() {
-                mouseOverMarker = false;
-                setTimeout(function() {
-                    if (!mouseOverPopup && activePopup) {
+                map.on('mouseleave', 'highlighted-location', function() {
+                    mouseOverMarker = false;
+                    setTimeout(isPopup, 50)
+
+                });
+
+                function isPopup() {
+                    console.log("isPopup", "mouseOverMarker :", mouseOverMarker, "mouseOverPopup :", mouseOverPopup);
+                    if (!mouseOverPopup && !mouseOverMarker && activePopup) {
                         activePopup.remove();
                         activePopup = null;
                         map.getCanvas().style.cursor = '';
                     }
-                }, 500);
+                }
+
             });
+
 
             map.on('mouseenter', 'locations-layer', function(e) {
                 if (activePopup) activePopup.remove(); // Remove the active popup
@@ -945,17 +970,23 @@
 
                 // Create the HTML content for the popup
                 const popupContent = `
-        <div style="text-align: center; border-radius: 10px">
-            <div style="font-size: 14px; font-weight: bold; margin-bottom:5px;">${name}</div>
-            <div style="display: flex; align-items: center; justify-content: center;">
-                ${productBadge}
-                <div>${productNamesList}</div>
-            </div>
-            <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
-                                     <p class="cursor-pointer underline text-indigo-600" @click="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}', '_blank')">${address}</p>
-
-        </div>
-    `;
+                    <div style="text-align: center; border-radius: 10px">
+                        <div style="font-size: 14px; font-weight: bold; margin-bottom:5px;">${name}</div>
+                        <div style="display: flex; align-items: center; justify-content: center;">
+                            ${productBadge}
+                            <div>${productNamesList}</div>
+                        </div>
+                        <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
+                        <div style="margin-top: 5px;" class="text-gray-500 hover:text-indigo-600 hover:cursor-pointer hover:bg-gray-100" data-toggle="tooltip" data-placement="bottom" title="Open On Google Maps">
+                            <p style="display: inline; cursor: pointer;" @click="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}', '_blank')">
+                                <span>Google Maps Routenplaner</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4" style="display: inline; vertical-align: middle;">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                                </svg>
+                            </p>
+                        </div>
+                    </div>
+                `;
 
                 // Display the popup with the content
                 activePopup = new mapboxgl.Popup({
@@ -969,38 +1000,41 @@
 
                 // Keep the popup open when the mouse is over
                 activePopup.getElement().addEventListener('mouseenter', () => {
-                    mouseOverPopup = true; // The mouse is over the popup
+                    mouseOverPopup = true;
                 });
 
-                // Close the popup when the mouse leaves the popup
                 activePopup.getElement().addEventListener('mouseleave', () => {
-                    mouseOverPopup = false; // The mouse left the popup
-                    if (!mouseOverPopup && !mouseOverMarker) {
-                        activePopup.remove();
-                        activePopup = null;
-                        map.getCanvas().style.cursor = '';
-                    }
+                    mouseOverPopup = false;
+                    setTimeout(isPopup, 10)
+
+
                 });
 
                 map.getCanvas().style.cursor = 'pointer';
-            });
 
-            // Keep the popup open while the mouse is over the marker
-            map.on('mouseenter', 'locations-layer', function() {
-                mouseOverMarker = true;
-            });
+                map.on('mouseenter', 'locations-layer', function() {
+                    mouseOverMarker = true;
 
-            // Close the popup when the mouse leaves the marker, if it's not on the popup
-            map.on('mouseleave', 'locations-layer', function() {
-                mouseOverMarker = false;
-                setTimeout(function() {
-                    if (!mouseOverPopup && activePopup) {
+                });
+
+                map.on('mouseleave', 'locations-layer', function() {
+                    mouseOverMarker = false;
+                    setTimeout(isPopup, 50)
+
+                });
+
+                function isPopup() {
+                    console.log("isPopup", "mouseOverMarker :", mouseOverMarker, "mouseOverPopup :", mouseOverPopup);
+                    if (!mouseOverPopup && !mouseOverMarker && activePopup) {
                         activePopup.remove();
                         activePopup = null;
                         map.getCanvas().style.cursor = '';
                     }
-                }, 500);
+                }
+
             });
+
+
 
             // Show a popup and zoom to a specific location
             function flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds, address) {
@@ -1064,8 +1098,14 @@
                                                     <div>${productNamesList}</div>
                                                 </div>
                                                 <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
-                                                <p class="cursor-pointer underline text-indigo-600" @click="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}', '_blank')">${address}</p>
-
+                                                <div style="margin-top: 5px;" class="text-gray-500 hover:text-indigo-600 hover:cursor-pointer hover:bg-gray-100" data-toggle="tooltip" data-placement="bottom" title="Open On Google Maps">
+                                                    <p style="display: inline; cursor: pointer;" @click="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}', '_blank')">
+                                                        <span>Google Maps Routenplaner</span>
+                                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4" style="display: inline; vertical-align: middle;">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                                                        </svg>
+                                                    </p>
+                                                </div>
                                             </div>
                                         `;
 

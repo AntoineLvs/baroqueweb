@@ -20,7 +20,7 @@ class TokenTypeSeeder extends Seeder
         DB::table('token_types')->insert([
             [
                 'id' => '1',
-                'name' => 'On Site Integration',
+                'name' => 'Free License',
                 'description' => 'Unterseite mit eigener Cl z.B. xtl-freigaben.de/efuel-today',
                 'marketing' => 'Individuell anpassbar auf eigener Website, Gestaltung direkt im Kundenbackend',
                 'monthly_cost' => '99',
@@ -34,11 +34,11 @@ class TokenTypeSeeder extends Seeder
 
             [
                 'id' => '2',
-                'name' => 'On Site + API',
-                'description' => 'Wie bei On Site + API-Lösung zur Einbettung der Freigabe-Suche auf Ihrer eigenen Website',
-                'marketing' => 'Mit Logo, Bild und Produkt auf Unterseite von xtl-freigaben.de (Upload im Kundenprofil)',
-                'monthly_cost' => '199',
-                'api_call_cost' => '0.05',
+                'name' => 'On Site Integration',
+                'description' => 'Unterseite mit eigener Cl z.B. xtl-freigaben.de/efuel-today',
+                'marketing' => 'Individuell anpassbar auf eigener Website, Gestaltung direkt im Kundenbackend',
+                'monthly_cost' => '99',
+                'api_call_cost' => '10',
                 'tax_rate' => '0.19',
                 'setup_cost' => '290',
                 'contract_duration' => '365',
