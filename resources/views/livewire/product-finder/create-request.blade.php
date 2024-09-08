@@ -121,7 +121,7 @@
 
 
                     </div>
-                    @error('product_unit') <span class="error">{{ $message }}</span> @enderror
+                    @error('product_unit_id') <span class="error">{{ $message }}</span> @enderror
                 </div>
 
 
@@ -144,6 +144,21 @@
                         <input type="text" wire:model="customer_contact_lastname" id="customer_contact_lastname" autocomplete="given-name" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     </div>
                     @error('customer_contact_lastname') <span class="error">{{ $message }}</span> @enderror
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label for="email" class="block text-sm font-semibold leading-6 text-gray-900">E-Mail</label>
+                    <div class="mt-2.5">
+                        <input type="email" wire:model="customer_email" name="customer_email" id="customer_email" autocomplete="email" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    </div>
+                    @error('customer_email') <span class="error">{{ $message }}</span> @enderror
+                </div>
+                <div class="sm:col-span-2">
+                    <label for="phone-number" class="block text-sm font-semibold leading-6 text-gray-900">Telefon</label>
+                    <div class="relative mt-2.5">
+                        <input type="tel" wire:model="customer_phone" name="customer_phone" id="customer_phone" autocomplete="tel" class="block w-full rounded-md border-0 px-3.5 py-2 pl-20 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                    </div>
+                    @error('customer_phone') <span class="error">{{ $message }}</span> @enderror
                 </div>
 
                 <div class="sm:col-span-2">
@@ -187,20 +202,6 @@
                 </div>
 
 
-                <div class="sm:col-span-2">
-                    <label for="email" class="block text-sm font-semibold leading-6 text-gray-900">E-Mail</label>
-                    <div class="mt-2.5">
-                        <input type="email" wire:model="customer_email" name="customer_email" id="customer_email" autocomplete="email" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                    </div>
-                    @error('customer_email') <span class="error">{{ $message }}</span> @enderror
-                </div>
-                <div class="sm:col-span-2">
-                    <label for="phone-number" class="block text-sm font-semibold leading-6 text-gray-900">Telefon</label>
-                    <div class="relative mt-2.5">
-                        <input type="tel" wire:model="customer_phone" name="customer_phone" id="customer_phone" autocomplete="tel" class="block w-full rounded-md border-0 px-3.5 py-2 pl-20 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                    </div>
-                    @error('customer_phone') <span class="error">{{ $message }}</span> @enderror
-                </div>
                 <div class="sm:col-span-2">
                     <label for="message" class="block text-sm font-semibold leading-6 text-gray-900">Ergänzungen zur Anfrage</label>
                     <div class="mt-2.5">

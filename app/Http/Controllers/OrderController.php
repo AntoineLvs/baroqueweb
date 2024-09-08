@@ -10,13 +10,50 @@ use App\Models\ProductUnit;
 use App\Models\PublicProductOffer;
 use App\Models\Standard;
 use App\Scopes\TenantScope;
+use Auth;
 use Illuminate\View\View;
 
 class OrderController extends Controller
 {
+   /* public function index(): View
+    {
+
+        if(Auth::user()->tenant_id)
+        {
+            $tenantId = Auth::user()->tenant_id;
+
+            $orders = Order::withoutGlobalScope(TenantScope::class)->where('tenant_id', $tenantId)->orWhere('to_tenant_id', $tenantId)->paginate(25);
+
+            //ddd($orders);
+        }
+        else
+        {
+            $orders = Order::paginate(25);
+        }
+
+
+        return view('orders.index', compact('orders'));
+    }*/
+
     public function index(): View
     {
-        $orders = Order::paginate(25);
+        if (Auth::user()->tenant_id) {
+            $tenantId = Auth::user()->tenant_id;
+
+            // Lade die Orders und ihre Produkte ohne den TenantScope
+            $orders = Order::withoutGlobalScope(TenantScope::class)
+                ->where('tenant_id', $tenantId)
+                ->orWhere('to_tenant_id', $tenantId)
+                ->with(['orderedProducts' => function ($query) {
+                    $query->withoutGlobalScope(TenantScope::class);
+                }])
+                ->paginate(25);
+        } else {
+            // Lade alle Orders und ihre Produkte ohne den TenantScope
+            $orders = Order::with(['orderedProducts' => function ($query) {
+                $query->withoutGlobalScope(TenantScope::class);
+            }])->paginate(25);
+        }
 
         return view('orders.index', compact('orders'));
     }
@@ -35,6 +72,17 @@ class OrderController extends Controller
 
         return view('orders.edit', compact('order', 'order_types', 'order_statuses', 'product_units', 'standards'));
     }
+
+
+    /**
+     * Show the shwo view of the specified resource.
+     */
+    public function show(Order $order)
+    {
+
+        return view('orders.show', compact('order'));
+    }
+
 
 
 

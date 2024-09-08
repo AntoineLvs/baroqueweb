@@ -18,6 +18,7 @@ class OrderedProduct extends Model
         'product_price',
         'product_tax',
         'total_amount',
+        'product_unit_id'
     ];
 
     public function order()

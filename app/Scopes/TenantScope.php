@@ -13,8 +13,24 @@ class TenantScope implements Scope
      */
     public function apply(Builder $builder, Model $model): void
     {
-        if (session()->has('tenant_id')) {
+
+
+       /* if (session()->has('tenant_id')) {
             $builder->where('tenant_id', '=', session()->get('tenant_id'));
+        }*/
+
+        if (session()->has('tenant_id')) {
+            $tenantId = session()->get('tenant_id');
+
+            // Überprüfen, ob der aktuelle Tenant auf dieses Model zugreifen darf
+            if (method_exists($model, 'tenantAccessible')) {
+                $builder->where(function ($query) use ($tenantId, $model) {
+                    $model->tenantAccessible($query, $tenantId);
+                });
+            } else {
+                // Standardmäßig nur eigene tenant_id
+                $builder->where('tenant_id', '=', $tenantId);
+            }
         }
 
     }

@@ -3,7 +3,7 @@
 namespace App\Mail\Order;
 
 use App\Models\Order;
-use App\Models\ProductOfferInquiry;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -13,6 +13,7 @@ class NewProductRequest extends Mailable
     use Queueable, SerializesModels;
 
     public $order;
+    public $ordered_products;
 
     /**
      * Create a new message instance.
@@ -22,6 +23,9 @@ class NewProductRequest extends Mailable
     public function __construct(Order $order)
     {
         $this->order = $order;
+        $this->ordered_products = $order->orderedProducts;
+        //ddd($this->ordered_products);
+
     }
 
     /**
@@ -30,8 +34,6 @@ class NewProductRequest extends Mailable
     public function build(): static
     {
 
-        //ddd($this->product_offer_inquiry->offer($this->product_offer_inquiry->public_product_offer_id)->products);
-
-        return $this->subject('New Product Inquiry # '.$this->product_offer_inquiry->id)->markdown('emails.product-inquiry.new-product-inquiry');
+        return $this->subject('New Product Request # '.$this->order->id)->markdown('emails.order.new-product-request');
     }
 }

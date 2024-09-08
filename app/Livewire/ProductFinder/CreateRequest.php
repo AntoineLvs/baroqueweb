@@ -2,12 +2,14 @@
 
 namespace App\Livewire\ProductFinder;
 
+use App\Mail\Order\NewProductRequest;
 use App\Models\Order;
 use App\Models\OrderedProduct;
 use App\Models\Product;
 use App\Models\ProductUnit;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
+use Mail;
 
 class CreateRequest extends Component
 {
@@ -66,7 +68,7 @@ class CreateRequest extends Component
             // Customer-related fields
             'customer_tenant_id' => 'nullable|integer',
             'customer_company_name' => 'nullable|string|max:255',
-            'customer_email' => 'nullable|email|max:255',
+            'customer_email' => 'required|email|max:255',
             'customer_phone' => 'nullable|string|max:50',
             'customer_contact_firstname' => 'nullable|string|max:255',
             'customer_contact_lastname' => 'nullable|string|max:255',
@@ -83,6 +85,13 @@ class CreateRequest extends Component
         ]);
 
         $order = Order::create($data);
+
+        if(Auth::user())
+        {
+            $order->to_tenant_id = $this->product->tenant->id;
+        }
+
+
         $order->save();
 
         // OrderedProducts für jedes Produkt erstellen
@@ -96,6 +105,15 @@ class CreateRequest extends Component
         ]);
 
         $ordered_product->save();
+
+        $order->fresh();
+
+        // E-Mail an den Benutzer, der die Anfrage sendet
+        Mail::to($order->customer_email)->send(new NewProductRequest($order, $ordered_product));
+
+        // E-Mail an den Empfänger (Tenant, der das Produkt anbietet)
+        Mail::to($this->product->tenant->email)->send(new NewProductRequest($order, $ordered_product));
+
 
         $message = 'Ihre Anfrage wurde erfolgreich übermittelt. ';
 
@@ -118,7 +136,7 @@ class CreateRequest extends Component
         $this->request_quantity = 2500;
 
         // Customer-related fields
-        $this->customer_tenant_id = 1;
+
         $this->customer_company_name = 'Musterfirma GmbH';
         $this->customer_email = 'muster@email.com';
         $this->customer_phone = '+49 123 456 789';

@@ -1,14 +1,25 @@
 <div>
+
     <form wire:submit="submit">
         @csrf
 
         <!-- Order Type -->
         <div class="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
 
+
+
+
+
             <button type="button" wire:click="fillWithDemoData"
-                    class="inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
+                    class="inline-flex items-center px-4 py-2 bg-gray-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:ring ring-blue-300 disabled:opacity-25 transition ease-in-out duration-150">
                 Demo-Daten ausfüllen
             </button>
+
+            <button wire:click="handleOrderAction"
+                    class="inline-flex items-center px-4 py-2 bg-blue-500 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                {{ $this->getActionButtonLabel() }}
+            </button>
+
 
             <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                 <label for="order_type_id" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">

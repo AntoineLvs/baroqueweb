@@ -26,16 +26,29 @@ class TenantTypeSeeder extends Seeder
 
             [
                 'id' => '2',
-                'name' => 'Hersteller',
+                'name' => 'Hersteller (Raffinerie)',
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
-
 
             [
                 'id' => '3',
+                'name' => 'Logistiker',
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            ],
+
+            [
+                'id' => '4',
+                'name' => 'Endkunde (Verbraucher)',
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            ],
+
+            [
+                'id' => '5',
                 'name' => 'Sonstige',
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
+
+
 
         ]);
 
