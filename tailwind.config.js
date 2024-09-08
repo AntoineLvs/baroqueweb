@@ -3,11 +3,9 @@ const colors = require('tailwindcss/colors');
 import forms from '@tailwindcss/forms';
 
 module.exports = {
-
     presets: [
         require('./vendor/tallstackui/tallstackui/tailwind.config.js')
     ],
-
 
     content: [
         './app/**/*.php',
@@ -24,37 +22,27 @@ module.exports = {
         './app/Providers/MyCustomServiceProvider.php',
         './app/Providers/AppServiceProvider.php',
         './app/TallStackUi/**/*.php',
-        './resources/css/custom-styles.css', // Ajoutez ce chemin si nécessaire
-
-
-
+        './resources/css/custom-styles.css',
     ],
 
-
     theme: {
-
         fontWeight: {
             thin: '100',
             hairline: '100',
             extralight: '200',
             light: '300',
             normal: '400',
-            medium: '401',
+            medium: '401', // Dieser Wert kann problematisch sein, da er normalerweise 500 ist
             semibold: '600',
             bold: '700',
             extrabold: '800',
             black: '900',
         },
 
-
         extend: {
             fontFamily: {
                 sans: ['Inter var', ...defaultTheme.fontFamily.sans],
-
             },
-
-
-
             colors: {
                 transparent: 'transparent',
                 current: 'currentColor',
@@ -66,25 +54,23 @@ module.exports = {
                 yellow: colors.yellow,
             },
             margin: {
-                '18': '72px',  // Ajoute mt-18 avec une valeur de 72px
+                '18': '72px',  // Hinzufügen von mt-18 mit einer Wert von 72px
             },
-
         },
     },
 
-
-    options: {
-        defaultExtractor: (content) => content.match(/[\w-/.:]+(?<!:)/g) || [],
-        whitelistPatterns: [/-active$/, /-enter$/, /-leave-to$/, /show$/],
-    },
-
+    safelist: [
+        'bg-red-200',
+        'bg-blue-200',
+        'bg-green-200',
+        'bg-yellow-200',
+        'bg-orange-200',
+        // Füge hier weitere dynamische Klassen hinzu
+    ],
 
     plugins: [
         require('@tailwindcss/typography'),
         require('@tailwindcss/forms'),
         require('@tailwindcss/aspect-ratio'),
-
     ],
-
-
 };

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ShippingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -234,6 +235,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('orders', OrderController::class)->except(['update']);
     Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
     Route::get('orders/create', [OrderController::class, 'create'])->name('orders.create');
+
+    // Shipping Routes
+    Route::resource('shippings', ShippingController::class)->except(['update']);
+    Route::get('shippings', [ShippingController::class, 'index'])->name('shippings.index');
+    Route::get('shippings/create', [ShippingController::class, 'create'])->name('shippings.create');
+
 
     // Manufacturers Routes
     Route::resource('manufacturers', ManufacturerController::class)->except(['show']);

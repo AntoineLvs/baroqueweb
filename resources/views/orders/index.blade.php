@@ -38,22 +38,44 @@
                                             <table class="min-w-full divide-y divide-gray-200">
                                                 <thead class="bg-gray-50">
                                                 <tr>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">FROM</th>
+                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">TO</th>
                                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kunde</th>
 
                                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Adresse</th>
                                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Kontakt</th>
                                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Produkte</th>
                                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Datum</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order Status</th>
-                                                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order Type</th>
+
                                                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody class="bg-white divide-y divide-gray-200">
                                                 @foreach ($orders as $order)
                                                     <tr>
-                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $order->id }}</td>
+                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                                            <a href="{{ route('orders.show', $order) }}" class="text-indigo-600 hover:text-indigo-900">    {{ $order->id }}</a>
+
+                                                        </td>
+                                                        <td class="px-6 py-4 whitespace-nowrap">
+
+                                                            <span class="px-4 inline-flex text-xs leading-5 font-semibold rounded-full bg-{{ $order->status->color}}-200 text-orange-800">
+                                                                {{ $order->status->name }}
+                                                            </span>
+
+                                                        </td>
+
+                                                        <td class="px-6 py-4 whitespace-nowrap">
+                                                            <span class="px-4 inline-flex text-xs leading-5 font-semibold rounded-full bg-{{ $order->type->color}}-200 text-{{ $order->type->color}}-800">
+                                                                {{ $order->type->name }}
+                                                            </span>
+                                                        </td>
+                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{{ $order->tenant->name }}</td>
+                                                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">@if($order->toTenant){{ $order->toTenant->name }}@endif</td>
+
                                                         <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                                                             {{ $order->customer_contact_firstname }}  {{ $order->customer_contact_lastname }}<br>
                                                             {{ $order->customer_company_name }}</td>
@@ -79,22 +101,11 @@
                                                         </td>
 
 
-                                                        <td class="px-6 py-4 whitespace-nowrap">
 
-                                                            <span class="px-4 inline-flex text-xs leading-5 font-semibold rounded-full bg-{{ $order->status->color}}-200 text-{{ $order->status->color}}-800">
-                                                                {{ $order->status->name }}
-                                                            </span>
-
-                                                        </td>
-
-                                                        <td class="px-6 py-4 whitespace-nowrap">
-                                                            <span class="px-4 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-200 text-green-800">
-                                                                {{ $order->type->name }}
-                                                            </span>
-                                                        </td>
 
 
                                                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                                                            <a href="{{ route('orders.show', $order) }}" class="text-indigo-600 hover:text-indigo-900">Show</a>
                                                             <a href="{{ route('orders.edit', $order) }}" class="text-indigo-600 hover:text-indigo-900">Edit</a>
                                                             <form action="{{ route('orders.destroy', $order) }}" method="post" style="display:inline;">
                                                                 @csrf

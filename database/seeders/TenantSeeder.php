@@ -99,8 +99,8 @@ class TenantSeeder extends Seeder
         ]);
         Tenant::factory()->create([
             'id' => 11,
-            'name' => 'Rosa Heizöl GmbH',
-            'tenant_type_id' => 1,
+            'name' => 'Elsen Media GmbH',
+            'tenant_type_id' => 4,
             'email' => $faker->unique()->safeEmail,
             'street' => $faker->address(),
         ]);
@@ -150,6 +150,23 @@ class TenantSeeder extends Seeder
             'email' => $faker->unique()->safeEmail,
             'street' => $faker->address(),
         ]);
+
+        Tenant::factory()->create([
+            'id' => 18,
+            'name' => 'Schmidt Logistik GmbH',
+            'tenant_type_id' => 3,
+            'email' => $faker->unique()->safeEmail,
+            'street' => $faker->address(),
+        ]);
+
+        Tenant::factory()->create([
+            'id' => 19,
+            'name' => 'Müller Speditions GmbH',
+            'tenant_type_id' => 3,
+            'email' => $faker->unique()->safeEmail,
+            'street' => $faker->address(),
+        ]);
+
 
 
 

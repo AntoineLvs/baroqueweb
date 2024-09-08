@@ -2,12 +2,16 @@
 
 namespace App\Livewire\Order;
 
+use App\Mail\Order\NewProductOffer;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductUnit;
 use App\Models\OrderedProduct;
 use Livewire\Component;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Mail;
+
+
 
 class EditOrder extends Component
 {
@@ -75,7 +79,15 @@ class EditOrder extends Component
         $this->customer_order_notice = $order->customer_order_notice;
 
 // Lade die vorhandenen Produkte der Bestellung als Collection
-        $this->ordered_products = $order->orderedProducts()->get();
+      //  $this->ordered_products = $order->orderedProducts()->get();
+
+        // Prüfen, ob der Benutzer der Empfänger der Order ist
+        if (auth()->user()->tenant_id === $order->to_tenant_id) {
+            $this->ordered_products = $order->orderedProductsForRecipient();
+        } else {
+            $this->ordered_products = $order->orderedProducts;
+        }
+
 
         // Automatische Vorauswahl des ersten Produkts für den Tenant, falls vorhanden
         if ($this->products->isNotEmpty()) {
@@ -203,5 +215,64 @@ class EditOrder extends Component
         }
     }
 
+
+
+// Send offer mail from the frontend edit view
+      public function handleOrderAction()
+    {
+        try {
+            switch ($this->order->order_status_id) {
+                case 1:
+                    // Send New Offer Email
+                    Mail::to($this->order->customer_email)->send(new NewProductOffer($this->order));
+                    $this->order->order_status_id = 21; // Setze auf neuen Status (z.B. 'Angebot gesendet')
+                    session()->flash('message', 'Angebot wurde gesendet.');
+                    break;
+
+                case 2:
+                    // Send Order Confirmation Email
+                    // Mail::to($this->order->customer_email)->send(new OrderConfirmation($this->order)); // Beispiel-E-Mail
+                    $this->order->order_status_id = 5; // Setze auf neuen Status (z.B. 'Bestellbestätigung gesendet')
+                    session()->flash('message', 'Bestellbestätigung wurde gesendet.');
+                    break;
+
+                case 3:
+                    // Handle other statuses (e.g. cancellation)
+                    // Mail::to($this->order->customer_email)->send(new XYZEmail($this->order)); // Beispiel-E-Mail
+                    $this->order->order_status_id = 6; // Setze auf neuen Status
+                    session()->flash('message', 'XYZ Text wurde gesendet.');
+                    break;
+
+                default:
+                    session()->flash('error', 'Ungültiger Status.');
+                    return;
+            }
+
+            // Speichere den aktualisierten Status in der Datenbank
+            //ddd($this->order);
+
+            $this->order->save();
+
+        } catch (\Exception $e) {
+            // Falls ein Fehler auftritt, protokolliere diesen und setze eine Fehlermeldung
+            \Log::error('Fehler beim Senden der E-Mail: ' . $e->getMessage());
+            session()->flash('error', 'Es gab ein Problem beim Senden der E-Mail oder Speichern des Status.');
+        }
+
+    }
+
+    public function getActionButtonLabel()
+    {
+        switch ($this->order->order_status_id) {
+            case 1:
+                return 'Angebot senden';
+            case 2:
+                return 'Bestellbestätigung senden';
+            case 3:
+                return 'XYZ Text senden';
+            default:
+                return 'Aktion ausführen';
+        }
+    }
 
 }
