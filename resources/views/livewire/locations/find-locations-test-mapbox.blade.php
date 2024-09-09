@@ -7,6 +7,7 @@
             openHeight: '0px',
             isHvo100: true,
             isHvoBlend: true, 
+            radius: 100,
             test() {
                 setTimeout(() => {
                     $dispatch('filterChanged');
@@ -18,14 +19,12 @@
         class="relative main-container w-full md:w-1/5 transition-all duration-2000 shadow rounded-t-md border-b border-gray-300 xl:rounded-l-md xl:border-r-0 xl:rounded-r-md xl:border-b-0 xl:border-t-0 bg-white">
 
         <!-- closure button -->
-        <div class="invisible-buttons absolute top-1 right-1 cursor-pointer" @click="isHidden = true">
-            <svg class="w-6 h-6 text-gray-500 hover:text-red-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-            </svg>
+        <div class="absolute top-1 right-1 cursor-pointer text-sm text-gray-500 hover:text-red-500 mr-2" @click="isHidden = true">
+            Ausblenden
         </div>
 
         <!-- content of the search bar -->
-        <div x-transition x-cloak class="mx-auto mt-8 md:mt-4 mr-4 ml-4">
+        <div x-transition x-cloak class="mx-auto mt-8 mt-4 mr-4 ml-4">
             <div class="w-full flex flex-col items-center space-y-4">
                 <div class="w-full">
                     <div class="animated">
@@ -37,7 +36,7 @@
                                 </svg>
                             </div>
                             <input @keyup.enter="showResultClass = true" id="searchBar" name="searchbox" placeholder="Search..." type="search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                            <button @click="isHvoBlend = false; isHvo100 = false" id="resetButton" type="button" class="text-white absolute end-2.5 bottom-2.5 bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            <button @click="isHvoBlend = false; isHvo100 = false; radius = 100" id="resetButton" type="button" class="text-white absolute end-2.5 bottom-2.5 bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                 <svg class="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                 </svg>
@@ -56,6 +55,7 @@
             <div class="flex items-center justify-between">
                 <div class="mt-2">
                     <div class="flex items-center">
+                        <!-- Button HVO 100 -->
                         <div>
                             <button type="button"
                                 :class="isHvo100 ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600' : 'bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50'"
@@ -64,6 +64,8 @@
                                 HVO 100
                             </button>
                         </div>
+
+                        <!-- Button HVO Blend -->
                         <div class="ml-2">
                             <button type="button"
                                 :class="isHvoBlend ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600' : 'bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50'"
@@ -72,9 +74,21 @@
                                 HVO Blend
                             </button>
                         </div>
+
                         <div id="isHvo100" x-text="isHvo100" hidden></div>
                         <div id="isHvoBlend" x-text="isHvoBlend" hidden></div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Radius Slider -->
+            <div class="flex items-center justify-between">
+                <div class="mt-4">
+                    <label for="radiusRange" class="block text-sm font-medium text-gray-700">
+                        Search Radius (<span x-text="radius"></span> km)
+                    </label>
+                    <input type="range" id="radiusRange" min="5" max="250" x-model="radius" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                    <div id="radius" x-text="radius" hidden></div>
                 </div>
             </div>
         </div>
@@ -298,6 +312,40 @@
 
     @script
     <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('filterData', () => ({
+                isHvo100: false,
+                isHvoBlend: false,
+                radius: 100, // Default value of the slider (100km)
+
+                async updateMarkersAndTable(query) {
+                    if (query.length > 0) {
+                        const coordinates = await getCoordinatesFromCity(query);
+
+                        if (coordinates) {
+                            // If city coordinates are found, filter features by proximity
+                            filteredFeatures = filteredFeatures.filter(feature => {
+                                const [longitude, latitude] = feature.geometry.coordinates;
+                                const distance = distanceRadius({
+                                    latitude,
+                                    longitude
+                                }, coordinates);
+
+                                // Use the selected radius
+                                return distance <= this.radius;
+                            });
+
+                            // Update the map view with filtered features
+                            adjustMapView(filteredFeatures);
+                        }
+                    }
+                },
+
+                test() {
+                    console.log('HVO 100:', this.isHvo100, 'HVO Blend:', this.isHvoBlend);
+                }
+            }));
+        });
         mapboxgl.accessToken = 'pk.eyJ1IjoiZWxzZW5tZWRpYSIsImEiOiJjbHBiYXozZm0wZ21vMnFwZHE4ZWc5Z2lzIn0.dJGBO1JOfota9KceLDgGJg';
         const map = new mapboxgl.Map({
             container: 'map',
@@ -343,73 +391,111 @@
                 };
             }
 
-            function updateMarkersAndTable() {
-                if (activePopup) activePopup.remove(); // Delete the active popup
+            async function getCoordinatesFromCity(cityName) {
+                const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(cityName)}.json?access_token=${accessToken}`);
+                const data = await response.json();
+                console.log(data);
 
-                // Set the current center of the map
+                if (data.features && data.features.length > 0) {
+                    const [longitude, latitude] = data.features[0].center; // City coordinates
+                    return {
+                        longitude,
+                        latitude
+                    };
+                }
+
+                return null;  // No matching coordinates
+            }
+
+            // Function to calculate the distance in kilometers between two geographical points
+            function distanceRadius(coord1, coord2) {
+                const R = 6371; // Earth's radius
+                const dLat = (coord2.latitude - coord1.latitude) * Math.PI / 180;
+                const dLon = (coord2.longitude - coord1.longitude) * Math.PI / 180;
+
+                const a =
+                    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                    Math.cos(coord1.latitude * Math.PI / 180) *
+                    Math.cos(coord2.latitude * Math.PI / 180) *
+                    Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+                return R * c; // Distance in kilometers
+            }
+
+            async function updateMarkersAndTable() {
+                if (activePopup) activePopup.remove();
+
                 currentCenter = map.getCenter();
-                lastCenter = currentCenter; // Update the last center of the map
+                lastCenter = currentCenter;
 
-                // Set the minimum and maximum zoom levels
-                const minZoom = 5; // Minimum zoom level to reach
-                const currentZoom = map.getZoom(); // Get the current zoom level
-                const maxZoom = 20; // The usual maximum zoom level for the map
+                const minZoom = 5;
+                const currentZoom = map.getZoom();
+                const maxZoom = 20;
 
-                // Get the features visible at the current zoom level
                 let features = map.querySourceFeatures('your-tileset-source', {
                     sourceLayer: 'efuelmap_v1',
-                    filter: ['==', ['get', 'active'], 1], // Filter to display only the locations where 'active' is equal to 1,             
+                    filter: ['==', ['get', 'active'], 1], // Display only active locations
                     validate: false
                 });
 
-                //  Check HVO filters
-                const isHvo100 = document.getElementById('isHvo100').textContent === 'true'; // Convert to boolean
+                const isHvo100 = document.getElementById('isHvo100').textContent === 'true';
                 const isHvoBlend = document.getElementById('isHvoBlend').textContent === 'true';
 
-                // Filter the features based on HVO filters
+
                 let filteredFeatures = features.filter(feature => {
                     const productTypes = feature.properties.product_types || [];
-                    // Filter based on the values of isHvo100 and isHvoBlend
                     if (isHvo100 && isHvoBlend) {
-                        // Both filters are active, so we search [1, 2]
                         return productTypes.includes(1) || productTypes.includes(2);
                     } else if (isHvo100) {
-                        // Only HVO 100 is active
                         return productTypes.includes(1);
                     } else if (isHvoBlend) {
-                        // Only HVO Blend is active
                         return productTypes.includes(2);
                     } else {
-                        // No filter is active
                         return true;
                     }
                 });
 
-                // Check if there is text in the search bar
                 const searchBar = document.getElementById('searchBar');
                 const query = searchBar.value.trim().toLowerCase();
 
                 if (query.length > 0) {
-                    // If a search query is made, filter the features
-                    filteredFeatures = filteredFeatures.filter(feature => {
-                        const name = feature.properties.name || "";
-                        const tenantName = feature.properties.tenant || "";
-                        const address = feature.properties.address || "";
+                    const coordinates = await getCoordinatesFromCity(query);
 
-                        return (
-                            name.toLowerCase().includes(query) ||
-                            tenantName.toLowerCase().includes(query) ||
-                            address.toLowerCase().includes(query)
-                        );
-                    });
+                    const radius = document.getElementById('radius').textContent;
+
+                    if (coordinates) {
+                        console.log(radius);
+                        // If city coordinates are found, filter features by proximity
+                        filteredFeatures = filteredFeatures.filter(feature => {
+                            const [longitude, latitude] = feature.geometry.coordinates;
+                            const distance = distanceRadius({
+                                latitude,
+                                longitude
+                            }, coordinates);
+                            return distance <= radius; // Display locations within a 100km radius
+                        });
+                    } else {
+                        // Filter by text if no matching city found
+                        filteredFeatures = filteredFeatures.filter(feature => {
+                            const name = feature.properties.name || "";
+                            const tenantName = feature.properties.tenant || "";
+                            const address = feature.properties.address || "";
+
+                            return (
+                                name.toLowerCase().includes(query) ||
+                                tenantName.toLowerCase().includes(query) ||
+                                address.toLowerCase().includes(query)
+                            );
+                        });
+                    }
                 }
 
-                // Get the current bounds of the map if unzoom is false
                 const bounds = map.getBounds();
                 const sw = bounds.getSouthWest();
                 const ne = bounds.getNorthEast();
 
-                // Filter the features to include only those visible on the map
                 filteredFeatures = filteredFeatures.filter(feature => {
                     const [longitude, latitude] = feature.geometry.coordinates;
                     return (
@@ -417,10 +503,9 @@
                         latitude >= sw.lat && latitude <= ne.lat
                     );
                 });
-                // Progressive zoom out
+
                 function progressiveZoomOut() {
                     if (filteredFeatures.length > 0 || map.getZoom() <= minZoom) {
-                        // If results are found or the minimum zoom level is reached
                         updateMarkers(filteredFeatures);
                         updateTable(filteredFeatures);
 
@@ -437,22 +522,18 @@
                             tableBody.appendChild(tr);
                         }
 
-                        // Adjust the map view if it is zoomed out
                         adjustMapView(filteredFeatures);
                     } else {
-                        // If no results are found, zoom out progressively
                         map.zoomOut({
                             animate: true
                         });
                         setTimeout(() => {
-                            // Search with the new zoom level
                             features = map.querySourceFeatures('your-tileset-source', {
                                 sourceLayer: 'efuelmap_v1',
-                                filter: ['==', ['get', 'active'], 1], // Filter to display only the locations where 'active' is equal to 1,             
+                                filter: ['==', ['get', 'active'], 1],
                                 validate: false
                             });
 
-                            // Apply the same HVO and search filters
                             filteredFeatures = features.filter(feature => {
                                 const productTypes = feature.properties.product_types || [];
                                 if (isHvo100 && isHvoBlend) {
@@ -480,23 +561,17 @@
                                 });
                             }
 
-                            // Call the recursive function to continue zooming progressively
                             progressiveZoomOut();
-                        }, 500); // Delay to allow the zoom
+                        }, 500);
                     }
                 }
 
-                // Check if there are results that are visible
                 if (filteredFeatures.length > 0) {
-                    // If results are found, update the markers and the table
                     updateMarkers(filteredFeatures);
                     updateTable(filteredFeatures);
                     adjustMapView(filteredFeatures);
-
                 } else {
-                    // Otherwise, start the progressive zoom
                     progressiveZoomOut();
-
                 }
             }
 
@@ -595,11 +670,11 @@
                         const detailsContent = detailsRow.querySelector('.details-content');
                         const locationInfoSpan = detailsRow.querySelector('.details-location-info');
                         if (productType.includes(1)) {
-                            productBadge = `<div class="mr-2 text-center min-w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                            productBadge = `<div class="mr-2 text-xs text-center min-w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
                         HVO 100
                     </div>`;
                         } else if (productType.includes(2)) {
-                            productBadge = `<div class="mr-2 text-center min-w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                            productBadge = `<div class="mr-2 text-xs text-center min-w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
                         HVO Blend
                     </div>`;
                         } else {
@@ -741,6 +816,7 @@
             }
 
             function adjustMapView(features) {
+                console.log(features);
                 if (features.length === 0) {
                     // No features match the filter
                     return;
@@ -752,8 +828,8 @@
                     const name = features[0].properties.name;
                     const opening_start = features[0].properties.opening_start || "00:00";
                     const opening_end = features[0].properties.opening_end || "23:59";
-                    const productType = e.features[0].properties.product_types || [];
-                    let productIds = e.features[0].properties.products;
+                    const productType = features[0].properties.product_types || []; // Changed 'e.features[0]' to 'features[0]'
+                    let productIds = features[0].properties.products; // Same here
                     const id = features[0].properties.id;
                     const address = features[0].properties.address;
 
@@ -824,11 +900,11 @@
                 let productBadge = '';
 
                 if (productType.includes(1)) {
-                    productBadge = `<div class="mr-2 text-center w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                    productBadge = `<div class="mr-2 text-xs text-center w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
                                         HVO 100
                                     </div>`;
                 } else if (productType.includes(2)) {
-                    productBadge = `<div class="mr-2 text-center w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                    productBadge = `<div class="mr-2 text-xs text-center w-[80px]  rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
                                         HVO Blend
                                     </div>`;
                 }
@@ -862,12 +938,12 @@
                         <div style="font-size: 14px; font-weight: bold; margin-bottom:5px;">${name}</div>
                         <div style="display: flex; align-items: center; justify-content: center;">
                             ${productBadge}
-                            <div>${productNamesList}</div>
+                            <div class="text-sm">${productNamesList}</div>
                         </div>
-                        <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
-                        <div style="margin-top: 5px;" class="text-gray-500 hover:text-indigo-600 hover:cursor-pointer hover:bg-gray-100" data-toggle="tooltip" data-placement="bottom" title="Open On Google Maps">
+                        <div style="margin-top: 5px;" class="text-sm">Open from ${opening_start} to ${opening_end}</div>
+                        <div style="margin-top: 5px;" class="text-gray-500 hover:text-indigo-600 hover:cursor-pointer hover:bg-gray-100 text-sm" data-toggle="tooltip" data-placement="bottom" title="Open On Google Maps">
                             <p style="display: inline; cursor: pointer;" @click="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}', '_blank')">
-                                <span>Google Maps Routenplaner</span>
+                                <span>Google Maps Route</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4" style="display: inline; vertical-align: middle;">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
                                 </svg>
@@ -910,7 +986,6 @@
                 });
 
                 function isPopup() {
-                    console.log("isPopup", "mouseOverMarker :", mouseOverMarker, "mouseOverPopup :", mouseOverPopup);
                     if (!mouseOverPopup && !mouseOverMarker && activePopup) {
                         activePopup.remove();
                         activePopup = null;
@@ -935,9 +1010,9 @@
                 // Verificatin of the value of productType to determine the type of badge to display
                 let productBadge = '';
                 if (productType.includes(1)) {
-                    productBadge = `<div class="mr-2 text-center w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">HVO 100</div>`;
+                    productBadge = `<div class="mr-2 text-xs text-center w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">HVO 100</div>`;
                 } else if (productType.includes(2)) {
-                    productBadge = `<div class="mr-2 text-center w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">HVO Blend</div>`;
+                    productBadge = `<div class="mr-2 text-xs text-center w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">HVO Blend</div>`;
                 }
 
                 // Product name table
@@ -974,12 +1049,12 @@
                         <div style="font-size: 14px; font-weight: bold; margin-bottom:5px;">${name}</div>
                         <div style="display: flex; align-items: center; justify-content: center;">
                             ${productBadge}
-                            <div>${productNamesList}</div>
+                            <div class="text-sm">${productNamesList}</div>
                         </div>
-                        <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
-                        <div style="margin-top: 5px;" class="text-gray-500 hover:text-indigo-600 hover:cursor-pointer hover:bg-gray-100" data-toggle="tooltip" data-placement="bottom" title="Open On Google Maps">
+                        <div style="margin-top: 5px;" class="text-sm">Open from ${opening_start} to ${opening_end}</div>
+                        <div style="margin-top: 5px;" class="text-gray-500 hover:text-indigo-600 hover:cursor-pointer hover:bg-gray-100 text-sm" data-toggle="tooltip" data-placement="bottom" title="Open On Google Maps">
                             <p style="display: inline; cursor: pointer;" @click="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}', '_blank')">
-                                <span>Google Maps Routenplaner</span>
+                                <span>Google Maps Route</span>
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4" style="display: inline; vertical-align: middle;">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
                                 </svg>
@@ -1024,7 +1099,6 @@
                 });
 
                 function isPopup() {
-                    console.log("isPopup", "mouseOverMarker :", mouseOverMarker, "mouseOverPopup :", mouseOverPopup);
                     if (!mouseOverPopup && !mouseOverMarker && activePopup) {
                         activePopup.remove();
                         activePopup = null;
@@ -1051,12 +1125,12 @@
                 let productBadge = '';
 
                 if (productType.includes(1)) {
-                    productBadge = `<div class="mr-2 text-center w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                    productBadge = `<div class="mr-2 text-xs text-center w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
 
                         HVO 100
                     </div>`;
                 } else if (productType.includes(2)) {
-                    productBadge = `<div class="mr-2 text-center w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
+                    productBadge = `<div class="mr-2 text-xs text-center w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
                         HVO Blend
                     </div>`;
                 }
@@ -1095,12 +1169,12 @@
                                                  <div style="font-size: 14px; font-weight: bold; margin-bottom:5px;">${name}</div>
                                                 <div style="display: flex; align-items: center; justify-content: center;">
                                                     ${productBadge}
-                                                    <div>${productNamesList}</div>
+                                                    <div class="text-sm">${productNamesList}</div>
                                                 </div>
-                                                <div style="margin-top: 5px;">Open from ${opening_start} to ${opening_end}</div>
-                                                <div style="margin-top: 5px;" class="text-gray-500 hover:text-indigo-600 hover:cursor-pointer hover:bg-gray-100" data-toggle="tooltip" data-placement="bottom" title="Open On Google Maps">
+                                                <div style="margin-top: 5px;" class="text-sm">Open from ${opening_start} to ${opening_end}</div>
+                                                <div style="margin-top: 5px;" class="text-gray-500 hover:text-indigo-600 hover:cursor-pointer hover:bg-gray-100 text-sm" data-toggle="tooltip" data-placement="bottom" title="Open On Google Maps">
                                                     <p style="display: inline; cursor: pointer;" @click="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}', '_blank')">
-                                                        <span>Google Maps Routenplaner</span>
+                                                        <span>Google Maps Route</span>
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4" style="display: inline; vertical-align: middle;">
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
                                                         </svg>
