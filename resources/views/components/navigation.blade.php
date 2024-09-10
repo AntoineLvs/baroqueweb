@@ -20,14 +20,14 @@
                 </button>
 
             </div>
+
+
+
             <div class="hidden lg:flex lg:gap-x-12">
-                <a href="{{route('product-finder.index-public')}}" class="text-m font-semibold leading-6 text-white hover:underline">Product Finder</a>
-                <a href="#" class="text-m font-semibold leading-6 text-white hover:underline">FAQ</a>
-                <a href="#" class="text-m font-semibold leading-6 text-white">Für Unternehmen</a>
-                <a href="#" class="text-m font-semibold leading-6 text-white">Partner werden</a>
                 <a href="{{route('locations.find-locations-public')}}" class="text-m font-semibold leading-6 text-white">HVO Map</a>
-
-
+                <a href="{{route('fuer-unternehmen')}}" class="text-m font-semibold leading-6 text-white hover:underline">Für Unternehmen</a>
+                <a href="{{route('contact')}}" class="text-m font-semibold leading-6 text-white hover:underline">Kontakt</a>
+                <a href="{{route('legal-informations')}}" class="text-m font-semibold leading-6 text-white hover:underline">Nutzungsbedingungen</a>
             </div>
 
 
@@ -80,8 +80,9 @@
                     class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
                     <div class="flex items-center justify-between">
                         <a href="#" class="-m-1.5 p-1.5">
-                            <span class="sr-only">Your Company</span>
-                            <img class="h-14 w-auto" src="{{ asset('assets/img/refuelos_dark.png') }}" alt="Logo"/>
+                            <span class="sr-only">XTL</span>
+                            <img class="h-16 w-auto" src="{{ asset('assets/img/refuelos_dark.png') }}" alt="Logo"/>
+                        </a>
                         <button @click="open = false" aria-label="Main menu" aria-haspopup="true"
                                 type="button" class="-m-2.5 rounded-md p-2.5 text-gray-700">
                             <span class="sr-only">Close menu</span>
@@ -95,19 +96,20 @@
                     <div class="mt-6 flow-root">
                         <div class="-my-6 divide-y divide-gray-500/10">
                             <div class="space-y-2 py-6">
-                                <a href="#"
-                                   class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Product</a>
-                                <a href="#"
-                                   class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Features</a>
-                                <a href="#"
-                                   class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Marketplace</a>
-                                <a href="#"
-                                   class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Company</a>
+                                <a href="{{route('home')}}"
+                                   class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Start</a>
+                                <a href="{{route('check.efueltoday')}}"
+                                   class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Freigabe-Check</a>
+                                <a href="{{route('imprint')}}"
+                                   class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Impressum</a>
+                                <a href="{{route('legal-informations')}}"
+                                   class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Nutzungsbedingungen</a>
+                                <a href="{{route('privacy')}}"
+                                   class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Datenschutz</a>
+
                             </div>
                             <div class="py-6">
-                                <a href="#"
-                                   class="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">Log
-                                    in</a>
+
                             </div>
                         </div>
                     </div>

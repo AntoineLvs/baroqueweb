@@ -1,6 +1,9 @@
 <?php
 
 use App\Http\Controllers\ShippingController;
+use App\Http\Controllers\SourceController;
+use App\Http\Controllers\SubsiteController;
+use App\Livewire\ContactForm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -115,6 +118,22 @@ Route::get('/find/products/{id}', [LocationController::class, 'showProducts'])->
 
 
 
+// Subsite Routes
+Route::get('efuel-today', [SubsiteController::class, 'efueltoday'])->name('check.efueltoday');
+
+Route::view('legal-informations', 'legal-informations')->name('legal-informations');
+Route::view('privacy', 'privacy')->name('privacy');
+Route::view('imprint', 'imprint')->name('imprint');
+Route::view('contact', 'contact')->name('contact');
+
+Route::view('fuer-unternehmen', 'fuer-unternehmen')->name('fuer-unternehmen');
+
+Route::get('sources-list', [SourceController::class, 'sourcesList'])->name('sourcesList');
+Route::post('/contact', [ContactForm::class, 'submitForm']);
+
+
+
+
 // AUTH SECTION BACKEND
 Route::middleware(['auth', 'verified'])->group(function () {
 
@@ -200,8 +219,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
 
     // Tenant Routes
-    //Route::resource('tenant', 'TenantController')->except(['edit', 'update']);
+
     Route::view('/tenant', 'tenant.edit')->name('tenant.index');
+    Route::view('/tenants', 'tenant.index')->name('tenant.list');
 
     // Team Routes
     Route::view('/team', 'users.team')->name('team.index');
@@ -284,6 +304,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/documents/{tenant}/{filename}', [DocumentController::class, 'show'])->name('documents.show');
     Route::get('/photos/{tenant}/{filename}', [DocumentController::class, 'showPhoto'])->name('photos.show');
 
-    //Route::get('/documents/{user}/{filename}', [DocumentController::class, 'show'])->name('documents.show');
+ 
 
 });

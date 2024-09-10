@@ -8,29 +8,72 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
+use Livewire\Attributes\Validate;
+
 class Tenant extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
 
-    // protected $fillable = [
-    //     'tenant_name',
-    // ];
+
 
     protected $fillable = [
         'name',
         'email',
         'tenant_type_id',
-
+        'api_calls_count',
+        'url_subsite',
+        'website',
+        'street',
+        'zip',
+        'city',
+        'country',
+        'photo',
+        'photo_header'
+        /* 'ci_button_color',
+         'ci_button_font_color',
+         'ci_backgrund_color',
+         'ci_font_color',
+         'ci_logo_img_url',
+         'ci_background_img_url',
+         'ci_last_edit',*/
     ];
+
+
+    /**
+     * Überprüft, ob alle erforderlichen Unternehmensdaten vorhanden sind.
+     *
+     * @return bool
+     */
+    public function hasCompleteProfile(): bool
+    {
+        $requiredFields = [
+            'name',
+            'email',
+            'phone',
+            'website',
+            'street',
+            'zip',
+            'city',
+
+        ];
+
+        foreach ($requiredFields as $field) {
+            if (empty($this->$field)) {
+                return false;
+            }
+        }
+
+        return true; // Alle erforderlichen Felder sind ausgefüllt
+    }
 
     public static function search($query)
     {
 
         return empty($query) ? static::query()
             : static::where('name', 'like', '%' . $query . '%')
-            ->orWhere('email', 'like', '%' . $query . '%');
+                ->orWhere('email', 'like', '%' . $query . '%');
     }
 
     public function users()
@@ -55,23 +98,20 @@ class Tenant extends Model
         return $this->hasMany(Product::class);
     }
 
-    public function offeredProducts()
-    {
 
-        return $this->hasMany(OfferedProduct::class);
-    }
 
-    public function productOffers()
-    {
-
-        return $this->hasMany(ProductOffer::class);
-    }
 
     public function projects()
     {
 
         return $this->hasMany(Project::class);
     }
+
+    public function sepaMandate()
+    {
+        return $this->hasOne(SepaMandate::class, 'tenant_id', 'id');
+    }
+
 
     public function locations()
     {
@@ -89,10 +129,6 @@ class Tenant extends Model
     {
 
         return $this->hasMany(BucketEntry::class);
-    }
-    public function sepaMandate()
-    {
-        return $this->hasOne(SepaMandate::class, 'tenant_id', 'id');
     }
 
     public function tenant_type()
@@ -114,7 +150,7 @@ class Tenant extends Model
     {
         $filename = $tenant->photo;
 
-        $url = url('/photos/' . $tenant->id . '/' . $filename);
+        $url = url('/tenants/' . $tenant->id . '/' . $filename);
 
         //$url = url('/photos/' . Auth::user()->tenant->id . '/' . $filename);
         return $url;
@@ -124,7 +160,7 @@ class Tenant extends Model
     {
         $filename = $tenant->photo_header;
 
-        $url = url('/photos/' . $tenant->id . '/' . $filename);
+        $url = url('/tenants/' . $tenant->id . '/' . $filename);
 
         // $url = url('/photos/' . Auth::user()->tenant->id . '/' . $filename);
         return $url;
@@ -158,26 +194,8 @@ class Tenant extends Model
         return $count;
     }
 
-    public function getProjectNumber(Tenant $tenant)
-    {
-        $count = Project::withoutGlobalScope(TenantScope::class)->where('tenant_id', '=', $tenant->id)->count();
 
-        return $count;
-    }
 
-    public function getLocationNumber(Tenant $tenant)
-    {
-        $count = Location::withoutGlobalScope(TenantScope::class)->where('tenant_id', '=', $tenant->id)->count();
-
-        return $count;
-    }
-
-    public function getOfferNumber(Tenant $tenant)
-    {
-        $count = ProductOffer::withoutGlobalScope(TenantScope::class)->where('tenant_id', '=', $tenant->id)->count();
-
-        return $count;
-    }
 
     public function apiTokens()
     {
@@ -190,5 +208,16 @@ class Tenant extends Model
         $count = ApiToken::where('tenant_id', '=', $tenant->id)->count();
 
         return $count;
+
     }
+
+    public function getLocationNumber(Tenant $tenant)
+    {
+        $count = Location::withoutGlobalScope(TenantScope::class)->where('tenant_id', '=', $tenant->id)->count();
+
+        return $count;
+    }
+
+
+
 }

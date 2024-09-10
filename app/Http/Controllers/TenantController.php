@@ -11,14 +11,6 @@ class TenantController extends Controller
 {
     public function index(): View
     {
-        if (Auth::check()) {
-            $id = Auth::id();
-
-        }
-
-        // $tenant_types = TenantType::all();
-
-        //return view('tenant.edit');
-        return view('tenant.edit');
+        return view('tenant.index');
     }
 }

@@ -31,9 +31,7 @@ return new class extends Migration
             $table->decimal('blend_percent', 5, 2)->nullable();
             $table->string('file')->nullable();
 
-
             $table->foreign('document_id')->references('id')->on('documents')->onDelete('cascade');
-
 
             $table->foreign('base_product_id')->references('id')->on('base_products');
             $table->foreign('product_type_id')->references('id')->on('product_types');

@@ -1,60 +1,166 @@
-<x-guest-layout>
-    <x-jet-authentication-card>
-        <x-slot name="logo">
-            <x-jet-authentication-card-logo />
-        </x-slot>
+@section('title', 'Create a new account')
 
-        <x-jet-validation-errors class="mb-4" />
+<div>
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+        <a href="{{ route('home') }}">
+            <x-logo class="w-auto h-16 mx-auto text-indigo-600"/>
+        </a>
 
-        <form method="POST" action="{{ route('register') }}">
-            @csrf
+        <h2 class="mt-6 text-3xl font-extrabold text-center text-gray-900 leading-9">
+            Neuen Account erstellen
+        </h2>
 
-            <div>
-                <x-jet-label for="name" value="{{ __('Name') }}" />
-                <x-jet-input wire:model="name" id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus autocomplete="name" />
-            </div>
+        <p class="mt-2 text-sm text-center text-gray-600 leading-5 max-w">
+            Oder in bestehenden Account
+            <a href="{{ route('login') }}"
+               class="font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:underline transition ease-in-out duration-150">
+                einloggen
+            </a>
+        </p>
+    </div>
 
-            <div class="mt-4">
-                <x-jet-label for="email" value="{{ __('Email') }}" />
-                <x-jet-input wire:model="email" id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required />
-            </div>
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div class="px-4 py-8 bg-white shadow sm:rounded-lg sm:px-10">
+            <form wire:submit.prevent="register">
 
-            <div class="mt-4">
-                <x-jet-label for="password" value="{{ __('Password') }}" />
-                <x-jet-input wire:model="password" id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
-            </div>
+                <div >
+                    <label for="company" class="block text-sm font-medium text-gray-700 leading-5">
+                        Firma / Organisation
+                    </label>
 
-            <div class="mt-4">
-                <x-jet-label for="password_confirmation" value="{{ __('Confirm Password') }}" />
-                <x-jet-input wire:model="password_confirmation" id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
-            </div>
+                    <div class="mt-1 rounded-md shadow-sm">
+                        <input wire:model.lazy="company" id="company" type="text" required
+                               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 @error('company') border-red-300 text-red-900 placeholder-red-300 focus:border-red-300 focus:ring-red @enderror"/>
+                    </div>
 
-            @if (Laravel\Jetstream\Jetstream::hasTermsAndPrivacyPolicyFeature())
-                <div class="mt-4">
-                    <x-jet-label for="terms">
-                        <div class="flex items-center">
-                            <x-jet-checkbox name="terms" id="terms"/>
-
-                            <div class="ml-2">
-                                {!! __('I agree to the :terms_of_service and :privacy_policy', [
-                                        'terms_of_service' => '<a target="_blank" href="'.route('terms.show').'" class="underline text-sm text-gray-600 hover:text-gray-900">'.__('Terms of Service').'</a>',
-                                        'privacy_policy' => '<a target="_blank" href="'.route('policy.show').'" class="underline text-sm text-gray-600 hover:text-gray-900">'.__('Privacy Policy').'</a>',
-                                ]) !!}
-                            </div>
-                        </div>
-                    </x-jet-label>
+                    @error('company')
+                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
                 </div>
-            @endif
 
-            <div class="flex items-center justify-end mt-4">
-                <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
-                    {{ __('Already registered?') }}
-                </a>
 
-                <x-jet-button class="ml-4">
-                    {{ __('Register') }}
-                </x-jet-button>
-            </div>
-        </form>
-    </x-jet-authentication-card>
-</x-guest-layout>
+                <div class="mt-6">
+                    <label for="tenant_type_id" class="block text-sm font-medium text-gray-700 leading-5">
+                        Typ des Unternehmens
+                    </label>
+
+                    <div class="mt-1 rounded-md shadow-sm">
+                        <select wire:model="tenant_type_id" required name="tenant_type_id" id="tenant_type_id"
+                                class="appearance-none block w-full px-3 py-2 focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+                                required>
+                            @foreach ($tenant_types as $tenant_type)
+
+                                <option wire:key="{{ $tenant_type['id']}}"
+                                        value="{{$tenant_type->id }}">{{$tenant_type['name']}}</option>
+
+                            @endforeach
+                        </select>
+                    </div>
+
+                    @error('tenant_type_id')
+                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+
+                <hr class="h-0.5 my-8 bg-teal-600 border-0 dark:bg-teal-600">
+
+                <div class="mt-6">
+                    <label for="name" class="block text-sm font-medium text-gray-700 leading-5">
+                        Ansprechpartner Name
+                    </label>
+
+                    <div class="mt-1 rounded-md shadow-sm">
+                        <input wire:model.lazy="name" id="name" type="text" required autofocus
+                               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 @error('name') border-red-300 text-red-900 placeholder-red-300 focus:border-red-300 focus:ring-red @enderror"/>
+                    </div>
+
+                    @error('name')
+                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="mt-6">
+                    <label for="phone" class="block text-sm font-medium text-gray-700 leading-5">
+                        Ansprechpartner Telefon
+                    </label>
+
+                    <div class="mt-1 rounded-md shadow-sm">
+                        <input wire:model.lazy="phone" id="name" type="text" required autofocus
+                               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 @error('name') border-red-300 text-red-900 placeholder-red-300 focus:border-red-300 focus:ring-red @enderror"/>
+                    </div>
+
+                    @error('phone')
+                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+
+
+                <div class="mt-6">
+                    <label for="email" class="block text-sm font-medium text-gray-700 leading-5">
+                        E-Mail Adresse
+                    </label>
+
+                    <div class="mt-1 rounded-md shadow-sm">
+                        <input wire:model.lazy="email" id="email" type="email" required
+                               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 @error('email') border-red-300 text-red-900 placeholder-red-300 focus:border-red-300 focus:ring-red @enderror"/>
+                    </div>
+
+                    @error('email')
+                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <hr class="h-0.5 my-8 bg-teal-600 border-0 dark:bg-teal-600">
+
+                <div class="mt-6">
+                    <label for="password" class="block text-sm font-medium text-gray-700 leading-5">
+                        Passwort
+                    </label>
+
+                    <div class="mt-1 rounded-md shadow-sm">
+                        <input wire:model.lazy="password" id="password" type="password" required
+                               class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md placeholder-gray-400 focus:outline-none focus:ring-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 @error('password') border-red-300 text-red-900 placeholder-red-300 focus:border-red-300 focus:ring-red @enderror"/>
+                    </div>
+
+                    @error('password')
+                    <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <div class="mt-6">
+                    <label for="password_confirmation" class="block text-sm font-medium text-gray-700 leading-5">
+                        Passwort wiederholen
+                    </label>
+
+                    <div class="mt-1 rounded-md shadow-sm">
+                        <input wire:model.lazy="passwordConfirmation" id="password_confirmation" type="password"
+                               required
+                               class="block w-full px-3 py-2 placeholder-gray-400 border border-gray-300 appearance-none rounded-md focus:outline-none focus:ring-blue focus:border-blue-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5"/>
+                    </div>
+                </div>
+
+                <div class="mt-6">
+                    <x-toggle wire:model="checkbox">
+                        <x-slot:label >
+                            Ich habe die <u><a href="{{route('privacy')}}">Datenschutzhinweise</a></u> gelesen und zur Kenntnis genommen
+                        </x-slot:label>
+                    </x-toggle>
+
+                </div>
+
+
+
+                <div class="mt-10">
+                    <span class="block w-full rounded-md shadow-sm">
+                        <button type="submit"
+                                class="flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-teal-600 border border-transparent rounded-md hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:ring-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                            Account erstellen
+                        </button>
+                    </span>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
