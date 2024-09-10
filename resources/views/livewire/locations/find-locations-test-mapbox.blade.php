@@ -3,7 +3,7 @@
     class=" select-menu flex flex-col md:flex-row md:mt-32 mt-18 ml-5">
 
     <div x-data="{ 
-            showResultClass: @entangle('showResultClass'), 
+            showResultClass: false, 
             openHeight: '0px',
             isHvo100: true,
             isHvoBlend: true, 
@@ -101,7 +101,7 @@
                     if (value) {
                         // Delayed to ensure element is rendered before changing height
                         setTimeout(() => {
-                            openHeight = '560px';
+                            openHeight = '500px';
                         }, 10);
                     } else {
                         openHeight = '0px';
@@ -127,7 +127,7 @@
                         <span class="ml-4">Current Search Results: <span id="resultsCount">0</span></span>
                     </div>
                 </div>
-                <div class="table-container" id="tableContainer" style="overflow-y: scroll; height: 520px; background-color:rgba(255, 255, 255, 0.8);">
+                <div class="table-container" id="tableContainer" style="overflow-y: scroll; height: 460px; background-color:rgba(255, 255, 255, 0.8);">
                     <table id="locationsTable" class="w-full">
                         <tbody>
                             <!-- The code will be injected here dynamically -->
@@ -340,10 +340,6 @@
                         }
                     }
                 },
-
-                test() {
-                    console.log('HVO 100:', this.isHvo100, 'HVO Blend:', this.isHvoBlend);
-                }
             }));
         });
         mapboxgl.accessToken = 'pk.eyJ1IjoiZWxzZW5tZWRpYSIsImEiOiJjbHBiYXozZm0wZ21vMnFwZHE4ZWc5Z2lzIn0.dJGBO1JOfota9KceLDgGJg';
@@ -392,9 +388,9 @@
             }
 
             async function getCoordinatesFromCity(cityName) {
+                const accessToken = 'pk.eyJ1IjoiZWxzZW5tZWRpYSIsImEiOiJjbHBiYXozZm0wZ21vMnFwZHE4ZWc5Z2lzIn0.dJGBO1JOfota9KceLDgGJg';
                 const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(cityName)}.json?access_token=${accessToken}`);
                 const data = await response.json();
-                console.log(data);
 
                 if (data.features && data.features.length > 0) {
                     const [longitude, latitude] = data.features[0].center; // City coordinates
@@ -404,7 +400,7 @@
                     };
                 }
 
-                return null;  // No matching coordinates
+                return null; // No matching coordinates
             }
 
             // Function to calculate the distance in kilometers between two geographical points
@@ -436,15 +432,27 @@
 
                 let features = map.querySourceFeatures('your-tileset-source', {
                     sourceLayer: 'efuelmap_v1',
-                    filter: ['==', ['get', 'active'], 1], // Display only active locations
+                    filter: ['==', ['get', 'active'], 1],
                     validate: false
+                });
+                console.log(features);
+
+                // Supprimer les doublons en utilisant un Set pour stocker les IDs uniques
+                let uniqueFeatures = [];
+                let seenIds = new Set();
+
+                features.forEach(feature => {
+                    const id = feature.properties.id;
+                    if (!seenIds.has(id)) {
+                        seenIds.add(id);
+                        uniqueFeatures.push(feature);
+                    }
                 });
 
                 const isHvo100 = document.getElementById('isHvo100').textContent === 'true';
                 const isHvoBlend = document.getElementById('isHvoBlend').textContent === 'true';
 
-
-                let filteredFeatures = features.filter(feature => {
+                let filteredFeatures = uniqueFeatures.filter(feature => {
                     const productTypes = feature.properties.product_types || [];
                     if (isHvo100 && isHvoBlend) {
                         return productTypes.includes(1) || productTypes.includes(2);
@@ -462,27 +470,22 @@
 
                 if (query.length > 0) {
                     const coordinates = await getCoordinatesFromCity(query);
-
                     const radius = document.getElementById('radius').textContent;
 
                     if (coordinates) {
-                        console.log(radius);
-                        // If city coordinates are found, filter features by proximity
                         filteredFeatures = filteredFeatures.filter(feature => {
                             const [longitude, latitude] = feature.geometry.coordinates;
                             const distance = distanceRadius({
                                 latitude,
                                 longitude
                             }, coordinates);
-                            return distance <= radius; // Display locations within a 100km radius
+                            return distance <= radius;
                         });
                     } else {
-                        // Filter by text if no matching city found
                         filteredFeatures = filteredFeatures.filter(feature => {
                             const name = feature.properties.name || "";
                             const tenantName = feature.properties.tenant || "";
                             const address = feature.properties.address || "";
-
                             return (
                                 name.toLowerCase().includes(query) ||
                                 tenantName.toLowerCase().includes(query) ||
@@ -508,7 +511,6 @@
                     if (filteredFeatures.length > 0 || map.getZoom() <= minZoom) {
                         updateMarkers(filteredFeatures);
                         updateTable(filteredFeatures);
-
                         if (filteredFeatures.length === 0) {
                             const tableBody = document.querySelector("#locationsTable tbody");
                             tableBody.innerHTML = '';
@@ -521,7 +523,6 @@
                             tr.appendChild(td);
                             tableBody.appendChild(tr);
                         }
-
                         adjustMapView(filteredFeatures);
                     } else {
                         map.zoomOut({
@@ -530,7 +531,7 @@
                         setTimeout(() => {
                             features = map.querySourceFeatures('your-tileset-source', {
                                 sourceLayer: 'efuelmap_v1',
-                                filter: ['==', ['get', 'active'], 1],
+                                filter: ['==', ['get', 'tenant'], tenant_id],
                                 validate: false
                             });
 
@@ -552,7 +553,6 @@
                                     const name = feature.properties.name || "";
                                     const tenantName = feature.properties.tenant || "";
                                     const address = feature.properties.address || "";
-
                                     return (
                                         name.toLowerCase().includes(query) ||
                                         tenantName.toLowerCase().includes(query) ||
@@ -816,7 +816,6 @@
             }
 
             function adjustMapView(features) {
-                console.log(features);
                 if (features.length === 0) {
                     // No features match the filter
                     return;
