@@ -17,7 +17,7 @@
         <main class="flex-1 relative z-0 focus:outline-none overflow-y-auto" tabindex="0">
 
             @if(session()->has('impersonate'))
-            <div class="relative bg-indigo-600">
+            <div class="relative bg-indigo-600 z-10">
                 <div class="max-w-screen-xl mx-auto py-3 px-3 sm:px-6 lg:px-8">
                     <div class="pr-16 sm:text-center sm:px-16">
                         <p class="font-medium text-white">
