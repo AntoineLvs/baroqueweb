@@ -5,11 +5,27 @@
 
 
         <div class="px-4 py-5 sm:px-6">
-            <h3 class="card-title">Locations</h3>
+            <h3 class="card-title">Tankstellen und Tankpunkte</h3>
             <!-- We use less vertical padding on card headers on desktop than on body sections -->
         </div>
         <div class="px-4 py-5 sm:p-6">
             <!-- Content goes here -->
+
+
+            @if($locations->count() == 0 )
+
+                <button type="button" onclick=window.location='{{ route("locations.create") }}' class="relative block w-full border-2 border-gray-300 border-dashed rounded-lg p-6 text-center hover:border-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <svg class="mx-auto h-12 w-12 text-gray-500" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span class="block text-sm font-medium text-gray-500">
+                                Noch keine Tankstelle vorhanden. Jetzt anlegen.
+                            </span>
+                </button>
+
+
+            @else
+
 
             <!-- This example requires Tailwind CSS v2.0+ -->
             <div class="flex flex-col">
@@ -20,25 +36,25 @@
                                 <thead class="bg-gray-50">
                                     <tr>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Locations
+                                            Tankstelle
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Locations Type
+                                            Type
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Product Types
+                                            Produkt Typen
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Address
+                                            Adresse
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Lng / Lat
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            State
+                                            Status
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Active on map
+                                            Aktiv auf Karte
                                         </th>
                                         <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                             Edit
@@ -185,6 +201,7 @@
                     </div>
                 </div>
             </div>
+                @endif
         </div>
     </div>
 </div>

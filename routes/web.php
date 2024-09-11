@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\ShippingController;
 use App\Http\Controllers\SourceController;
 use App\Http\Controllers\SubsiteController;
@@ -48,6 +49,7 @@ use App\Livewire\Auth\Register;
 use App\Livewire\Auth\Verify;
 use App\Models\Engine;
 use App\Models\Manufacturer;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -102,6 +104,15 @@ Route::middleware('auth')->group(function () {
         ->name('logout');
 });
 
+
+// AWS Routes
+// IMG Routes from aws
+Route::get('/images/{tenant}/{filename}', [ImageController::class, 'show'])->name('image.show');
+
+Route::get('/test-s3', function () {
+    $exists = Storage::disk('s3')->exists('logo.png');
+    return $exists ? 'Datei existiert' : 'Datei existiert nicht';
+});
 
 // PUBLIC Order Routes
 
@@ -195,6 +206,49 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('admin/import-data', [AdminController::class, 'importDataView'])->name('admin.import-data');
 
 
+
+        // Order Routes
+        Route::resource('orders', OrderController::class)->except(['update']);
+        Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
+        Route::get('orders/create', [OrderController::class, 'create'])->name('orders.create');
+
+        // Shipping Routes
+        Route::resource('shippings', ShippingController::class)->except(['update']);
+        Route::get('shippings', [ShippingController::class, 'index'])->name('shippings.index');
+        Route::get('shippings/create', [ShippingController::class, 'create'])->name('shippings.create');
+
+
+        // Manufacturers Routes
+        Route::resource('manufacturers', ManufacturerController::class)->except(['show']);
+        Route::get('manufacturers', [ManufacturerController::class, 'index'])->name('manufacturers.index');
+        Route::get('manufacturers/create', [ManufacturerController::class, 'create'])->name('manufacturers.create');
+
+        // Engine Routes
+        Route::resource('engines', EngineController::class)->except(['show']);
+        Route::get('engines', [EngineController::class, 'index'])->name('engines.index');
+        Route::get('engines/create', [EngineController::class, 'create'])->name('engines.create');
+
+        // Vehicle Routes
+        Route::resource('vehicles', VehicleController::class)->except(['show']);
+        Route::get('vehicles', [VehicleController::class, 'index'])->name('vehicles.index');
+        Route::get('vehicle/create', [VehicleController::class, 'create'])->name('vehicles.create');
+
+        // Realeases Routes
+        Route::resource('releases', ReleaseController::class)->except(['show']);
+        Route::get('releases', [ReleaseController::class, 'index'])->name('releases.index');
+        Route::get('releases/create', [ReleaseController::class, 'create'])->name('releases.create');
+
+        // Directory Routes
+        Route::view('/directory', 'directory.index')->name('directory.index');
+        Route::get('/directory/{tenant}', [DirectoryController::class, 'show'])->name('directory.show');
+
+        // Product Type Routes
+        Route::resource('product-types', ProductTypeController::class);
+        Route::get('product-types', [ProductTypeController::class, 'index'])->name('product-types.index');
+        Route::get('product-types/create', [ProductTypeController::class, 'create'])->name('product-types.create');
+        Route::get('product-types/{product-type}/edit', [ProductTypeController::class, 'edit'])->name('product-types.edit');
+
+
         Route::controller(ImportExportController::class)->group(function () {
             Route::get('admin/import_export', 'importExport');
             Route::post('admin/import', 'importData')->name('data.import');
@@ -219,7 +273,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
 
     // Tenant Routes
-
     Route::view('/tenant', 'tenant.edit')->name('tenant.index');
     Route::view('/tenants', 'tenant.index')->name('tenant.list');
 
@@ -228,15 +281,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::view('/team/add-user', 'users.create')->name('users.create');
     Route::view('/team/add-tenant', 'users.create-tenant')->name('users.create-tenant');
 
-    // Directory Routes
-    Route::view('/directory', 'directory.index')->name('directory.index');
-    Route::get('/directory/{tenant}', [DirectoryController::class, 'show'])->name('directory.show');
-
-    // Product Type Routes
-    Route::resource('product-types', ProductTypeController::class);
-    Route::get('product-types', [ProductTypeController::class, 'index'])->name('product-types.index');
-    Route::get('product-types/create', [ProductTypeController::class, 'create'])->name('product-types.create');
-    Route::get('product-types/{product-type}/edit', [ProductTypeController::class, 'edit'])->name('product-types.edit');
 
     // Product Routes
     Route::resource('products', ProductController::class);
@@ -251,36 +295,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('services/{service}/edit/delete-document', [ServiceController::class, 'destroyDocument'])->name('services.destroyDocument');
 
 
-    // Order Routes
-    Route::resource('orders', OrderController::class)->except(['update']);
-    Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
-    Route::get('orders/create', [OrderController::class, 'create'])->name('orders.create');
-
-    // Shipping Routes
-    Route::resource('shippings', ShippingController::class)->except(['update']);
-    Route::get('shippings', [ShippingController::class, 'index'])->name('shippings.index');
-    Route::get('shippings/create', [ShippingController::class, 'create'])->name('shippings.create');
-
-
-    // Manufacturers Routes
-    Route::resource('manufacturers', ManufacturerController::class)->except(['show']);
-    Route::get('manufacturers', [ManufacturerController::class, 'index'])->name('manufacturers.index');
-    Route::get('manufacturers/create', [ManufacturerController::class, 'create'])->name('manufacturers.create');
-
-    // Engine Routes
-    Route::resource('engines', EngineController::class)->except(['show']);
-    Route::get('engines', [EngineController::class, 'index'])->name('engines.index');
-    Route::get('engines/create', [EngineController::class, 'create'])->name('engines.create');
-
-    // Vehicle Routes
-    Route::resource('vehicles', VehicleController::class)->except(['show']);
-    Route::get('vehicles', [VehicleController::class, 'index'])->name('vehicles.index');
-    Route::get('vehicle/create', [VehicleController::class, 'create'])->name('vehicles.create');
-
-    // Realeases Routes
-    Route::resource('releases', ReleaseController::class)->except(['show']);
-    Route::get('releases', [ReleaseController::class, 'index'])->name('releases.index');
-    Route::get('releases/create', [ReleaseController::class, 'create'])->name('releases.create');
 
     // Location Routes
     Route::resource('locations', LocationController::class);
@@ -304,6 +318,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/documents/{tenant}/{filename}', [DocumentController::class, 'show'])->name('documents.show');
     Route::get('/photos/{tenant}/{filename}', [DocumentController::class, 'showPhoto'])->name('photos.show');
 
- 
+
 
 });

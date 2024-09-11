@@ -3,7 +3,7 @@
         <h3 class="card-title">Formular Manager</h3>
         <p class="mt-2 text-sm leading-6 text-grey-700">Hier können Sie das Design für das Freigabe-Suchformular festlegen, das Sie auf Ihrer Website integrieren können.<br>
             Anschließend wird automatisch ein HTML, JavaScript und CSS Code erzeugt. Den CSS Code können Sie (oder Ihr Webdesigner) frei anpassen, um diesen noch aktiver an Ihre CI auszurichten.
-            <br>Sie brauchen Unterstützung bei der Integration? Schreiben Sie uns unter <b>info@xtl-freigaben.de</b>!
+            <br>Sie brauchen Unterstützung bei der Integration? Schreiben Sie uns unter <b>mail@refuelos.com</b>!
         </p>
 
     </div>

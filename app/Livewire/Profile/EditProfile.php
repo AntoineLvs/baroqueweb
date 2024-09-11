@@ -2,12 +2,19 @@
 
 namespace App\Livewire\Profile;
 
+use App\Actions\Fortify\UpdateUserPassword;
 use App\Actions\Fortify\UpdateUserProfileInformation;
+use Illuminate\Support\Facades\Hash;
 use Livewire\Component;
 
 class EditProfile extends Component
 {
     public $state = [];
+
+    public $current_password;
+    public $password;
+    public $password_confirmation;
+
 
     public function render()
     {
@@ -24,16 +31,14 @@ class EditProfile extends Component
     //USES FORTIFY
     public function updateProfileInformation(UpdateUserProfileInformation $updater)
     {
-        //  ddd(auth()->user()->Tenant->name);
-
         $this->resetErrorBag();
-
-        //ddd($this->state);
 
         $updater->update(auth()->user(), $this->state);
 
-        //auth()->user()->Tenant->name = $this->state['tenant_name'];
-
-        session()->flash('status', 'Profile successfully updated');
+        session()->flash('message', 'Profile successfully updated');
     }
+
+
+
+
 }

@@ -44,14 +44,14 @@
 
                     <div class="overflow-auto bg-gray-200 p-4 rounded language-html" style="max-height: 300px;">
                         <pre><code  class="language-html">
-                            <div id="language-html">   
+                            <div id="language-html">
                             &lt;div id="searchForm"&gt;
                                 &lt;div class="disclaimer" id="disclaimer"&gt;
                                     &lt;h2 class="disclaimer-title"&gt;Disclaimer&lt;/h2&gt;
                                     &lt;p class="disclaimer-text"&gt;
-                                    Sämtliche in den Suchergebnissen von xtl-freigaben.de angezeigte Freigaben stammen von externen Quellen und stehen unter dem Vorbehalt der Änderung durch die Urheber. &lt;br&gt;
-                        XTL-Freigaben.de übernimmt keine Garantie für die Richtigkeit der Angaben und haftet auch nicht für mögliche Schäden, die aus unrichtigen oder unvollständigen Angaben oder der Berücksichtigung einer Freigabe bei der Kraftstoffbetankung entstehen. &lt;br&gt;
-                        Durch die Nutzung unseres Tools bestätigen Sie, dass Sie die &lt;a href="https://dev.xtl-freigaben.de/legal-informations" target="_blank" rel="noopener noreferrer"&gt;Nutzungsbedingungen&lt;/a&gt; gelesen und akzeptiert haben.
+                                    Sämtliche in den Suchergebnissen von refuelos.com angezeigte Freigaben stammen von externen Quellen und stehen unter dem Vorbehalt der Änderung durch die Urheber. &lt;br&gt;
+                        refuelos.com übernimmt keine Garantie für die Richtigkeit der Angaben und haftet auch nicht für mögliche Schäden, die aus unrichtigen oder unvollständigen Angaben oder der Berücksichtigung einer Freigabe bei der Kraftstoffbetankung entstehen. &lt;br&gt;
+                        Durch die Nutzung unseres Tools bestätigen Sie, dass Sie die &lt;a href="https://dev.refuelos.com/legal-informations" target="_blank" rel="noopener noreferrer"&gt;Nutzungsbedingungen&lt;/a&gt; gelesen und akzeptiert haben.
                                     &lt;/p&gt;
                                     &lt;button id="acceptButton"&gt;Ich akzeptiere die Nutzungsbedingungen&lt;/button&gt;
                                 &lt;/div&gt;
@@ -252,7 +252,7 @@
 
                                     function fetchData(endpoint, queryParams, userId, tenantId) {
                                         var url = `{{ $appUrl }}/api/${endpoint}?${new URLSearchParams(queryParams)}&userId=${userId}&tenantId=${tenantId}`;
-                                        
+
                                         var headers = {
                                             'Authorization': 'Bearer ' + apiToken,
                                             'Content-Type': 'application/json'
@@ -266,13 +266,13 @@
 
                                                 var errorMessage = '';
                                                 if (response.status === 400) {
-                                                    errorMessage = "Nicht autorisiertes Authentifizierungstoken. Wenden Sie sich an info@xtl-freigaben.de";
+                                                    errorMessage = "Nicht autorisiertes Authentifizierungstoken. Wenden Sie sich an mail@refuelos.com";
                                                 } else if (response.status === 401) {
-                                                    errorMessage = "Nicht autorisiertes Authentifizierungstoken. Wenden Sie sich an info@xtl-freigaben.de";
+                                                    errorMessage = "Nicht autorisiertes Authentifizierungstoken. Wenden Sie sich an mail@refuelos.com";
                                                 } else if (response.status === 403) {
-                                                    errorMessage = 'Die Lizenz ist abgelaufen. Wenden Sie sich an info@xtl-freigaben.de';
+                                                    errorMessage = 'Die Lizenz ist abgelaufen. Wenden Sie sich an mail@refuelos.com';
                                                 } else {
-                                                    errorMessage = "There is an error occurring, please try again, or contact info@xtl-freigaben.de.";
+                                                    errorMessage = "There is an error occurring, please try again, or contact mail@refuelos.com.";
                                                 }
 
 
@@ -522,11 +522,11 @@
                                                     xtl = `&lt;span style="color:#15803d; " class="xtl-b10-text"&gt; ${release.release_xtl_from ? release.release_xtl_from : ''} &lt;/span&gt; &lt;br&gt; &lt;span style="color:red;"&gt;${release.no_xtl_release ? release.no_xtl_release : ''}&lt;/span&gt;`;
                                                     xtlBadge = `&lt;span style="font-weight: 400;display:inline-flex;align-items:center;border-radius:0.375rem;padding:0.2rem 0.5rem;font-size:0.75rem;line-height:1rem;color:#15803d;background-color:rgba(187, 246, 208, 1);border:0px solid rgb(165, 227, 165);box-shadow:inset 0 0 0 1px rgb(110, 226, 110);"&gt;
                                     XTL
-                    
+
                                     &lt;svg style="color:#22c55e; width: 1.5rem; height: 1.5rem; xmlns=" http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"&gt;
                                     &lt;path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" /&gt;
                                     &lt;/svg&gt;
-                    
+
                                     &lt;/span&gt;`
                                                 } else {
                                                     xtl = `&lt;span style="color:#DC2626; " class="xtl-b10-text"&gt;Keine Freigabe&lt;/span&gt;`;
@@ -575,7 +575,7 @@
                                     ${b10}
                                     &lt;/div&gt;
                                     &lt;/div&gt;
-                    
+
                                     &lt;/div&gt;
                                     &lt;div class="xtl-details-indicator"&gt;
                                     &lt;span class="xtl-details-text"&gt;mehr Details&lt;/span&gt; &lt;span class="xtl-details-symbol"&gt;&lt;svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"&gt;
@@ -583,8 +583,8 @@
                                     &lt;/svg&gt;&lt;/span&gt;
                                     &lt;/div&gt;
                                     &lt;/button&gt;
-                    
-                    
+
+
                                     &lt;span class="xtl-panel" data-index="${index}"&gt;
                                     &lt;span class="xtl-card-row"&gt;
                                     &lt;span class="xtl-card-label"&gt;Hersteller&lt;/span&gt;
@@ -592,58 +592,58 @@
                                     &lt;b&gt;${release.manufacturer.name ? release.manufacturer.name : ''}&lt;/b&gt;
                                     &lt;/span&gt;
                                     &lt;/span&gt;
-                    
+
                                     &lt;span class="xtl-card-row"&gt;
                                     &lt;span class="xtl-card-label"&gt;Baureihe&lt;/span&gt;
                                     &lt;span class="xtl-card-value" style="color:black;"&gt;
                                     &lt;b&gt;${release.vehicleSeries.vehicle_series_name ? release.vehicleSeries.vehicle_series_name : ''}&lt;/b&gt;
                                     &lt;/span&gt;
                                     &lt;/span&gt;
-                    
+
                                     &lt;span class="xtl-card-row"&gt;
                                     &lt;span class="xtl-card-label"&gt;Modell&lt;/span&gt;
                                     &lt;span class="xtl-card-value" style="color:black;"&gt;
                                     &lt;b&gt;${release.releaseVehicle.vehicle_model_name ? release.releaseVehicle.vehicle_model_name : ''}&lt;/b&gt;
                                     &lt;/span&gt;
                                     &lt;/span&gt;
-                    
+
                                     &lt;span class="xtl-card-row"&gt;
                                     &lt;span class="xtl-card-label"&gt;Motor&lt;/span&gt;
                                     &lt;span class="xtl-card-value"&gt;
                                     ${release.releaseVehicle.engine_name ? release.releaseVehicle.engine_name : ''}
                                     &lt;/span&gt;
                                     &lt;/span&gt;
-                    
+
                                     &lt;span class="xtl-card-row"&gt;
                                     &lt;span class="xtl-card-label"&gt;Produktionsstart&lt;/span&gt;
                                     &lt;span class="xtl-card-value"&gt;
                                     ${release.releaseVehicle.vehicle_production_start ? release.releaseVehicle.vehicle_production_start : ''}
                                     &lt;/span&gt;
                                     &lt;/span&gt;
-                    
+
                                     &lt;span class="xtl-card-row"&gt;
                                     &lt;span class="xtl-card-label"&gt;Leistung&lt;/span&gt;
                                     &lt;span class="xtl-card-value"&gt;
                                     ${leistung ? leistung : ''}
                                     &lt;/span&gt;
                                     &lt;/span&gt;
-                    
+
                                     &lt;span class="xtl-card-row"&gt;
                                     &lt;span class="xtl-card-label"&gt;B10 Freigabe für Fahrzeuge&lt;/span&gt;
                                     &lt;span class="xtl-card-value"&gt;
                                     ${b10}
                                     &lt;/span&gt;
                                     &lt;/span&gt;
-                    
+
                                     &lt;span class="xtl-card-row"&gt;
                                     &lt;span class="xtl-card-label"&gt;XTL Freigabe für Fahrzeuge&lt;/span&gt;
                                     &lt;span class="xtl-card-value"&gt;
                                     ${xtl}
                                     &lt;/span&gt;
                                     &lt;/span&gt;
-                    
+
                                     ${zustzinfo}
-                    
+
                                     &lt;span class="xtl-card-row" style="border-bottom:0px;"&gt;
                                     &lt;span class="xtl-card-label"&gt;Quelle&lt;/span&gt;
                                     &lt;span class="xtl-card-value"&gt;
@@ -1426,9 +1426,9 @@
                 <div class="disclaimer" id="disclaimer">
                     <h2 class="disclaimer-title">Disclaimer</h2>
                     <p class="disclaimer-text">
-                        Sämtliche in den Suchergebnissen von xtl-freigaben.de angezeigte Freigaben stammen von externen Quellen und stehen unter dem Vorbehalt der Änderung durch die Urheber. <br>
-                        XTL-Freigaben.de übernimmt keine Garantie für die Richtigkeit der Angaben und haftet auch nicht für mögliche Schäden, die aus unrichtigen oder unvollständigen Angaben oder der Berücksichtigung einer Freigabe bei der Kraftstoffbetankung entstehen. <br>
-                        Durch die Nutzung unseres Tools bestätigen Sie, dass Sie die <a href="https://dev.xtl-freigaben.de/legal-informations" target="_blank" rel="noopener noreferrer">Nutzungsbedingungen</a> gelesen und akzeptiert haben.
+                        Sämtliche in den Suchergebnissen von refuelos.com angezeigte Freigaben stammen von externen Quellen und stehen unter dem Vorbehalt der Änderung durch die Urheber. <br>
+                        refuelos.com übernimmt keine Garantie für die Richtigkeit der Angaben und haftet auch nicht für mögliche Schäden, die aus unrichtigen oder unvollständigen Angaben oder der Berücksichtigung einer Freigabe bei der Kraftstoffbetankung entstehen. <br>
+                        Durch die Nutzung unseres Tools bestätigen Sie, dass Sie die <a href="https://dev.refuelos.com/legal-informations" target="_blank" rel="noopener noreferrer">Nutzungsbedingungen</a> gelesen und akzeptiert haben.
                     </p>
                     <button id="acceptButton">Ich akzeptiere die Nutzungsbedingungen</button>
                 </div>
@@ -2116,13 +2116,13 @@
 
                 var errorMessage = '';
                 if (response.status === 400) {
-                errorMessage = "Nicht autorisiertes Authentifizierungstoken. Wenden Sie sich an info@xtl-freigaben.de";
+                errorMessage = "Nicht autorisiertes Authentifizierungstoken. Wenden Sie sich an mail@refuelos.com";
                 } else if (response.status === 401) {
-                errorMessage = "Nicht autorisiertes Authentifizierungstoken. Wenden Sie sich an info@xtl-freigaben.de";
+                errorMessage = "Nicht autorisiertes Authentifizierungstoken. Wenden Sie sich an mail@refuelos.com";
                 } else if (response.status === 403) {
-                errorMessage = 'Die Lizenz ist abgelaufen. Wenden Sie sich an info@xtl-freigaben.de';
+                errorMessage = 'Die Lizenz ist abgelaufen. Wenden Sie sich an mail@refuelos.com';
                 } else {
-                errorMessage = "There is an error occurring, please try again, or contact info@xtl-freigaben.de.";
+                errorMessage = "There is an error occurring, please try again, or contact mail@refuelos.com.";
                 }
 
 

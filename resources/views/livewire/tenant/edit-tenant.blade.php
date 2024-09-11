@@ -297,7 +297,7 @@
                                                         <x-input
                                                             class="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md"
                                                             wire:model="url_subsite" id="url_subsite" name="url_subsite" disabled
-                                                            prefix="https://xtl-freigaben.de/"/>
+                                                            prefix="https://refuelos.com/"/>
 
 
 

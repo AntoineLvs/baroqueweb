@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('url_subsite', 255)->nullable();
 
             $table->integer('status')->default(0);
-            $table->integer('phone')->nullable();
+            $table->string('phone')->nullable();
             $table->string('email')->nullable();
             $table->string('street')->nullable();
             $table->string('zip')->nullable();

@@ -138,7 +138,7 @@ class EditTenant extends Component
             $input = "Tenant wurde bearbeitet: " . $tenant->name . ' - T-ID: ' . $tenant->id;
             $subject = "Tenant wurde bearbeitet";
 
-            Mail::to('info@xtl-freigaben.de')->send(new AdminNotificationMail($input, $subject));
+            Mail::to('mail@refuelos.com')->send(new AdminNotificationMail($input, $subject));
         };
 
         session()->flash('message', 'Unternehmen aktualisiert.');
@@ -226,7 +226,7 @@ class EditTenant extends Component
             $backgroundColor = $ciSettings['backgroundColor'] ?? '#f8f9fb';
             $fontColor = $ciSettings['fontColor'] ?? '#000000';
             $buttonFontColor = $ciSettings['buttonFontColor'] ?? '#ffffff';
-            $customLogoUrl = $ciSettings['customLogoUrl'] ?? 'https://xtl-freigaben.de/assets/img/xtl-logo.png';
+            $customLogoUrl = $ciSettings['customLogoUrl'] ?? 'https://refuelos.com/assets/img/xtl-logo.png';
             $personalText = $ciSettings['personalText'] ?? "Suchen Sie nach einer XTL Freigabe.";
         } else {
 
@@ -234,7 +234,7 @@ class EditTenant extends Component
             $backgroundColor = '#f8f9fb';
             $fontColor = '#000000';
             $buttonFontColor = '#ffffff';
-            $customLogoUrl = 'https://xtl-freigaben.de/assets/img/xtl-logo.png';
+            $customLogoUrl = 'https://refuelos.com/assets/img/xtl-logo.png';
             $personalText = "Suchen Sie nach einer XTL Freigabe.";
         }
 

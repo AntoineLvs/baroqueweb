@@ -21,9 +21,9 @@
                 <h1 class="text-2xl font-bold text-gray-900 mb-4">Nutzungsbedingungen unserer Suchfunktion</h1>
                 <div class="text-left text-gray-700 text-sm space-y-2">
                     <h2 class="text-xl font-bold text-gray-900 mb-4">Funktionsbeschreibung der Suchfunktionen von
-                        xtl-freigaben.de</h2>
+                        refuelos.com</h2>
                     <p class="text-gray-700 mb-4">
-                        Bei xtl-freigaben.de handelt es sich um eine interaktive Suchmaschine, die spezifische
+                        Bei refuelos.com handelt es sich um eine interaktive Suchmaschine, die spezifische
                         Kraftstoff-Freigaben zu sog. XTL oder B10-Dieselkraftstoffen von fest definierten externen
                         Quellen sammelt (z.B. die Website des Fahrzeugherstellers) und dem Benutzer (z.B. PKW- oder
                         LKW-Fahrer) diese in einer benutzerfreundlichen Liste aufbereitet anzeigt. Ziel der Anzeige ist
@@ -43,7 +43,7 @@
                         offizielle Herstellerfreigabe eines Fahrzeuges für die Kraftstoffe XTL (DIN EN 15940) oder B10
                         (DIN EN 16734) mit Hilfe der Anwendung anzeigen lassen. Der Benutzer gelangt zur Suchmaske
                         entweder online über eine Verlinkung, Werbematerial (Flyer oder Aufsteller) oder auch über einen
-                        QR-Code Aufkleber. Das Werbematerial und die Aufkleber können direkt über xtl-freigaben.de
+                        QR-Code Aufkleber. Das Werbematerial und die Aufkleber können direkt über refuelos.com
                         bezogen und am Point-of-Sale direkt an der Zapfsäule oder auch im Bereich des Tankstellenshops
                         aufgeklebt bzw. ausgelegt oder aufgestellt werden. Für weitere Medien wie Audio- und
                         Video-Medien gelten die individuell bereitgestellten Hinweise zur Nutzung.
@@ -51,10 +51,10 @@
 
                     <h2 class="text-xl font-bold text-gray-900 mt-6 mb-4">Haftungsausschluss</h2>
                     <p class="text-gray-700 mb-4">
-                        Sämtliche in den Suchergebnissen von xtl-freigaben.de angezeigte Freigaben stammen von externen
+                        Sämtliche in den Suchergebnissen von refuelos.com angezeigte Freigaben stammen von externen
                         Quellen, wie beispielsweise den Websites der Fahrzeug-Hersteller, dem ADAC oder der Deutsche
                         Automobil Treuhand GmbH („DAT“) und stehen unter dem Vorbehalt der Änderung durch diese.
-                        Sie wurden durch den Provider und die Suchmaschine xtl-freigaben.de lediglich zusammengetragen
+                        Sie wurden durch den Provider und die Suchmaschine refuelos.com lediglich zusammengetragen
                         und zum Zwecke der Auffindbarkeit und Definition von Suchkriterien (wie z.B. Fahrzeug-Hersteller
                         und Fahrzeug-Modell) aufbereitet.
                         Für die Aktualität, Richtigkeit und Vollständigkeit ist allein der jeweilige Fahrzeughersteller
@@ -72,7 +72,7 @@
                         Daten</h2>
                     <p class="text-gray-700 mb-4">
                         Der Provider dokumentiert die Quellenangaben der Herstellerfreigaben unter dem folgenden Link:
-                        <a href="{{route('sourcesList')}}">xtl-freigaben.de/sources-list/</a>
+                        <a href="{{route('sourcesList')}}">refuelos.com/sources-list/</a>
                         Da die Hersteller eine abweichende Struktur in der Datenherkunft angeben, stellt der Provider
                         diese Struktur als Grundlage der Suchfunktion bereit.
                         In der jeweiligen Quellen-Liste (Source) findet sich das konkrete Datum der Veröffentlichung der

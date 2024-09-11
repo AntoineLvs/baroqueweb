@@ -24,6 +24,7 @@ class CreateTokenTypesTable extends Migration
             $table->decimal('tax_rate', 10, 2)->default(0.19);
             $table->integer('contract_duration');
             $table->integer('api_calls_count')->default(0);
+            $table->integer('locations_limit');
             $table->timestamps();
         });
     }

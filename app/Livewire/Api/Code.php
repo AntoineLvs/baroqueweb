@@ -19,7 +19,7 @@ class Code extends Component
     public $buttonFontColor;
     public $customLogoUrl;
     public $personalText;
-    public $defaultLogoPath = 'https://xtl-freigaben.de/assets/img/xtl-logo.png';
+    public $defaultLogoPath = 'https://refuelos.com/assets/img/xtl-logo.png';
 
 
     public $htmlButton = false;
@@ -52,7 +52,7 @@ class Code extends Component
         $this->backgroundColor = $ciSettings['backgroundColor'] ?? '#f8f9fb';
         $this->fontColor = $ciSettings['fontColor'] ?? '#000000';
         $this->buttonFontColor = $ciSettings['buttonFontColor'] ?? '#ffffff';
-        $this->customLogoUrl = $ciSettings['customLogoUrl'] ?? 'https://xtl-freigaben.de/assets/img/xtl-logo.png';
+        $this->customLogoUrl = $ciSettings['customLogoUrl'] ?? 'https://refuelos.com/assets/img/xtl-logo.png';
         $this->personalText = $ciSettings['personalText'] ?? "Bitte Hersteller auswählen";
     }
 

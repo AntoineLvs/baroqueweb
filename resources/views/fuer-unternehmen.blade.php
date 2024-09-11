@@ -290,13 +290,13 @@
                             <h1 class="mt-10 text-5xl font-bold tracking-tight text-gray-900 sm:text-6xl">Unser Check.
                                 <br>In Ihrem Design.</h1>
                             <p class="mt-6 text-lg leading-8 text-gray-600">Für Sie als Unternehmen bietet
-                                xtl-freigaben.de die Möglichkeit, den gesamten Freigabe-Check nahtlos in Ihre eigene
+                                refuelos.com die Möglichkeit, den gesamten Freigabe-Check nahtlos in Ihre eigene
                                 Unternehmenskommunikation einzubinden, dort eigene Produkte direkt zu platzieren und
                                 dadurch eine langfristige Markenbindung zu schaffen! Natürlich mit Ihrer indiviudellen
                                 CI.</p>
                             <div class="mt-6 flex items-center gap-x-6">
 
-                                <a href="{{route('check.sprint')}}"
+                                <a href="   "
                                    class="text-sm font-semibold leading-6 text-gray-900">Zeig mir ein Beispiel<span
                                         aria-hidden="true">→</span></a>
                             </div>
@@ -400,7 +400,7 @@
                                           d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
                                           clip-rule="evenodd"/>
                                 </svg>
-                                Mit Logo, Bild und Produkt auf Unterseite  von xtl-freigaben.de (Upload im Kundenprofil)
+                                Mit Logo, Bild und Produkt auf Unterseite von refuelos.com (Upload im Kundenprofil)
                             </li>
                             <li class="flex gap-x-3">
                                 <svg class="h-6 w-5 flex-none text-indigo-600" viewBox="0 0 20 20" fill="currentColor"
@@ -409,7 +409,8 @@
                                           d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
                                           clip-rule="evenodd"/>
                                 </svg>
-                                Variable Kosten: <br>Keine bis 10.000 Suchanfragen / Monat. Ab 10.001: 10,00 € pro 1000 Suchanfragen
+                                Variable Kosten: <br>Keine bis 10.000 Suchanfragen / Monat. Ab 10.001: 10,00 € pro 1000
+                                Suchanfragen
                             </li>
                             <li class="flex gap-x-3">
                                 <svg class="h-6 w-5 flex-none text-indigo-600" viewBox="0 0 20 20" fill="currentColor"
@@ -434,7 +435,8 @@
                         <a href="{{route('register')}}" aria-describedby="tier-personal"
                            class="mt-8 block rounded-md bg-violet-700 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:mt-10">Jetzt
                             registrieren</a>
-                        <p class="pt-4 text-center text-xs text-gray-500">Zahlung via SEPA Mandat kann nach Registrierung ausgewählt werden.</p>
+                        <p class="pt-4 text-center text-xs text-gray-500">Zahlung via SEPA Mandat kann nach
+                            Registrierung ausgewählt werden.</p>
                     </div>
                     <div
                         class="rounded-3xl bg-white/60 p-8 ring-1 ring-gray-900/10 sm:mx-8 sm:rounded-t-none sm:p-10 lg:mx-0 lg:rounded-bl-none lg:rounded-tr-3xl">
@@ -473,7 +475,7 @@
                                           d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
                                           clip-rule="evenodd"/>
                                 </svg>
-                               1.000 API-Aufrufe pro Monat inklusive.
+                                1.000 API-Aufrufe pro Monat inklusive.
                             </li>
                             <li class="flex gap-x-3">
                                 <svg class="h-6 w-5 flex-none text-indigo-600" viewBox="0 0 20 20" fill="currentColor"
@@ -499,7 +501,8 @@
                            class="mt-8 block rounded-md px-3.5 py-2.5 text-center text-sm font-semibold text-violet-700 ring-1 ring-inset ring-violet-200 hover:ring-indigo-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:mt-10">Jetzt
                             registrieren</a>
 
-                        <p class="pt-4 text-center text-xs text-gray-500">Zahlung via SEPA Mandat kann nach Registrierung ausgewählt werden.</p>
+                        <p class="pt-4 text-center text-xs text-gray-500">Zahlung via SEPA Mandat kann nach
+                            Registrierung ausgewählt werden.</p>
                     </div>
 
                 </div>
@@ -522,7 +525,9 @@
                                     </button>
                                 </dt>
                                 <dd x-show="isOpen" class="mt-2 pr-12" id="faq-0">
-                                    <p class="text-base leading-7 text-gray-600">Der Freigabe-Check ist ideal, um Ihren Kunden direkt am POS eine eifnache Möglichkeit zu bieten, um nach bereits erfolgten Hersteller-Freigaben zu suchen. Einfacher geht es nicht.</p>
+                                    <p class="text-base leading-7 text-gray-600">Der Freigabe-Check ist ideal, um Ihren
+                                        Kunden direkt am POS eine eifnache Möglichkeit zu bieten, um nach bereits
+                                        erfolgten Hersteller-Freigaben zu suchen. Einfacher geht es nicht.</p>
                                 </dd>
                             </div>
 
@@ -537,7 +542,8 @@
                                     </button>
                                 </dt>
                                 <dd x-show="isOpen" class="mt-2 pr-12" id="faq-0">
-                                    <p class="text-base leading-7 text-gray-600">Ja, über das Backend lässt sich die CI für das eigene Profil individuell einstellen. Gerne unterstützen wir dabei!</p>
+                                    <p class="text-base leading-7 text-gray-600">Ja, über das Backend lässt sich die CI
+                                        für das eigene Profil individuell einstellen. Gerne unterstützen wir dabei!</p>
                                 </dd>
                             </div>
 
@@ -552,7 +558,9 @@
                                     </button>
                                 </dt>
                                 <dd x-show="isOpen" class="mt-2 pr-12" id="faq-0">
-                                    <p class="text-base leading-7 text-gray-600">Ja, mit der Variante 2 (On-Site + API Integration) kann der Freigabe Check auf anderen Websites oder sogar in einer App eingesetzt werden.</p>
+                                    <p class="text-base leading-7 text-gray-600">Ja, mit der Variante 2 (On-Site + API
+                                        Integration) kann der Freigabe Check auf anderen Websites oder sogar in einer
+                                        App eingesetzt werden.</p>
                                 </dd>
                             </div>
 
@@ -567,12 +575,13 @@
                                     </button>
                                 </dt>
                                 <dd x-show="isOpen" class="mt-2 pr-12" id="faq-0">
-                                    <p class="text-base leading-7 text-gray-600">Wir arbeiten derzeit an einer Erweiterung der Datensätze für Nutzfahrzeuge, Baumaschinen und Landwirtschaft.</p>
+                                    <p class="text-base leading-7 text-gray-600">Wir arbeiten derzeit an einer
+                                        Erweiterung der Datensätze für Nutzfahrzeuge, Baumaschinen und
+                                        Landwirtschaft.</p>
                                 </dd>
                             </div>
                             <!-- component -->
                             <!-- https://play.tailwindcss.com/PLrIiZQn2n -->
-
 
 
                         </dl>
@@ -585,11 +594,13 @@
             <div class="relative flex flex-col items-center justify-center overflow-hidden bg-white">
                 <div class="max-w-xl px-5 text-center">
                     <h2 class="mb-2 text-xl font-bold text-zinc-800">Sie haben Fragen?</h2>
-                    <p class="mb-2 text-lg text-zinc-500">Schreiben Sie uns unter <span class="font-medium text-violet-500">info@xtl-freigaben.de</span>.</p>
-                    <a href="{{route('contact')}}" class="mt-3 inline-block w-96 rounded bg-violet-700 px-5 py-3 font-medium text-white shadow-md shadow-violet-500/20 hover:bg-violet-500">Oder über das Kontaktformular</a>
+                    <p class="mb-2 text-lg text-zinc-500">Schreiben Sie uns unter <span
+                            class="font-medium text-violet-500">mail@refuelos.com</span>.</p>
+                    <a href="{{route('contact')}}"
+                       class="mt-3 inline-block w-96 rounded bg-violet-700 px-5 py-3 font-medium text-white shadow-md shadow-violet-500/20 hover:bg-violet-500">Oder
+                        über das Kontaktformular</a>
                 </div>
             </div>
-
 
 
             <div class="absolute inset-x-0 bottom-0 -z-10 h-24 bg-gradient-to-t from-white sm:h-32"></div>

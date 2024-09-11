@@ -9,7 +9,7 @@ Wir haben eine neue Nachricht.
 - **E-Mail:** {{ $input['email'] }}
 - **Nachricht:** {{ $input['message'] }}
 
-@component('mail::button', ['url' => 'xtl-freigaben.de/login'])
+@component('mail::button', ['url' => 'refuelos.com/login'])
 Einloggen
 @endcomponent
 

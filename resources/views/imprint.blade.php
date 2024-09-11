@@ -36,7 +36,7 @@
                     <p>Finanzamt Itzehoe</p>
 
                     <h3 class="pt-4 font-bold mt-4">Kontakt</h3>
-                    <p>Email: info@xtl-freigaben.de</p>
+                    <p>Email: mail@refuelos.com</p>
                     <p>Telefon: 040 74397325</p>
                     <p>Erreichbarkeit: Mo-Fr. 10.00-17.00 Uhr oder nach vorheriger Terminabsprache</p>
 
@@ -65,9 +65,9 @@
                         Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt
                         der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden
                         Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.</p>
-                    <p>Sämtliche in den Suchergebnissen von XTL-Freigaben.de angezeigte Freigaben stammen von externen
-                        Quellen und stehen unter dem Vorbehalt der Änderung durch die Urheber. XTL-Freigaben.de
-                        übernimmt keine Gewähr und/oder Garantie für die Richtigkeit der Angaben. XTL-Freigaben.de
+                    <p>Sämtliche in den Suchergebnissen von refuelos.com angezeigte Freigaben stammen von externen
+                        Quellen und stehen unter dem Vorbehalt der Änderung durch die Urheber. refuelos.com
+                        übernimmt keine Gewähr und/oder Garantie für die Richtigkeit der Angaben. refuelos.com
                         haftet nicht für mögliche Schäden, die aus der Berücksichtigung einer angegebenen Freigabe bei
                         der Kraftstoffbetankung entstehen. Der Kunde wird darauf hingewiesen, dass er verpflichtet ist,
                         hinsichtlich Beschaffenheit, Eignung und Verträglichkeit der Kraftstoffe vor dem erstmaligen
