@@ -20,7 +20,7 @@
 
         <!-- closure button -->
         <div class="absolute top-1 right-1 cursor-pointer text-sm text-gray-500 hover:text-red-500 mr-2" @click="isHidden = true">
-            Ausblenden
+            ausblenden
         </div>
 
         <!-- content of the search bar -->
@@ -35,8 +35,8 @@
                                     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
                                 </svg>
                             </div>
-                            <input @keyup.enter="showResultClass = true" id="searchBar" name="searchbox" placeholder="Search..." type="search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                            <button @click="isHvoBlend = false; isHvo100 = false; radius = 100" id="resetButton" type="button" class="text-white absolute end-2.5 bottom-2.5 bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                            <input @keyup="showResultClass = true" x-on:change.debounce="showResultClass = true" id="searchBar" name="searchbox" placeholder="Search..." type="search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                            <button @click="isHvoBlend = true; isHvo100 = true; radius = 100" id="resetButton" type="button" class="text-white absolute end-2.5 bottom-2.5 bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                 <svg class="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
                                 </svg>
@@ -350,11 +350,13 @@
             zoom: 5
         });
 
+
         let activePopup = null; // to manage the active popup
         let lastCenter = map.getCenter(); // stock the initial center
         let currentCenter = map.getCenter(); // Sotck the current center
         let mouseOverPopup = false;
         let mouseOverMarker = false;
+        let searchMarker = null; // Global variable to store the search marker
 
         map.on('load', function() {
             map.addSource('your-tileset-source', {
@@ -377,7 +379,7 @@
                 },
                 'filter': ['==', ['get', 'active'], 1] // Filter to display only the locations where 'active' is equal to 1
             });
-            setTimeout(updateMarkersAndTable, 500);
+            setTimeout(germanyCenter, 500);
 
             function debounce(func, delay) {
                 let timeout;
@@ -387,21 +389,12 @@
                 };
             }
 
-            async function getCoordinatesFromCity(cityName) {
-                const accessToken = 'pk.eyJ1IjoiZWxzZW5tZWRpYSIsImEiOiJjbHBiYXozZm0wZ21vMnFwZHE4ZWc5Z2lzIn0.dJGBO1JOfota9KceLDgGJg';
-                const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(cityName)}.json?access_token=${accessToken}`);
-                const data = await response.json();
+            const radiusUpdated = document.getElementById('radiusRange');
 
-                if (data.features && data.features.length > 0) {
-                    const [longitude, latitude] = data.features[0].center; // City coordinates
-                    return {
-                        longitude,
-                        latitude
-                    };
-                }
+            radiusUpdated.addEventListener('change', (event) => {
+                updateMarkersAndTable();
+            });
 
-                return null; // No matching coordinates
-            }
 
             // Function to calculate the distance in kilometers between two geographical points
             function distanceRadius(coord1, coord2) {
@@ -420,27 +413,135 @@
                 return R * c; // Distance in kilometers
             }
 
-            async function updateMarkersAndTable() {
-                if (activePopup) activePopup.remove();
+            async function getCoordinatesFromCity(cityName) {
+                const accessToken = 'pk.eyJ1IjoiZWxzZW5tZWRpYSIsImEiOiJjbHBiYXozZm0wZ21vMnFwZHE4ZWc5Z2lzIn0.dJGBO1JOfota9KceLDgGJg';
+                const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(cityName)}.json?access_token=${accessToken}`);
+                const data = await response.json();
 
-                currentCenter = map.getCenter();
-                lastCenter = currentCenter;
+                if (data.features && data.features.length > 0) {
+                    const [longitude, latitude] = data.features[0].center; // City coordinates
+                    return {
+                        longitude,
+                        latitude
+                    };
+                }
 
-                const minZoom = 5;
-                const currentZoom = map.getZoom();
-                const maxZoom = 20;
+                germanyCenter();
+            }
 
+            async function flyToAndPlaceMarker(coordinates, radius) {
+                return new Promise((resolve) => {
+                    // Delete the old search marker if it exists
+                    if (searchMarker) {
+                        searchMarker.remove();
+                    }
+
+                    // Add a new search marker
+                    searchMarker = new mapboxgl.Marker({
+                            color: 'blue',
+                            draggable: false,
+                            scale: 0.8
+                        })
+                        .setLngLat([coordinates.longitude, coordinates.latitude])
+                        .addTo(map);
+
+                    // Calculate the zoom level based on the radius
+                    const minZoom = 5; // Minimum zoom
+                    const maxZoom = 10; // Maximum zoom
+
+                    const zoomLevel = maxZoom - radius / (250 / (maxZoom - minZoom));
+
+                    // Move the camera to the new location with the right zoom
+                    map.flyTo({
+                        center: [coordinates.longitude, coordinates.latitude],
+                        zoom: zoomLevel, // Use the calculated zoom level
+                        essential: true, // Ensures that the animation is respected
+                    });
+
+                    // Draw a circle around the search marker
+                    drawRadiusCircle(coordinates, radius);
+
+                    // Once the camera movement is finished, resolve the promise
+                    map.once('moveend', () => {
+                        resolve();
+                    });
+                });
+            }
+
+            // Draw a circle based on the radius
+            function drawRadiusCircle(coordinates, radius) {
+                const circleRadiusMeters = radius * 1000; // Convert the radius to meters
+
+                // Check if the radius circle source exists, otherwise add it
+                if (map.getSource('radius-circle')) {
+                    map.getSource('radius-circle').setData(createGeoJSONCircle([coordinates.longitude, coordinates.latitude], circleRadiusMeters));
+                } else {
+                    // Add a source for the radius circle
+                    map.addSource('radius-circle', {
+                        type: 'geojson',
+                        data: createGeoJSONCircle([coordinates.longitude, coordinates.latitude], circleRadiusMeters)
+                    });
+
+                    // Add a layer for displaying the radius circle
+                    map.addLayer({
+                        id: 'radius-circle-layer',
+                        type: 'fill',
+                        source: 'radius-circle',
+                        layout: {},
+                        paint: {
+                            'fill-color': 'rgba(0, 0, 255, 0.2)', 
+                            'fill-opacity': 0.4
+                        }
+                    });
+                }
+            }
+
+            // Create a GeoJSON circle
+            function createGeoJSONCircle(center, radiusInMeters, points = 64) {
+                const coords = {
+                    latitude: center[1],
+                    longitude: center[0]
+                };
+
+                const km = radiusInMeters / 1000;
+                const ret = [];
+                const distanceX = km / (111.32 * Math.cos((coords.latitude * Math.PI) / 180));
+                const distanceY = km / 110.574;
+
+                for (let i = 0; i < points; i++) {
+                    const theta = (i / points) * (2 * Math.PI);
+                    const x = distanceX * Math.cos(theta);
+                    const y = distanceY * Math.sin(theta);
+
+                    const lng = coords.longitude + x;
+                    const lat = coords.latitude + y;
+
+                    ret.push([lng, lat]);
+                }
+
+                ret.push(ret[0]); // Close the circle
+
+                return {
+                    type: 'Feature',
+                    geometry: {
+                        type: 'Polygon',
+                        coordinates: [ret]
+                    }
+                };
+            }
+
+            async function refreshVisibleFeatures() {
+                // Query features from the current visible map area
                 let features = map.querySourceFeatures('your-tileset-source', {
                     sourceLayer: 'efuelmap_v1',
-                    filter: ['==', ['get', 'active'], 1],
+                    filter: ['==', ['get', 'active'], 1], // Keep only active locations
                     validate: false
                 });
-                console.log(features);
 
-                // Supprimer les doublons en utilisant un Set pour stocker les IDs uniques
                 let uniqueFeatures = [];
                 let seenIds = new Set();
 
+                // Ensure unique features by their ID
                 features.forEach(feature => {
                     const id = feature.properties.id;
                     if (!seenIds.has(id)) {
@@ -449,30 +550,82 @@
                     }
                 });
 
+                // Apply product filters
                 const isHvo100 = document.getElementById('isHvo100').textContent === 'true';
                 const isHvoBlend = document.getElementById('isHvoBlend').textContent === 'true';
 
                 let filteredFeatures = uniqueFeatures.filter(feature => {
                     const productTypes = feature.properties.product_types || [];
                     if (isHvo100 && isHvoBlend) {
-                        return productTypes.includes(1) || productTypes.includes(2);
+                        return productTypes.includes(1) || productTypes.includes(2); // Filter by product types
                     } else if (isHvo100) {
-                        return productTypes.includes(1);
+                        return productTypes.includes(1); // HVO100 only
                     } else if (isHvoBlend) {
-                        return productTypes.includes(2);
+                        return productTypes.includes(2); // HVO Blend only
                     } else {
-                        return true;
+                        return true; // No product filter
                     }
                 });
+
+                return filteredFeatures;
+            }
+
+            function germanyCenter() {
+                map.flyTo({
+                    center: [10.451526, 51.165691],
+                    zoom: 5,
+                    essential: false,
+                });
+
+                map.once('moveend', () => {
+                    updateMarkersAndTable();
+                });
+            }
+
+            async function updateMarkersAndTable() {
+                if (activePopup) activePopup.remove();
+
+                currentCenter = map.getCenter();
+                const minZoom = 5;
+                const maxZoom = 20;
+                lastCenter = currentCenter;
+
+                // Refresh visible features at the start
+                let filteredFeatures = await refreshVisibleFeatures();
 
                 const searchBar = document.getElementById('searchBar');
                 const query = searchBar.value.trim().toLowerCase();
 
+
+                // Step 1: Search in the tileset (locations and tenant names)
                 if (query.length > 0) {
+                    filteredFeatures = filteredFeatures.filter(feature => {
+                        const name = feature.properties.name || "";
+                        const tenantName = feature.properties.tenant || "";
+                        const address = feature.properties.address || "";
+                        return (
+                            name.toLowerCase().includes(query) ||
+                            tenantName.toLowerCase().includes(query) ||
+                            address.toLowerCase().includes(query)
+                        );
+                    });
+                }
+
+
+                // Step 2 : If no results, search for a city
+                if (filteredFeatures.length === 0) {
+
                     const coordinates = await getCoordinatesFromCity(query);
-                    const radius = document.getElementById('radius').textContent;
 
                     if (coordinates) {
+                        const radius = parseFloat(document.getElementById('radius').textContent);
+
+                        await flyToAndPlaceMarker(coordinates, radius);
+
+                        // Refresh visible features after moving the map
+                        filteredFeatures = await refreshVisibleFeatures();
+
+                        // Now apply the radius filter to the newly visible features
                         filteredFeatures = filteredFeatures.filter(feature => {
                             const [longitude, latitude] = feature.geometry.coordinates;
                             const distance = distanceRadius({
@@ -481,32 +634,24 @@
                             }, coordinates);
                             return distance <= radius;
                         });
-                    } else {
-                        filteredFeatures = filteredFeatures.filter(feature => {
-                            const name = feature.properties.name || "";
-                            const tenantName = feature.properties.tenant || "";
-                            const address = feature.properties.address || "";
-                            return (
-                                name.toLowerCase().includes(query) ||
-                                tenantName.toLowerCase().includes(query) ||
-                                address.toLowerCase().includes(query)
-                            );
-                        });
                     }
                 }
+               
+                setTimeout(() => {
+                    const bounds = map.getBounds();
+                    const sw = bounds.getSouthWest();
+                    const ne = bounds.getNorthEast();
 
-                const bounds = map.getBounds();
-                const sw = bounds.getSouthWest();
-                const ne = bounds.getNorthEast();
+                    filteredFeatures = filteredFeatures.filter(feature => {
+                        const [longitude, latitude] = feature.geometry.coordinates;
+                        return (
+                            longitude >= sw.lng && longitude <= ne.lng &&
+                            latitude >= sw.lat && latitude <= ne.lat
+                        );
+                    });
+                }, 500);
 
-                filteredFeatures = filteredFeatures.filter(feature => {
-                    const [longitude, latitude] = feature.geometry.coordinates;
-                    return (
-                        longitude >= sw.lng && longitude <= ne.lng &&
-                        latitude >= sw.lat && latitude <= ne.lat
-                    );
-                });
-
+                // Management of the zoom progress if there are no results in the visible area
                 function progressiveZoomOut() {
                     if (filteredFeatures.length > 0 || map.getZoom() <= minZoom) {
                         updateMarkers(filteredFeatures);
@@ -531,7 +676,7 @@
                         setTimeout(() => {
                             features = map.querySourceFeatures('your-tileset-source', {
                                 sourceLayer: 'efuelmap_v1',
-                                filter: ['==', ['get', 'tenant'], tenant_id],
+                                filter: ['==', ['get', 'active'], 1],
                                 validate: false
                             });
 
@@ -548,6 +693,7 @@
                                 }
                             });
 
+                            // Search in the tileset (locations and tenant names)
                             if (query.length > 0) {
                                 filteredFeatures = filteredFeatures.filter(feature => {
                                     const name = feature.properties.name || "";
@@ -839,7 +985,7 @@
                     const bounds = getBounds(features);
                     map.fitBounds(bounds, {
                         padding: 50,
-                        maxZoom: 15 // Limit the zoom to avoid too much zooming
+                        maxZoom: 12 // Limit the zoom to avoid too much zooming
                     });
                 }
             }
@@ -1229,24 +1375,41 @@
 
 
 
-            const debouncedUpdateMarkersAndTable = debounce(updateMarkersAndTable, 1000);
+            const debouncedGermanyCenter = debounce(germanyCenter, 1000);
 
             // Listen for input on the search bar
-            document.getElementById('searchBar').addEventListener('input', debouncedUpdateMarkersAndTable);
-
+            document.getElementById('searchBar').addEventListener('input', debouncedGermanyCenter);
+            document.getElementById('searchBar').addEventListener('input', function(e) {
+                if (e.target.value === '') {
+                    reset();
+                }
+            });
             document.getElementById('resetButton').addEventListener('click', function(e) {
                 reset();
             });
             document.getElementById('searchAreaButton').addEventListener('click', function(e) {
-                updateMarkersAndTable();
+                germanyCenter();
             });
 
             function reset() {
                 document.getElementById('searchBar').value = '';
-                updateMarkersAndTable();
+
+                map.flyTo({
+                    center: [10.451526, 51.165691],
+                    zoom: 5,
+                    essential: true,
+                });
+                map.once('moveend', () => {
+                    germanyCenter();
+                });
+                if (searchMarker) {
+                    searchMarker.remove();
+                    map.removeLayer('radius-circle-layer');
+                    map.removeSource('radius-circle');
+                }
             }
             document.addEventListener('filterChanged', () => {
-                updateMarkersAndTable();
+                germanyCenter();
             });
 
             // Function to calculate the distance between two points
