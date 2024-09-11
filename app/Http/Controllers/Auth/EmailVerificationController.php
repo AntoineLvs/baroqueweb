@@ -34,7 +34,7 @@ class EmailVerificationController extends Controller
             Mail::to(Auth::user()->email)->send(new UserRegisteredNew());
         }
 
-        Mail::to('admin@hofhub.com')->send(new AdminNewUserMail(Auth::user()));
+        Mail::to('admin@refuelos.com')->send(new AdminNewUserMail(Auth::user()));
 
         return redirect()
             ->route('dashboard')

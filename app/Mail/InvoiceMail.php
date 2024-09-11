@@ -35,7 +35,7 @@ class InvoiceMail extends Mailable
     {
         Log::info('tiens (invoiceMail) :' . $this->invoice);
 
-        return $this->subject('Ihre Rechnung - XTL-Freigaben.de')
+        return $this->subject('Ihre Rechnung - refuelOS')
             ->markdown('emails.invoices.invoice', [
                 'invoice' => $this->invoice,
             ])

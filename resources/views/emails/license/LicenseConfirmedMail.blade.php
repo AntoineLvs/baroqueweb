@@ -1,6 +1,6 @@
 @component('mail::message')
 <h2>Hallo {{ $user->name }},</h2>
-<p>ihre Lizenz für xtl-freigaben.de wurde freigeschaltet und ist nun nutzbar!</p>
+<p>ihre Lizenz für refuelos.com wurde freigeschaltet und ist nun nutzbar!</p>
 
 <p>Nachfolgend finden Sie eine Zusammenfassung zu Ihrer beantragten Lizenz:</p>
 
@@ -35,24 +35,24 @@ Einrichtung starten
 
 
 Sie haben Fragen zu unserem Angebot?<br>
-Dann kontaktieren Sie uns gerne per E-Mail unter info@xtl-freigaben.de</br>
+Dann kontaktieren Sie uns gerne per E-Mail unter mail@refuelos.com</br>
 
 Mit freundlichen Grüßen<br>
 
-Ihr Team von XTL-Freigaben.de
+Ihr Team von refuelOS
 
 
 
 <div class="content-footer">
 <hr style="margin-top: 20px;">
 <h4>Impressum</h4>
-XTL-Freigaben.de<br>
+refuelOS<br>
 Ein Angebot der Elsen Media GmbH<br>
 Großes Feld 7, 25421 Pinneberg<br>
 www.elsenmedia.com<br>
 Ust-ID: DE338867353<br>
 T +49 40 743 973 25<br>
-info@xtl-freigaben.de<br>
+mail@refuelos.com<br>
 </div>
 
 @endcomponent

@@ -5,7 +5,7 @@
         <div class="py-10">
             <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h1 class="text-2xl font-bold text-gray-900">Software as a Service – Vertrag über die Nutzung der
-                    Online-Anwendung xtl-freigaben.de</h1>
+                    Online-Anwendung refuelos.com</h1>
 
                 @if (session()->has('message'))
 
@@ -71,7 +71,7 @@
 
                             <ul class="pb-8">
                                 <li>
-                                   <a class="text-indigo-700 mb-2" href="#vertrag">Software as a Service – Vertrag über die Nutzung der Online-Anwendung xtl-freigaben.de</a>
+                                   <a class="text-indigo-700 mb-2" href="#vertrag">Software as a Service – Vertrag über die Nutzung der Online-Anwendung refuelos.com</a>
                                 </li>
                                 <li>
                                     <a class="text-indigo-700 mb-2" href="#leistungsbeschreibung">Anhang 1: Leistungsbeschreibung</a>
@@ -88,10 +88,10 @@
 
 
                                 <h2 id="vertrag" class="text-xl font-bold text-gray-900 mb-4">Software as a Service – Vertrag über
-                                    die Nutzung der Online-Anwendung xtl-freigaben.de</h2>
+                                    die Nutzung der Online-Anwendung refuelos.com</h2>
                                 <p class="text-gray-700 mb-4">Zwischen</p>
                                 <p class="text-gray-700 mb-4">
-                                    xtl-freigaben.de<br>
+                                    refuelos.com<br>
                                     Elsen Media GmbH<br>
                                     Großes Feld 7<br>
                                     25421 Pinneberg<br>
@@ -113,11 +113,11 @@
                                     (2) Vertragsgegenstand ist je nach von dem Kunden gewähltem Leistungsumfang (vgl.
                                     hierzu Anhang 2):
                                 <ul class="list-disc list-inside mb-4">
-                                    <li>Bereitstellung eines Zugangs zur Internet-Anwendung „xtl-freigaben.de“
+                                    <li>Bereitstellung eines Zugangs zur Internet-Anwendung „refuelos.com“
                                         (nachfolgend als „SOFTWARE“ bezeichnet) des Providers zur Nutzung über das
                                         Internet und
                                     </li>
-                                    <li>die Bereitstellung einer Unterseite auf xtl-freigaben.de mit zentraler
+                                    <li>die Bereitstellung einer Unterseite auf refuelos.com mit zentraler
                                         Suchfunktion für XTL-Freigaben in Kunden-CI (Corporate Identity) samt
                                         Speicherplatz auf den Servern des Providers gegen Gebühr sowie
                                     </li>
@@ -148,7 +148,7 @@
                                     (2) Der jeweils aktuelle Funktionsumfang der SOFTWARE ergibt sich aus der aktuellen
                                     Leistungsbeschreibung (Anhang 1); die Vertragsdauer und die Höhe der Vergütung
                                     ergeben sich aus den aktuellen Abo-Modellen auf der Web-Site des Providers unter
-                                    xtl-freigaben.de/abos (Anhang 2 Abo-Modelle).
+                                    refuelos.com/abos (Anhang 2 Abo-Modelle).
                                 </p>
                                 <p class="text-gray-700 mb-4">
                                     (3) Der Provider beseitigt nach Maßgabe der technischen Möglichkeiten unverzüglich
@@ -213,7 +213,7 @@
                                 <p class="text-gray-700 mb-4">
                                     (2) Der Provider wird Anfragen des Kunden zur Anwendung der vertragsgegenständlichen
                                     SOFTWARE und der weiteren SaaS-Dienste innerhalb der auf der Web-Site
-                                    xtl-freigaben.de/support veröffentlichten Geschäftszeiten nach Maßgabe der Support
+                                    refuelos.com/support veröffentlichten Geschäftszeiten nach Maßgabe der Support
                                     Policy des Providers wie aus Anlage 1  ersichtlich nach Eingang der jeweiligen Frage
                                     telefonisch oder in Textform beantworten.
                                 </p>
@@ -497,9 +497,9 @@
                                     <h3 id="leistungsbeschreibung" class="text-lg font-bold text-gray-900 mb-4">Anhang 1:
                                         Leistungsbeschreibung</h3>
                                     <h4 class="text-md font-semibold text-gray-900 mb-4">1.1 Funktionsbeschreibung der
-                                        Suchfunktionen von xtl-freigaben.de</h4>
+                                        Suchfunktionen von refuelos.com</h4>
                                     <p class="text-gray-700 mb-4">
-                                        Bei xtl-freigaben.de handelt es sich um eine interaktive Suchmaschine, die
+                                        Bei refuelos.com handelt es sich um eine interaktive Suchmaschine, die
                                         spezifische Kraftstoff-Freigaben zu sog. XTL oder B10-Dieselkraftstoffen von
                                         fest
                                         definierten externen Quellen sammelt (z.B. die Website des Fahrzeugherstellers)
@@ -525,7 +525,7 @@
                                     <h4 class="text-md font-semibold text-gray-900 mb-4">1.2 Begriffserklärung:
                                         On-Site-Integration / API-Integration</h4>
                                     <p class="text-gray-700 mb-4">
-                                        Das Abo-Modell von xtl-freigaben.de bietet dem Kunden zwei verschiedene
+                                        Das Abo-Modell von refuelos.com bietet dem Kunden zwei verschiedene
                                         Varianten
                                         der Nutzung unserer Suchfunktion und der extern ermittelten Datensätze:
                                     </p>
@@ -533,12 +533,12 @@
                                         <li>
                                             <strong>On-Site-Integration:</strong> Bei dieser Integration handelt es sich
                                             um
-                                            eine statische Unterseite auf xtl-freigaben.de, die in der Corporate
+                                            eine statische Unterseite auf refuelos.com, die in der Corporate
                                             Identity
                                             (CI) des Kunden gestaltet wird. Der Kunde kann die hier dargestellten
                                             Informationen (Farben, Texte, Angaben zum Kunden, Angaben zu Produkten des
                                             Kunden, Titelbild, Logo) selbständig auf seinem Profil anpassen. Beispiel:
-                                            xtl-freigaben.de/efuel-today
+                                            refuelos.com/efuel-today
                                         </li>
                                         <li>
                                             <strong>API-Integration:</strong> Bei dieser Integration handelt es sich um
@@ -548,8 +548,8 @@
                                             Form von HTML, CSS und JavaScript Code auf der Website des Kunden
                                             eingebunden
                                             werden kann. Durch die Einbindung dieses Codes wird die API (Application
-                                            Programming Interface) von xtl-freigaben.de angesprochen und ermöglicht die
-                                            Darstellung von Suchergebnissen außerhalb von xtl-freigaben.de. Der Kunde
+                                            Programming Interface) von refuelos.com angesprochen und ermöglicht die
+                                            Darstellung von Suchergebnissen außerhalb von refuelos.com. Der Kunde
                                             kann
                                             dabei den bereitgestellten CSS- und HTML-Code nach eigenem Bedarf
                                             bearbeiten,
@@ -591,7 +591,7 @@
                                         Der Benutzer gelangt zur Suchmaske entweder online über eine Verlinkung,
                                         Werbematerial (Flyer oder Aufsteller) oder auch über einen QR-Code Aufkleber.
                                         Das
-                                        Werbematerial und die Aufkleber können direkt über xtl-freigaben.de bezogen und
+                                        Werbematerial und die Aufkleber können direkt über refuelos.com bezogen und
                                         am
                                         Point-of-Sale direkt an der Zapfsäule oder auch im Bereich des Tankstellenshops
                                         aufgeklebt bzw. ausgelegt oder aufgestellt werden. Für weitere Medien wie Audio-
@@ -601,7 +601,7 @@
 
                                     <h4 class="text-md font-semibold text-gray-900 mb-4">1.5 Haftungsausschluss</h4>
                                     <p class="text-gray-700 mb-4">
-                                        Sämtliche in den Suchergebnissen von xtl-freigaben.de angezeigte Freigaben
+                                        Sämtliche in den Suchergebnissen von refuelos.com angezeigte Freigaben
                                         stammen
                                         von externen Quellen wie beispielsweise den Websites der Fahrzeug-Hersteller,
                                         dem
@@ -609,7 +609,7 @@
                                         Vorbehalt der Änderung durch diese.
                                     </p>
                                     <p class="text-gray-700 mb-4">
-                                        Sie wurden durch den Provider und die Suchmaschine xtl-freigaben.de lediglich
+                                        Sie wurden durch den Provider und die Suchmaschine refuelos.com lediglich
                                         zusammengetragen und zum Zwecke der Auffindbarkeit und Definition von
                                         Suchkriterien
                                         (wie z.B. Fahrzeug-Hersteller und Fahrzeug-Modell) aufbereitet.
@@ -645,13 +645,13 @@
                                         Bestätigung einen Cookie, woraufhin die Freigabe-Suche ausgeführt werden kann.
                                     </p>
                                     <p class="italic text-gray-700 mb-4">
-                                        „Sämtliche in den Suchergebnissen von xtl-freigaben.de angezeigte Freigaben
+                                        „Sämtliche in den Suchergebnissen von refuelos.com angezeigte Freigaben
                                         stammen
                                         von externen Quellen und stehen unter dem Vorbehalt der Änderung durch die
                                         Urheber.
-                                        XTL-Freigaben.de übernimmt keine Gewähr und/oder Garantie für die Richtigkeit
+                                        refuelos.com übernimmt keine Gewähr und/oder Garantie für die Richtigkeit
                                         der
-                                        Angaben. XTL-Freigaben.de haftet nicht für mögliche Schäden, die aus der
+                                        Angaben. refuelos.com haftet nicht für mögliche Schäden, die aus der
                                         Berücksichtigung einer angegebenen Freigabe bei der Kraftstoffbetankung
                                         entstehen.
                                         Der Kunde wird darauf hingewiesen, dass er verpflichtet ist, hinsichtlich
@@ -667,7 +667,7 @@
                                         Aktualität der Daten</h4>
                                     <p class="text-gray-700 mb-4">
                                         Der Provider dokumentiert die Quellenangaben der Herstellerfreigaben unter dem
-                                        folgenden Link: <a class="text-indigo-700 " href="{{route('sourcesList')}}">xtl-freigaben.de/sources/</a>
+                                        folgenden Link: <a class="text-indigo-700 " href="{{route('sourcesList')}}">refuelos.com/sources/</a>
                                     </p>
 
                                     <p class="text-gray-700 mb-4">
@@ -687,7 +687,7 @@
 
                                     <h3  id="abo-modelle" class="text-lg font-bold text-gray-900 mb-4 pt-10">Anhang 2: Abo-Modelle</h3>
                                     <p class="text-gray-700 mb-4">Übersicht über die Entgelte und Laufzeiten der
-                                        verschiedenen Abo-Modell auf xtl-freigaben.de</p>
+                                        verschiedenen Abo-Modell auf refuelos.com</p>
 
 
                                     <div class="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -718,7 +718,7 @@
                                                             Integrationsvariante
                                                         </td>
                                                         <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                            Unterseite mit eigener CI (z.B. xtl-freigaben.de/efuel-today)
+                                                            Unterseite mit eigener CI (z.B. refuelos.com/efuel-today)
                                                         </td>
                                                         <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                             Wie bei On Site + API-Lösung zur Einbettung der
@@ -732,7 +732,7 @@
                                                         </td>
                                                         <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                             Mit Logo, Bild und Text auf Unterseite von
-                                                            xtl-freigaben.de<br>(Upload im Kundenprofil)
+                                                            refuelos.com<br>(Upload im Kundenprofil)
                                                         </td>
                                                         <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
                                                             Wie Variante 1+ individuell anpassbare CI auf eigener

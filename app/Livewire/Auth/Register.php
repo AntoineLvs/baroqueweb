@@ -38,7 +38,7 @@ class Register extends Component
 
     public function mount()
     {
-        $this->tenant_types = TenantType::all();
+        $this->tenant_types = TenantType::where('id',1)->get();
 
     }
 

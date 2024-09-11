@@ -1,7 +1,7 @@
 @component('mail::message')
 # Herzlich Willkommen!
 
-Das Team von XTL-Freigaben.de heisst Sie herzlich Willkommen!
+Das Team von refuelos.com heisst Sie herzlich Willkommen!
 
 In nur wenigen Schritten ist Ihre Freigabe-Suche individuell eingerichtet und einsatzbereit für die Integration auf Ihrer Website!
 
@@ -19,17 +19,17 @@ Ihr Team von<br>
 {{ config('app.name') }}
 
 Fragen oder Anmerkungen?
-Schreiben Sie eine Mail an info@xtl-freigaben.de
+Schreiben Sie eine Mail an mail@refuelos.com
 
 <div class="content-footer">
 <hr style="margin-top: 20px;">
 <h4>Impressum</h4>
-XTL-Freigaben.de<br>
+refuelos.com<br>
 Ein Angebot der Elsen Media GmbH<br>
 Großes Feld 7, 25421 Pinneberg<br>
 www.elsenmedia.com<br>
 Ust-ID: DE338867353<br>
 T +49 40 743 973 25<br>
-info@xtl-freigaben.de<br>
+mail@refuelos.com<br>
 </div>
 @endcomponent

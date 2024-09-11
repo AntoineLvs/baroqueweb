@@ -8238,6 +8238,11 @@ input[type="number"].appearance-number-none {
     height: 2.5rem;
   }
 
+
+  .md\:h-16 {
+    height: 4rem;
+  }
+
   .md\:w-1\/5 {
     width: 20%;
   }
@@ -8373,6 +8378,10 @@ input[type="number"].appearance-number-none {
     border-top-width: 4px;
   }
 
+
+  .md\:p-6 {
+    padding: 1.5rem;
+  }
   .md\:px-6 {
     padding-left: 1.5rem;
     padding-right: 1.5rem;

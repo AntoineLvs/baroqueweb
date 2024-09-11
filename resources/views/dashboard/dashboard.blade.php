@@ -4,7 +4,7 @@
     <main class="flex-1 relative z-0 overflow-y-auto focus:outline-none">
         <div class="py-10">
             <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
-                <h1 class="text-2xl font-bold text-gray-900">Einführung</h1>
+                <h1 class="text-2xl font-bold text-gray-900">Start und Einführung</h1>
                 <x-session-message/>
             </div>
 
@@ -12,13 +12,13 @@
                 <div class="py-4">
                     <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
                         <div class="px-4 py-5 sm:px-6">
-                            <h3 class="card-title">Willkommen zu den ersten Schritten bei XTL-Freigaben.de!</h3>
+                            <h3 class="card-title">Willkommen zu den ersten Schritten bei refuelOS!</h3>
                         </div>
                         <div class="px-4 py-5 sm:p-6">
                             <!-- Content goes here -->
-                            In nur <b>wenigen Schritten</b> können Sie das Tool vollständig einrichten und Ihre Kunden
-                            direkt mit der Freigaben-Suche durchstarten lassen! Fragen? <a class="text-indigo-700"
-                                                                                           href="{{route('contact')}}">Schreiben
+                            In nur <b>wenigen Schritten</b> können Sie Ihr Profil vollständig einrichten und Ihre ersten
+                            Tankstellen und Produkte einrichten. Sie haben Fragen? <a class="text-indigo-700"
+                                                                                   href="{{route('contact')}}">Schreiben
                                 Sie uns!</a>
                         </div>
                     </div>
@@ -89,8 +89,8 @@
                                                     <div
                                                         class="mt-1 flex items-center gap-x-2 text-xs leading-5 text-gray-500">
                                                         <p class="whitespace-nowrap">Vervollständigen Sie die Angaben
-                                                            Ihres Unternehmens, damit die Freigabe-Suche korrekt
-                                                            angezeigt werden kann.</p>
+                                                            Ihres Unternehmens, damit Ihre Angaben korrekt
+                                                            angezeigt werden.</p>
                                                     </div>
                                                 </div>
                                                 <div class="mt-2 sm:mt-2 md:ml-auto flex items-center gap-x-4">
@@ -127,7 +127,7 @@
                                                     <div
                                                         class="mt-1 flex items-center gap-x-2 text-xs leading-5 text-gray-500">
                                                         <p class="whitespace-nowrap">Wählen Sie Ihre Lizenz aus und
-                                                            richten Sie ein SEPA-Mandat für die mtl. Zahlung ein.</p>
+                                                            richten Sie ein SEPA-Mandat für die mtl. Zahlung ein (nur bei kostenpflichtiger Lizenz).</p>
                                                     </div>
                                                 </div>
                                                 <div class="mt-2 sm:mt-2 md:ml-auto flex items-center gap-x-4">

@@ -50,15 +50,7 @@
                 </div>
                 <div class="mx-auto max-w-7xl px-6 lg:px-8">
                     <div class="mx-auto max-w-2xl py-32 sm:py-48 lg:py-56">
-                        <div class="hidden sm:mb-8 sm:flex sm:justify-center">
-                            <div
-                                class="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-300 ring-1 ring-white/10 hover:ring-white/20">
-                                Jetzt registrieren und HVO Tankpunkte einstellen! <a href="{{route('register')}}"
-                                                                                     class="font-semibold text-white"><span
-                                        class="absolute inset-0" aria-hidden="true"></span>Mehr dazu <span
-                                        aria-hidden="true">&rarr;</span></a>
-                            </div>
-                        </div>
+
                         <div class="text-center">
                             <h1 class="text-4xl font-bold tracking-tight text-white sm:text-6xl">refuelOS</h1>
                             <h2 class="mt-4 text-2xl leading-8 text-gray-50">Erneuerbare Kraftstoffe einfach
@@ -67,11 +59,23 @@
                                 <a href="{{route('locations.find-locations-public')}}"
                                    class="rounded-md bg-indigo-500 px-5 py-4 text-lg font-semibold text-white shadow-sm hover:bg-indigo-400
                                    focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400">
-                                    HVO Tankstellen finden</a>
+                                    HVO Tankstellen Karte</a>
 
                             </div>
 
+
+
                         </div>
+                        <div class="hidden mt-8 sm:mt-8 sm:mb-8 sm:flex sm:justify-center">
+                            <div
+                                class="relative rounded-full px-3 py-1 text-sm leading-6 text-gray-300 ring-1 ring-white/10 hover:ring-white/20">
+                                Jetzt registrieren und HVO Tankpunkte einstellen! <a href="{{route('register')}}"
+                                                                                     class="font-semibold text-white"><span
+                                        class="absolute inset-0" aria-hidden="true"></span>Mehr dazu <span
+                                        aria-hidden="true">&rarr;</span></a>
+                            </div>
+                        </div>
+
                     </div>
 
                     <!-- Logo cloud -->
@@ -101,18 +105,15 @@
                         <p class="mt-2 text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">Jetzt einfach
                             XTL Tankpunkte finden!
                         </p>
-                        <p class="mt-6 text-lg leading-8 text-gray-600">XTL-Freigaben beschreiben die offiziellen
-                            Hersteller-Freigaben für die neuen erneuerbaren Diesel-Kraftstoffe unter der Norm DIN EN
-                            15940. Ob auch dein Diesel bereits eine Freigabe für diesen neuen Diesel hat, kannst du über
-                            unsere XTL Freigaben Suchmaschine herausfinden!
+                        <p class="mt-6 text-lg leading-8 text-gray-600">Seit dem Mai 2024 ist der Verkauf von HVO-Kraftstoffen nun offiziell möglich. Auf unserer HVO Tankstellen Karte können Sie aktuelle Verkaufspunkte für HVO100 und Produkte mit HVO-Beimengung finden und Ihre eigenen Tankpunkte anlegen und online verwalten!
 
 
                         </p>
 
                         <div class="mt-6 flex items-center justify-center gap-x-6">
-                            <a href="{{route('locations.find-locations-public')}}"
+                            <a href="{{route('register')}}"
                                class="rounded-md bg-indigo-500 px-5 py-4 text-lg font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400">
-                               Zur HVO Map</a>
+                               Jetzt registrieren</a>
                         </div>
                     </div>
                 </div>

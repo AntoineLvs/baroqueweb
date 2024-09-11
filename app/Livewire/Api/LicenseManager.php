@@ -173,7 +173,7 @@ class LicenseManager extends Component
             }
 
             Mail::to($user->email)->send(new LicenseRequestMail($user, $sepaMandate, $tokenType));
-            Mail::to('info@xtl-freigaben.de')->send(new LicenseRequestAdminMail($user, $sepaMandate, $tokenType));
+            Mail::to(env('MAIL_FROM_ADDRESS'))->send(new LicenseRequestAdminMail($user, $sepaMandate, $tokenType));
         }
 
         return redirect()

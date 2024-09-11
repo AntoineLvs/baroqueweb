@@ -27,7 +27,7 @@
                 <div class="text-left text-gray-700 text-sm space-y-2">
                     <h2 class="text-xl font-bold text-gray-900 mb-4"></h2>
 
-                        <p class="text-gray-700 mb-4">Herzlich Willkommen auf den Internetseiten von xtl-freigaben.de.</p>
+                        <p class="text-gray-700 mb-4">Herzlich Willkommen auf den Internetseiten von refuelos.com.</p>
                         <p class="text-gray-700 mb-4">Der Verantwortliche im Sinne der Datenschutz-Grundverordnung und
                             anderer nationaler Datenschutzgesetze der Mitgliedsstaaten sowie sonstiger
                             datenschutzrechtlicher Bestimmungen ist:</p>

@@ -34,7 +34,7 @@ class ContactForm extends Component
     {
         $validatedData = $this->validate();
 
-        Mail::to('info@xtl-freigaben.de')->send(new ContactMail($validatedData));
+        Mail::to('mail@refuelos.com')->send(new ContactMail($validatedData));
 
         session()->flash('success', 'Vielen Dank für Ihre Nachricht! Wir haben Ihre E-Mail erhalten und werden uns bald bei Ihnen melden.');
 

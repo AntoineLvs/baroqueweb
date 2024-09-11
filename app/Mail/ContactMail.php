@@ -27,6 +27,6 @@ class ContactMail extends Mailable
      */
     public function build(): static
     {
-        return $this->subject('Neue XTL Freigaben Nachricht')->markdown('emails.contact.new-message');
+        return $this->subject('Neue refuelOS Nachricht')->markdown('emails.contact.new-message');
     }
 }
