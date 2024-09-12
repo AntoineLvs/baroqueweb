@@ -11,23 +11,15 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class LocationsImport implements ToCollection, WithHeadingRow
+class adminLocationsImport implements ToCollection, WithHeadingRow
 {
-    protected $tenant_id;
-
-    // Constructor to receive tenant_id
-    public function __construct($tenant_id)
-    {
-        $this->tenant_id = $tenant_id;
-    }
-
     public function collection(Collection $rows)
     {
         foreach ($rows as $row) {
             $location = Location::updateOrCreate(
                 ['id' => $row['id']],
                 [
-                    'tenant_id' => $this->tenant_id, // Use tenant_id from constructor
+                    'tenant_id' => $row['tenant_id'],
                     'name' => $row['name'],
                     'description' => $row['description'],
                     'address' => $row['address'],
