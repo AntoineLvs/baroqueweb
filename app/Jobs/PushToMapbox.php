@@ -52,6 +52,8 @@ class PushToMapbox implements ShouldQueue
         // Vérifications pour éviter les erreurs
         $locationTypeName = $location->location_type?->name ?? 'default_location_type';
         $tenantName = $location->tenant?->name ?? 'default_tenant';
+        $tenantLogo = $location->tenant?->photo ?? '';
+        $tenantId = $location->tenant_id;
 
         $product_ids = json_decode($location->product_id);
         $products = Product::whereIn('id', $product_ids)->get();
@@ -72,6 +74,8 @@ class PushToMapbox implements ShouldQueue
                 'description' => $location->description ?? 'default_description',
                 'type' => $locationTypeName,
                 'tenant' => $tenantName,
+                'tenant_id' => $tenantId,
+                'tenant_logo' => $tenantLogo ?? '',
                 'opening_start' => $opening_start ?? '00:01',
                 'opening_end' => $opening_end ?? '23:59',
                 'address' => $address,

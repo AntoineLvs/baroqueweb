@@ -302,8 +302,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('locations/create', [LocationController::class, 'create'])->name('locations.create');
     Route::get('import-data', [ImportExportController::class, 'importData'])->name('locations.import-view');
 
-    Route::post('locations-import', [ImportExportController::class, 'importLocations'])->name('locations.import');
+    Route::post('locations-import/{tenant_id}', [ImportExportController::class, 'importLocations'])->name('locations.import');
+    Route::post('admin-locations-import/', [ImportExportController::class, 'adminImportLocations'])->name('locations.admin-import');
+
     Route::get('locations-export', [ImportExportController::class, 'exportLocations'])->name('locations.export');
+    Route::get('locations-download-template', [ImportExportController::class, 'downloadTemplate'])->name('locations.download-template');
 
     // Map Routes
     Route::view('/map', 'map.index')->name('map.index');
@@ -317,7 +320,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('documents/create', [DocumentController::class, 'create'])->name('documents.create');
     Route::get('/documents/{tenant}/{filename}', [DocumentController::class, 'show'])->name('documents.show');
     Route::get('/photos/{tenant}/{filename}', [DocumentController::class, 'showPhoto'])->name('photos.show');
-
-
-
 });
