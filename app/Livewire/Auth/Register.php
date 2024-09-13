@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Auth;
 
+use App\Models\Location;
 use App\Models\Tenant;
 use App\Models\User;
 use App\Models\TenantType;
@@ -75,6 +76,31 @@ class Register extends Component
         ]);
         //added
         $tenant->fresh();
+
+        $location = Location::create([
+            'tenant_id' => $tenant->id, 
+            'name' => $tenant->name,
+            'description' => 'This is an example of the ideal location. You can create a new location, by taking care of filling all the needed informations, as you can see on this example.',
+            'address' => 'Rathausstraße 15',
+            'city' => 'Berlin',
+            'zipcode' => '10178',
+            'country' => 'Germany',
+            'distance' => '',
+            'opening_start' => '06:00',
+            'opening_end' => '23:00',
+            'opening_info' => 'Example opening informations',
+            'active' => '0',
+            'verified' => '0',
+            'status' => '0',
+            'lng' => '13.408226',
+            'lat' => '52.518520',
+            'location_type_id' => '1',
+            'service_id' => '[]',
+            'product_id' => '[]',
+        ]);
+
+    
+        $location->save();
 
         event(new Registered($user));
 
