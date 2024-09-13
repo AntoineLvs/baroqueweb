@@ -90,9 +90,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Radius Slider -->
-
         </div>
         <!-- <div class="flex items-center justify-start mr-4 ml-4">
             <label for="filter-is-open" class="mb-1 mr-2 text-gray-900">Show open Locations :</label>
