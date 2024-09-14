@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\View\View;
 use Panoscape\History\Events\ModelChanged;
 
+use function PHPUnit\Framework\isNull;
+
 class LocationController extends Controller
 {
     /**
@@ -79,14 +81,14 @@ class LocationController extends Controller
             fn($val) => intval(trim($val)),
             explode(',', $selectedServices)
         );
-        $location->service_id = empty($cleanedArray) ? '[]' : json_encode($cleanedArray);
+        $location->service_id = isNull($selectedServices) ? '[]' : json_encode($cleanedArray);
 
         $selectedProducts = $request->product_id;
         $cleanedArray = array_map(
             fn($val) => intval(trim($val)),
             explode(',', $selectedProducts)
         );
-        $location->product_id = empty($cleanedArray) ? '[]' : json_encode($cleanedArray);
+        $location->product_id = isNull($selectedProducts) ? '[]' : json_encode($cleanedArray);
 
 
         $user = auth()->user();
@@ -270,11 +272,11 @@ class LocationController extends Controller
         // Get the list of services associated to the location
         $serviceIds = json_decode($location->service_id);
 
-        $services = Service::whereIn('id', $serviceIds)->get();
+        $services = Service::withoutGlobalScope(TenantScope::class)->whereIn('id', $serviceIds)->get();
 
         // Get the list of products associated to the location
         $productIds = json_decode($location->product_id);
-        $products = Product::whereIn('id', $productIds)->get();
+        $products = Product::withoutGlobalScope(TenantScope::class)->whereIn('id', $productIds)->get();
 
         return view('locations.profile-locations-public', compact('location', 'services', 'products'));
     }
@@ -288,9 +290,24 @@ class LocationController extends Controller
             ->where('tenant_id', $tenant_id)
             ->get();
 
-        $products = Product::whereIn('id', $locations->pluck('product_id')->flatten()->unique())->get();
-        $services = Service::whereIn('id', $locations->pluck('service_id')->flatten()->unique())->get();
+        $productIds = $locations->pluck('product_id')
+            ->map(function ($productId) {
+                return json_decode($productId, true); // Decode the JSON string into an array
+            })
+            ->flatten() // Flatten all arrays into a single one
+            ->unique(); // Remove duplicates
 
+
+        $serviceIds = $locations->pluck('service_id')
+            ->map(function ($serviceId) {
+                return json_decode($serviceId, true); // Decode the JSON string into an array
+
+            })
+            ->flatten() // Flatten all arrays into a single one
+            ->unique(); // Remove duplicates
+
+        $products = Product::withoutGlobalScope(TenantScope::class)->whereIn('id', $productIds)->get();
+        $services = Service::withoutGlobalScope(TenantScope::class)->whereIn('id', $serviceIds)->get();
         return view('locations.profile-tenants', compact('tenant', 'locations', 'products', 'services'));
     }
 

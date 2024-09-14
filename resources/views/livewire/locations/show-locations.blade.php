@@ -2,10 +2,19 @@
     <div class="bg-gray-50 max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
         <div class="py-4">
             <div class="bg-white overflow-hidden shadow rounded-lg border border-gray-200 divide-y divide-gray-200">
-                <div class="px-4 py-5 sm:px-6">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">
-                        Tenant Information
-                    </h3>
+                <div class="px-4 py-5 sm:px-6 flex items-center justify-between flex-wrap sm:flex-nowrap">
+                    <div>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">
+                            Informations
+                        </h3>
+                    </div>
+
+                    <div class="ml-4 flex items-center justify-between">
+                        <div>
+                            <a href="{{ route('locations.find-locations-public') }}" class="relative inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Back to map</a>
+
+                        </div>
+                    </div>
 
                 </div>
                 <div class="border-t border-gray-200 px-4 py-5 sm:px-6">
@@ -70,15 +79,15 @@
                                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium border-b-2 border-gray-300 text-gray-500 uppercase tracking-wider">
                                                 <!-- Opening hours -->
                                             </th>
-                                      
+
                                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium border-b-2 border-gray-300 text-gray-500 uppercase tracking-wider">
                                                 Services
                                             </th>
                                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium border-b-2 border-gray-300 text-gray-500 uppercase tracking-wider">
-                                                Renewable Diesel
+                                                HV0 100
                                             </th>
                                             <th scope="col" class="px-6 py-3 text-left text-xs font-medium border-b-2 border-gray-300 text-gray-500 uppercase tracking-wider">
-                                                Renewable Petrol
+                                                HVO Blend
                                             </th>
 
                                             <th class="px-6 py-3 text-left text-xs font-medium border-b-2 border-gray-300 text-gray-500 uppercase tracking-wider"></th>
@@ -148,7 +157,7 @@
                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
                                                         </svg>
                                                         <span class="tooltip">
-                                                            @foreach($this->getServices($location->id) as $service)
+                                                            @foreach($location->getServices() as $service)
                                                             {{ $loop->first ? '' : ', ' }}{{ $service->name }}
                                                             @endforeach
                                                         </span>
@@ -166,8 +175,7 @@
                                                     @php
                                                     $product = $products->where('id', $productId)->first();
                                                     @endphp
-                                                    @if ($product->product_type_id == 1)
-
+                                                    @if ($product && $product->product_type_id == 1)
                                                     <div class="image-container">
 
                                                         <li style="margin-right: 10px;"> <a href="{{ route('locations.show-products', ['id' => $location->id]) }}">
@@ -175,6 +183,10 @@
                                                                 <span class="tooltip">{{ $product->name }} @if($product->blend_percent) ({{ $product->blend_percent }}%) @endif</span>
                                                             </a>
                                                         </li>
+                                                    </div>
+                                                    @else
+                                                    <div class="image-container">
+                                                        no data
                                                     </div>
                                                     @endif
                                                     @endforeach
@@ -191,7 +203,7 @@
                                                     @php
                                                     $product = $products->where('id', $productId)->first();
                                                     @endphp
-                                                    @if ($product->product_type_id == 2)
+                                                    @if ($product && $product->product_type_id == 2)
                                                     <li style="margin-right: 10px;"> <img style="background: lightgrey; min-width:34px; min-height:34px;" class="h-8 w-8 rounded-full ring-2 ring-green" src="{{ $product->image_path }}" alt="">
                                                         <span class="tooltip">{{ $product->name }} @if($product->blend_percent) ({{ $product->blend_percent }}%) @endif</span>
 
@@ -199,7 +211,6 @@
                                                     @endif
                                                     @endforeach
                                                     @else
-                                                    <li>-</li>
                                                     @endif
                                                 </ul>
                                             </td>
@@ -215,6 +226,19 @@
                     </div><!-- Service end div-->
                     <!-- final div-->
                 </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- map div-->
+    <div class="bg-gray-50 max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
+        <div class="py-4">
+            <div class="bg-white overflow-hidden shadow border border-gray-200 rounded-lg divide-y divide-gray-200">
+                <div class="px-4 py-5 sm:px-6">
+                    <h3 class="card-title"> You can find here all the active locations of {{ $tenant->name }}</h3>
+                </div>
+                @livewire('map.location-map', ['tenant_id' => $tenant->id])
             </div>
         </div>
     </div>

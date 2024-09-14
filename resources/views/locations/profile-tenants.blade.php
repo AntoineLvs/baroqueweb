@@ -27,7 +27,7 @@
                 <div class="flex">
 
                     @if($tenant->photo)
-                    <img style="background: lightgrey;" class="h-24 w-24 rounded-full ring-4 ring-blue sm:h-32 sm:w-32" src="{{ $location->photoUrl($location) }}" alt="">
+                    <img style="background: lightgrey;" class="h-24 w-24 rounded-full ring-4 ring-blue sm:h-32 sm:w-32" src="{{ route('image.show', ['tenant' => $tenant->id, 'filename' => $tenant->photo]) }}" alt="">
 
 
                     @else

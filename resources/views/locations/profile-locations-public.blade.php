@@ -37,20 +37,21 @@
 
 
                 </div>
-                <div class="mt-6 sm:flex-1 sm:min-w-0 sm:flex sm:items-center sm:justify-end sm:space-x-6 sm:pb-1">
-                    <div class="sm:hidden md:block mt-6 min-w-0 flex-1">
-                        <h1 class="text-2xl font-bold text-gray-900 truncate">
+                <div class="mt-6 flex items-center space-x-2">
+                    <h1 class="text-2xl font-bold text-gray-900 truncate">
+                        {{ $location->name }}
+                    </h1>
+                    <div class="image-container">
+                        <div class="flex items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="w-5 h-5 mt-1" fill="{{ $location->isOpen() ? 'rgb(0, 160, 0)' : 'red' }}">
+                                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 000-1.5h-3.25V5z" clip-rule="evenodd" />
+                            </svg>
+                            <span class="tooltip text-gray-500">{{ substr($location->opening_start, 0, 5) }} / {{ substr($location->opening_end, 0, 5) }}</span>
+                        </div>
 
-                            {{ $location->name}}
-
-                        </h1>
                     </div>
-                    <div class="mt-6 flex flex-col justify-stretch space-y-3 sm:flex-row sm:space-y-0 sm:space-x-4">
-
-                    </div>
-
-
                 </div>
+
             </div>
         </div>
     </div>
