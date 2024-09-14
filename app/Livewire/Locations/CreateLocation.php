@@ -6,6 +6,7 @@ use App\Models\Location;
 use App\Models\LocationType;
 use App\Models\Service;
 use App\Models\Product;
+use App\Scopes\TenantScope;
 use Illuminate\Support\Facades\Http;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -212,7 +213,7 @@ class CreateLocation extends Component
     {
         $selected = json_decode($request->get('selected', ''), true);
 
-        return Product::query()
+        return Product::withoutGlobalScope(TenantScope::class)
             ->when(
                 $search = $request->get('search'),
                 fn ($query) => $query->where('name', 'like', "%{$search}%")
@@ -233,7 +234,7 @@ class CreateLocation extends Component
     {
         $selected = json_decode($request->get('selected', ''), true);
 
-        return Service::query()
+        return Service::withoutGlobalScope(TenantScope::class)
             ->when(
                 $search = $request->get('search'),
                 fn ($query) => $query->where('name', 'like', "%{$search}%")

@@ -4,12 +4,25 @@
     <div class=" bg-gray-50 max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
         <div class="py-4">
             <div class="bg-white border border-gray-200 overflow-hidden shadow rounded-lg divide-y divide-gray-200">
-                <div class="px-4 py-5 sm:px-6">
-                    <h3 class="text-lg leading-6 font-medium text-gray-900">
-                        Location Information
-                    </h3>
+                <div class="px-4 py-5 sm:px-6 flex items-center justify-between flex-wrap sm:flex-nowrap">
+                    <div>
+                        <h3 class="text-lg leading-6 font-medium text-gray-900">
+                            Location Informations
+                        </h3>
+                    </div>
+
+                    <div class="ml-4 flex items-center justify-between">
+                        <div>
+                            <a href="{{ route('locations.find-locations-public') }}" class="relative inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Back to map</a>
+
+                        </div>
+                        <div>
+                            <a href="{{ route('locations.profile-tenants', $location->tenant_id) }}" class="ml-3 relative inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Back to tenant</a>
+                        </div>
+                    </div>
 
                 </div>
+
                 <div class="border-t border-gray-200 px-4 py-5 sm:px-6">
                     <dl class="grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2">
                         <div class="sm:col-span-1">
@@ -30,7 +43,21 @@
                         </div>
 
 
-                        <div class="sm:col-span-2">
+                        <div class="sm:col-span-1">
+                            <dt class="text-sm font-medium text-gray-500">
+                                Address
+                            </dt>
+                            <dd class="mt-1 text-sm text-gray-900">
+                                @if ($location->address && $location->zipcode && $location->city)
+                                <div class="text-sm text-gray-900">{{$location->address}}</div>
+                                <div class="text-sm text-gray-900">{{$location->zipcode}}, {{$location->city}}</div>
+                                @else
+                                No address available
+                                @endif
+
+                            </dd>
+                        </div>
+                        <div class="sm:col-span-1">
                             <dt class="text-sm font-medium text-gray-500">
                                 About
                             </dt>
@@ -41,6 +68,15 @@
                                 No Company description available
                                 @endif
 
+                            </dd>
+                        </div>
+
+                        <div class="sm:col-span-1">
+                            <dt class="text-sm font-medium text-gray-500">
+                                Opening hours
+                            </dt>
+                            <dd class="mt-1 text-sm text-gray-900">
+                                {{ substr($location->opening_start, 0, 5) }} / {{ substr($location->opening_end, 0, 5) }}
                             </dd>
                         </div>
                     </dl>
@@ -219,6 +255,16 @@
             </div>
         </div>
     </div>
+
+    <!-- map div-->
+    <div class="bg-gray-50 max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
+        <div class="py-4">
+            <div class="bg-white overflow-hidden shadow border border-gray-200 rounded-lg divide-y divide-gray-200">
+                <div class="px-4 py-5 sm:px-6">
+                    <h3 class="card-title"> You can find here {{$location->name}} emplacement on the map</h3>
+                </div>
+                @livewire('map.single-location-map', ['id' => $location->id])
+            </div>
+        </div>
+    </div>
 </div>
-<!-- Service end div-->
-<!-- final div-->

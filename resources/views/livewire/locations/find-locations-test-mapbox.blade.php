@@ -424,7 +424,6 @@
                     };
                 }
 
-                germanyCenter();
             }
 
             async function flyToAndPlaceMarker(coordinates, radius) {
@@ -765,7 +764,7 @@
 
                     const tenantImg = feature.properties.tenant_logo || '';
                     const tenantId = feature.properties.tenant_id || '';
-                    const imageUrl = tenantImg ? `${s3BaseUrl}${tenantId}/${tenantImg}` : '/assets/img/hvo.png';
+                    const imageUrl = tenantImg ? `/images/${tenantId}/${tenantImg}` : '/assets/img/hvo.png';
                     const tenantLogo = `<img style="background: lightgrey;" class="h-10 w-10 rounded-full ring-2 ring-green location-img" src="${imageUrl}" alt="">`;
 
                     // Inject the name
@@ -909,6 +908,9 @@
                                                             <div class="w-full flex flex-col items-start justify-center">
                                                                 <div style="margin-bottom: 5px;" class="items-start text-center rounded-md bg-white px-3 py-2 hover:cursor-pointer text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100 whitespace-nowrap overflow-hidden text-ellipsis">
                                                                     <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}" target="_blank">Routenplaner</a>
+                                                                </div>
+                                                                <div style="margin-bottom: 5px;" class="items-start text-center rounded-md bg-white px-3 py-2 hover:cursor-pointer text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100 whitespace-nowrap overflow-hidden text-ellipsis">
+                                                                    <a href="/find/${tenantId}" target="_blank">More Details</a>
                                                                 </div>
                                                             </div>
                                                         </div>

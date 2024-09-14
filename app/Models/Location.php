@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Panoscape\History\HasHistories;
 use App\Models\Service;
 use App\Models\Product;
+use App\Scopes\TenantScope;
 
 class Location extends Model
 {
@@ -79,7 +80,7 @@ class Location extends Model
 
     public function getImagePathAttribute()
     {
-        // Utilisez la logique nécessaire pour déterminer le chemin de l'image en fonction de l'id du service
+        // Use the appropriate logic to determine the image path based on the service id
         if ($this->id == 1) {
             return asset('assets/img/efuel-station-clean.png');
         } elseif ($this->id == 2) {
@@ -93,12 +94,11 @@ class Location extends Model
     public function getServices()
     {
         $serviceIds = json_decode($this->service_id);
-
         if (!$serviceIds) {
             return collect();
         }
 
-        $services = Service::whereIn('id', $serviceIds)->get();
+        $services = Service::withoutGlobalScope(TenantScope::class)->whereIn('id', $serviceIds)->get();
 
         return $services;
     }
@@ -111,7 +111,7 @@ class Location extends Model
             return collect();
         }
 
-        $products = Product::whereIn('id', $productIds)->get();
+        $products = Product::withoutGlobalScope(TenantScope::class)->whereIn('id', $productIds)->get();
 
         return $products;
     }
@@ -122,10 +122,10 @@ class Location extends Model
         if (!$productIds) {
             return collect();
         } else {
-            $products = Product::whereIn('id', $productIds)->get();
+            $products = Product::withoutGlobalScope(TenantScope::class)->whereIn('id', $productIds)->get();
 
             $productTypes = $products->pluck('product_type_id')->unique();
-            return ProductType::whereIn('id', $productTypes)->get();
+            return ProductType::withoutGlobalScope(TenantScope::class)->whereIn('id', $productTypes)->get();
         }
     }
 
@@ -138,8 +138,13 @@ class Location extends Model
         $opening_start = substr($this->opening_start, 0, 5);
         $opening_end = substr($this->opening_end, 0, 5);
 
+        if ($opening_start === '00:00' && $opening_end === '00:00') {
+            return true;
+        }
+
         return $currentTime >= $opening_start && $currentTime <= $opening_end;
     }
+
 
     public function getStatus()
     {

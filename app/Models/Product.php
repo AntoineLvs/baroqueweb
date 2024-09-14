@@ -91,7 +91,6 @@ class Product extends Model
 
     public function getImagePathAttribute()
     {
-      // Utilisez la logique nécessaire pour déterminer le chemin de l'image en fonction de l'id du service
       if ($this->id == 1) {
         return asset('assets/img/hvo.png');
       } elseif ($this->id == 2) {

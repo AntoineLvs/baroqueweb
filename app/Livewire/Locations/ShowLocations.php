@@ -28,12 +28,12 @@ class ShowLocations extends Component
 
     public $location;
 
-    public function mount($tenant, $locations)
+    public function mount($locations, $tenant, $services, $products)
     {
-        $this->tenant = $tenant;
         $this->locations = $locations;
-        $this->services = Service::all();
-        $this->products = Product::all();
+        $this->tenant = $tenant;
+        $this->services = $services;
+        $this->products = $products;
     }
 
     public function getServices($locationId)
