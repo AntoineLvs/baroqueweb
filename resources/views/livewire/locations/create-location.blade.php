@@ -66,7 +66,8 @@
                                         <div class="px-4 sm:px-0">
                                             <h3 class="text-lg font-medium leading-6 text-gray-900">Geographic Information</h3>
                                             <p class="mt-1 text-sm text-gray-600">
-                                                Provide Geographic Informations for this locations.<br>This can be used for the geotag at our efuel map.
+                                                Provide Geographic Informations for this locations.<br>This can be used for the geotag at our efuel map.<br>
+                                                Please, fill the Street, ZIP, and City fields, to be able to use the "Get Coordinates" button.
                                             </p>
                                         </div>
                                     </div>
@@ -100,7 +101,7 @@
                                             <div class="col-span-6 sm:col-span-6 lg:col-span-2">
                                                 <label for="address" class="block text-sm font-medium text-gray-700 flex items-center">
 
-                                                    Longitude (optional) /
+                                                    Longitude /
 
                                                     @if(!$getCoordinatesButton)
                                                     <span class="text-gray-600 disabled:opacity-50 cursor-not-allowed">
@@ -117,7 +118,7 @@
                                             </div>
 
                                             <div class="col-span-6 sm:col-span-3 lg:col-span-2">
-                                                <label for="zipcode" class="block text-sm font-medium text-gray-700">Latitude (optional)</label>
+                                                <label for="zipcode" class="block text-sm font-medium text-gray-700">Latitude</label>
                                                 <input wire:model.live="lat" type="text" name="lat" id="lat" autocomplete="lat" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                             </div>
 

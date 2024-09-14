@@ -13,6 +13,8 @@ class Location extends Model
 {
     use BelongsToTenant, HasFactory, HasHistories;
 
+    public $timestamps = true;
+
     protected $fillable = [
         'name',
         'description',

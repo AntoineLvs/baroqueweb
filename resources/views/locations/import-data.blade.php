@@ -61,8 +61,24 @@
                         <div class="space-y-8 divide-y divide-gray-200 sm:space-y-5">
                             <div>
                                 <div class="container">
-                                    <h3>CSV oder EXCEL File wählen</h3>
-                                    <form action="{{ route('locations.import') }}" method="POST" name="importform" enctype="multipart/form-data">
+                                    <div>
+                                        <h3>CSV oder EXCEL File wählen</h3>
+
+                                        <div class="mt-4">
+                                            <a href="{{ route('locations.download-template') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">CSV Ideal Template</a>
+                                        </div>
+
+                                    </div>
+                                    @if(session('tenant_id') != null)
+                                    @php
+                                    $tenant_id = session('tenant_id');
+                                    @endphp
+                                    @else
+                                    @php
+                                    $tenant_id = 1;
+                                    @endphp
+                                    @endif
+                                    <form action="{{ route('locations.import', ['tenant_id' => $tenant_id]) }}" method="POST" name="importform" enctype="multipart/form-data">
                                         @csrf
                                         <div class="form-group pt-8 pb-8">
                                             <label for="file">File:</label>
@@ -74,6 +90,20 @@
                                         </button>
 
                                     </form>
+                                    @if(session('tenant_id') === null)
+                                    <form action="{{ route('locations.admin-import') }}" method="POST" name="importform" enctype="multipart/form-data" class="mt-4 bg-gray-200 py-4 px-4 rounded-md">
+                                        @csrf
+                                        <div class="form-group pt-8 pb-8">
+                                            <label for="file">File:</label>
+                                            <input id="file" type="file" name="file" class="form-control">
+                                        </div>
+
+                                        <button class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                                           Admin Import starten
+                                        </button>
+
+                                    </form>
+                                    @endif
                                 </div>
                             </div>
                         </div>

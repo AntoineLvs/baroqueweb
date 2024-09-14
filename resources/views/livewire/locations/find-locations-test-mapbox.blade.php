@@ -77,18 +77,17 @@
 
                         <div id="isHvo100" x-text="isHvo100" hidden></div>
                         <div id="isHvoBlend" x-text="isHvoBlend" hidden></div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Radius Slider -->
-            <div class="flex items-center justify-between">
-                <div class="mt-4">
-                    <label for="radiusRange" class="block text-sm font-medium text-gray-700">
-                        Search Radius (<span x-text="radius"></span> km)
-                    </label>
-                    <input type="range" id="radiusRange" min="5" max="250" x-model="radius" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
-                    <div id="radius" x-text="radius" hidden></div>
+                        <div class="ml-4 flex items-center justify-between">
+                            <div>
+                                <label for="radiusRange" class="block text-xs font-medium text-gray-700">
+                                    Search Radius (<span x-text="radius"></span> km)
+                                </label>
+                                <input type="range" id="radiusRange" min="5" max="250" x-model="radius" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                <div id="radius" x-text="radius" hidden></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -143,7 +142,6 @@
                                             <div class="flex-shrink-0 items-center h-8 h-8 md:h-10 md:w-10">
                                                 <div class="image-container">
                                                     <a href="#" class="location-link">
-                                                        <img style="background: lightgrey;" class="h-10 w-10 rounded-full ring-2 ring-green location-img" src="/assets/img/hvo.png" alt="">
                                                     </a>
                                                 </div>
                                             </div>
@@ -489,7 +487,7 @@
                         source: 'radius-circle',
                         layout: {},
                         paint: {
-                            'fill-color': 'rgba(0, 0, 255, 0.2)', 
+                            'fill-color': 'rgba(0, 0, 255, 0.2)',
                             'fill-opacity': 0.4
                         }
                     });
@@ -636,7 +634,7 @@
                         });
                     }
                 }
-               
+
                 setTimeout(() => {
                     const bounds = map.getBounds();
                     const sw = bounds.getSouthWest();
@@ -763,11 +761,20 @@
                     const product_types = feature.properties.product_types || [];
                     const isHvo100 = product_types.includes(1);
                     const isHvoBlend = product_types.includes(2);
+                    const s3BaseUrl = 'https://refuelos-dev.s3.amazonaws.com/images/';
+
+                    const tenantImg = feature.properties.tenant_logo || '';
+                    const tenantId = feature.properties.tenant_id || '';
+                    const imageUrl = tenantImg ? `${s3BaseUrl}${tenantId}/${tenantImg}` : '/assets/img/hvo.png';
+                    const tenantLogo = `<img style="background: lightgrey;" class="h-10 w-10 rounded-full ring-2 ring-green location-img" src="${imageUrl}" alt="">`;
 
                     // Inject the name
                     clone.querySelector('.location-name').textContent = name;
                     clone.querySelector('.location-tenant').textContent = tenant;
                     clone.querySelector('.location-id').textContent = id;
+                    const locationLinkElement = clone.querySelector('.location-link');
+                    locationLinkElement.innerHTML = tenantLogo;
+
 
                     // Check if the location is open
                     const isOpen = isLocationOpen(opening_start, opening_end);
@@ -1458,10 +1465,24 @@
                 const currentTime = new Date(); // Get the current time
                 const currentHours = currentTime.getHours().toString().padStart(2, '0'); // Current hours
                 const currentMinutes = currentTime.getMinutes().toString().padStart(2, '0'); // Current minutes
-
                 const currentTimeString = `${currentHours}:${currentMinutes}`;
 
-                return currentTimeString >= opening_start && currentTimeString <= opening_end;
+                // Handle 24-hour open case
+                if (opening_start === '00:00' && opening_end === '00:00') {
+                    return true;
+                }
+
+                // Convert opening and closing times to comparable strings
+                const startTimeString = opening_start.slice(0, 5); // Get 'HH:MM' part
+                const endTimeString = opening_end.slice(0, 5); // Get 'HH:MM' part
+
+                // Handle cases where the opening end time is the next day (i.e., closing time is past midnight)
+                if (opening_end < opening_start) {
+                    return currentTimeString >= startTimeString || currentTimeString <= endTimeString;
+                }
+
+                // Normal case (same day)
+                return currentTimeString >= startTimeString && currentTimeString <= endTimeString;
             }
 
         });
