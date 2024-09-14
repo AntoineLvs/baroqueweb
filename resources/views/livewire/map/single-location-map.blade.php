@@ -88,7 +88,7 @@
                                             <div id="radius" x-text="radius" hidden></div>
                                         </div>
                                     </div>
-                                    <div id="tenant" hidden>{{ $tenant }}</div>
+                                    <div id="id" hidden>{{ $id }}</div>
                                 </div>
                             </div>
                         </div>
@@ -354,7 +354,7 @@
         let mouseOverPopup = false;
         let mouseOverMarker = false;
         let searchMarker = null; // Global variable to store the search marker
-        const tenant = document.getElementById('tenant').textContent ?? null;
+        const id = document.getElementById('id').textContent ?? null;
 
         map.on('load', function() {
             map.addSource('your-tileset-source', {
@@ -378,7 +378,7 @@
                     'text-size': 0,
                     'icon-size': 0,
                 },
-                'filter': ['==', ['get', 'tenant'], tenant] // Filter to display only the locations where 'active' is equal to 1
+                'filter': ['==', ['get', 'id'], id] // Filter to display only the locations where 'active' is equal to 1
             });
             setTimeout(germanyCenter, 500);
 
@@ -534,7 +534,7 @@
                 // Query features from the current visible map area
                 let features = map.querySourceFeatures('your-tileset-source', {
                     sourceLayer: 'efuelmap_v1',
-                    filter: ['==', ['get', 'tenant'], tenant], // Keep only active locations
+                    filter: ['==', ['get', 'id'], id], // Keep only active locations
                     validate: false
                 });
 
@@ -676,7 +676,7 @@
                         setTimeout(() => {
                             features = map.querySourceFeatures('your-tileset-source', {
                                 sourceLayer: 'efuelmap_v1',
-                                filter: ['==', ['get', 'tenant'], tenant],
+                                filter: ['==', ['get', 'id'], id],
                                 validate: false
                             });
 
@@ -767,7 +767,7 @@
 
                     const tenantImg = feature.properties.tenant_logo || '';
                     const tenantId = feature.properties.tenant_id || '';
-                    const imageUrl = tenantImg ? `${s3BaseUrl}${tenantId}/${tenantImg}` : '/assets/img/hvo.png';
+                    const imageUrl = tenantImg ? `/images/${tenantId}/${tenantImg}` : '/assets/img/hvo.png';
                     const tenantLogo = `<img style="background: lightgrey;" class="h-10 w-10 rounded-full ring-2 ring-green location-img" src="${imageUrl}" alt="">`;
 
                     // Inject the name

@@ -309,7 +309,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('locations-download-template', [ImportExportController::class, 'downloadTemplate'])->name('locations.download-template');
 
     // Map Routes
-    Route::view('/map', 'map.index')->name('map.index');
+    Route::view('/my-map', 'map.index')->name('map.index');
     Route::get('map/get', [MapController::class, 'getResponse'])->name('map.getResponse');
     Route::get('map/geo', [MapController::class, 'getGeoResponse'])->name('map.getGeoResponse');
     Route::put('map/insert', [MapController::class, 'insertLocation'])->name('map.insertLocation');
