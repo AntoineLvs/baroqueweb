@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Api;
 
+use App\Models\ApiToken;
+use App\Models\Location;
 use App\Models\Tenant;
 use App\Models\TokenType;
 use App\Models\User;
@@ -23,6 +25,8 @@ class Show extends Component
     public $token_type;
     public $user;
     public $tenant;
+    public $numberLocations;
+    public $maximumLocations;
 
 
 
@@ -44,6 +48,9 @@ class Show extends Component
 
         $this->token_type = TokenType::where('id', $this->token_type_id)->first();
         $this->tenant = Tenant::where('id', $this->tenant_id)->first();
+        $this->maximumLocations = $this->token_type->locations_limit;
+
+        $this->numberLocations = Location::where('tenant_id', $this->tenant_id)->count();
 
 
         $this->monthlyVerififcation($user);
