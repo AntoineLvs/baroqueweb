@@ -82,8 +82,8 @@
                                             </div>
                                         </fieldset>
 
-                                        <p class="mt-2 text-sm leading-6 text-gray-600">Hier finden Sie eine detaillierte  <a class="text-sm underline font-medium leading-6 text-blue-700" href="{{route('license-legal-informations')}}#leistungsbeschreibung">Leistungsbeschreibung</a> und eine Übersicht über die
-                                             <a class="text-sm underline font-medium leading-6 text-blue-700"  href="{{route('license-legal-informations')}}#abo-modelle">Abo-Modelle</a>.
+                                        <p class="mt-2 text-sm leading-6 text-gray-600">Hier finden Sie eine detaillierte <a class="text-sm underline font-medium leading-6 text-blue-700" href="{{route('license-legal-informations')}}#leistungsbeschreibung">Leistungsbeschreibung</a> und eine Übersicht über die
+                                            <a class="text-sm underline font-medium leading-6 text-blue-700" href="{{route('license-legal-informations')}}#abo-modelle">Abo-Modelle</a>.
                                         </p>
 
 
@@ -179,8 +179,7 @@
                                     <label for="country" class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5">Land</label>
                                     <div class="mt-2 sm:col-span-2 sm:mt-0">
                                         <select id="country" wire:model="country" name="country" autocomplete="country-name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
-                                            <option class="text-gray-500" selected>-- Bitte Land auswählen--
-                                            </option>
+                                            <option class="text-gray-500" selected>-- Bitte Land auswählen--</option>
                                             <option value="DE">Deutschland</option>
                                             <option value="AT">Österreich</option>
                                             <option value="CH">Schweiz</option>
@@ -196,8 +195,6 @@
 
                             </div>
                         </div>
-
-
                         <div>
                             <h2 class="text-base font-semibold leading-7 text-gray-900">Bank und Zahlung</h2>
                             <p class="mt-1  text-sm leading-6 text-gray-600">Bitte geben Sie die Bank Informationen
@@ -207,9 +204,7 @@
 
 
                                 <div class="sm:grid sm:grid-cols-3 sm:items-start sm:gap-4 sm:py-6">
-                                    <label for="postal-code" class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5">Bank
-                                        Name
-                                    </label>
+                                    <label for="postal-code" class="block text-sm font-medium leading-6 text-gray-900 sm:pt-1.5">Bank Name</label>
                                     <div class="mt-2 sm:col-span-2 sm:mt-0">
                                         <input type="text" name="bank_name" wire:model="bank_name" id="bank_name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:max-w-xs sm:text-sm sm:leading-6">
                                     </div>
@@ -281,7 +276,8 @@
                                         <x-toggle wire:model="toggleCheckedLegal">
                                             <x-slot:label>
                                                 <p class="mt-1 pl-4  text-sm leading-6 text-gray-600">Ich habe die
-                                                    <a class="text-sm underline font-medium leading-6 text-blue-700" href="{{route('license-legal-informations')}}">Nutzungsbedingungen</a> zur Kenntnis genommen und akzeptiert.</p>
+                                                    <a class="text-sm underline font-medium leading-6 text-blue-700" href="{{route('license-legal-informations')}}">Nutzungsbedingungen</a> zur Kenntnis genommen und akzeptiert.
+                                                </p>
 
                                             </x-slot:label>
                                         </x-toggle>
@@ -331,10 +327,20 @@
                     </div>
 
                     <div class="mt-6 flex items-center justify-end gap-x-6">
-
-                        <button type="submit" class="inline-flex justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                        @if( session('tenant_id') )
+                        <button type="submit" class="inline-flex justify-center rounded-md
+                        {{ session('tenant_id') ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-gray-200 cursor-not-allowed' }}
+                        px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                             Lizenz kostenpflichtig beantragen
                         </button>
+                        @else
+                        <button type="submit" class="inline-flex justify-center rounded-md
+                        {{ session('tenant_id') ? 'bg-indigo-600 hover:bg-indigo-500' : 'bg-gray-200 cursor-not-allowed' }}
+                        px-3 py-2 text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                            data-toggle="tooltip" data-placement="top" title="You can not purchase a license as Admin">
+                            Lizenz kostenpflichtig beantragen
+                        </button>
+                        @endif
                     </div>
                     <x-loading />
                 </form>

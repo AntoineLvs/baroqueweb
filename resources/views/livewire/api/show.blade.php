@@ -31,6 +31,11 @@
                 </div>
 
                 <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                    <dt class="text-sm font-medium leading-6 text-gray-900"> Number of Locations</dt>
+                    <dd class="mt-1 text-sm leading-6 {{ $numberLocations < $maximumLocations ? 'text-green-500' : 'text-red-500' }} sm:col-span-2 sm:mt-0"> {{ $numberLocations }} / {{ $maximumLocations }}</dd>
+                </div>
+
+                <div class="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                     <dt class="text-sm font-medium leading-6 text-gray-900">API Token</dt>
                     <dd class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"> {{$api_token->token}}</dd>
                 </div>

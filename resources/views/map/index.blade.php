@@ -41,13 +41,9 @@
         </div>
 
 
-        <div class="max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
-            <div class="py-4">
-                <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
+
                     @livewire('map.location-map', ['tenant_id' => session('tenant_id')])
-                </div>
-            </div>
-        </div>
+        
 
 
 
