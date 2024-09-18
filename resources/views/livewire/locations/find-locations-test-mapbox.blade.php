@@ -1,12 +1,12 @@
 <div x-data="{ isHidden: false, isMobile: window.innerWidth <= 640 }"
-    @resize.window="isMobile = window.innerWidth <= 640"
-    class=" select-menu flex flex-col md:flex-row md:mt-32 mt-18 ml-5">
+     @resize.window="isMobile = window.innerWidth <= 640"
+     class=" select-menu flex flex-col md:flex-row md:mt-32 mt-18 ml-5">
 
-    <div x-data="{ 
-            showResultClass: false, 
+    <div x-data="{
+            showResultClass: false,
             openHeight: '0px',
             isHvo100: true,
-            isHvoBlend: true, 
+            isHvoBlend: true,
             radius: 100,
             test() {
                 setTimeout(() => {
@@ -14,12 +14,13 @@
                     }, 100);
             }
         }"
-        :class="{ 'hidden': isHidden }"
-        style="z-index: 5; min-width: 400px;"
-        class="relative main-container w-full md:w-1/5 transition-all duration-2000 shadow rounded-t-md border-b border-gray-300 xl:rounded-l-md xl:border-r-0 xl:rounded-r-md xl:border-b-0 xl:border-t-0 bg-white">
+         :class="{ 'hidden': isHidden }"
+         style="z-index: 5; min-width: 400px;"
+         class="relative main-container w-full md:w-1/5 transition-all duration-2000 shadow rounded-t-md border-b border-gray-300 xl:rounded-l-md xl:border-r-0 xl:rounded-r-md xl:border-b-0 xl:border-t-0 bg-white">
 
         <!-- closure button -->
-        <div class="absolute top-1 right-1 cursor-pointer text-sm text-gray-500 hover:text-red-500 mr-2" @click="isHidden = true">
+        <div class="absolute top-1 right-1 cursor-pointer text-sm text-gray-500 hover:text-red-500 mr-2"
+             @click="isHidden = true">
             ausblenden
         </div>
 
@@ -28,17 +29,27 @@
             <div class="w-full flex flex-col items-center space-y-4">
                 <div class="w-full">
                     <div class="animated">
-                        <label for="default-search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
+                        <label for="default-search"
+                               class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Search</label>
                         <div class="relative">
-                            <div @click="showResultClass = true;" id="searchAreaButton" class="cursor-pointer absolute inset-y-0 start-0 flex items-center ps-3">
-                                <svg class="searchAreaButton w-4 h-4 text-indigo-500 dark:text-indigo-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+                            <div @click="showResultClass = true;" id="searchAreaButton"
+                                 class="cursor-pointer absolute inset-y-0 start-0 flex items-center ps-3">
+                                <svg class="searchAreaButton w-4 h-4 text-indigo-500 dark:text-indigo-400"
+                                     aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                     viewBox="0 0 20 20">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                          stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
                                 </svg>
                             </div>
-                            <input @keyup="showResultClass = true" x-on:change.debounce="showResultClass = true" id="searchBar" name="searchbox" placeholder="Search..." type="search" class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
-                            <button @click="isHvoBlend = true; isHvo100 = true; radius = 100" id="resetButton" type="button" class="text-white absolute end-2.5 bottom-2.5 bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                <svg class="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                            <input @keyup="showResultClass = true" x-on:change.debounce="showResultClass = true"
+                                   id="searchBar" name="searchbox" placeholder="Search..." type="search"
+                                   class="block w-full p-4 ps-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"/>
+                            <button @click="isHvoBlend = true; isHvo100 = true; radius = 100" id="resetButton"
+                                    type="button"
+                                    class="text-white absolute end-2.5 bottom-2.5 bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-sm px-4 py-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                <svg class="w-4 h-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                     viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                                 </svg>
                             </button>
                         </div>
@@ -58,9 +69,9 @@
                         <!-- Button HVO 100 -->
                         <div>
                             <button type="button"
-                                :class="isHvo100 ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600' : 'bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50'"
-                                @click="isHvo100 = !isHvo100; test()"
-                                class="rounded-full px-2.5 py-1 text-xs font-semibold shadow-sm">
+                                    :class="isHvo100 ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600' : 'bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50'"
+                                    @click="isHvo100 = !isHvo100; test()"
+                                    class="rounded-full px-2.5 py-1 text-xs font-semibold shadow-sm">
                                 HVO 100
                             </button>
                         </div>
@@ -68,9 +79,9 @@
                         <!-- Button HVO Blend -->
                         <div class="ml-2">
                             <button type="button"
-                                :class="isHvoBlend ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600' : 'bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50'"
-                                @click="isHvoBlend = !isHvoBlend; test()"
-                                class="rounded-full px-2.5 py-1 text-xs font-semibold shadow-sm">
+                                    :class="isHvoBlend ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600' : 'bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50'"
+                                    @click="isHvoBlend = !isHvoBlend; test()"
+                                    class="rounded-full px-2.5 py-1 text-xs font-semibold shadow-sm">
                                 HVO Blend
                             </button>
                         </div>
@@ -83,7 +94,8 @@
                                 <label for="radiusRange" class="block text-xs font-medium text-gray-700">
                                     Search Radius (<span x-text="radius"></span> km)
                                 </label>
-                                <input type="range" id="radiusRange" min="5" max="250" x-model="radius" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                                <input type="range" id="radiusRange" min="5" max="250" x-model="radius"
+                                       class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
                                 <div id="radius" x-text="radius" hidden></div>
                             </div>
                         </div>
@@ -107,29 +119,31 @@
                     }
                 })">
             <div x-show="showResultClass"
-                x-transition:enter="transition-all ease-out duration-500"
-                x-transition:enter-start="opacity-0"
-                x-transition:enter-end="opacity-100"
-                x-transition:leave="transition-all ease-in duration-500"
-                x-transition:leave-start="opacity-100"
-                x-transition:leave-end="opacity-0"
-                class="overflow-hidden"
-                :style="{ height: openHeight }">
-                <!-- 
+                 x-transition:enter="transition-all ease-out duration-500"
+                 x-transition:enter-start="opacity-0"
+                 x-transition:enter-end="opacity-100"
+                 x-transition:leave="transition-all ease-in duration-500"
+                 x-transition:leave-start="opacity-100"
+                 x-transition:leave-end="opacity-0"
+                 class="overflow-hidden"
+                 :style="{ height: openHeight }">
+                <!--
                 <div class="mx-auto mt-4 mb-4">
                     <div class="w-full flex flex-col items-center space-y-4 justify-center">
                         <button id="searchAreaButton" class="mx-auto bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded" type="button">Search in that area</button>
                     </div>
                 </div> -->
                 <div class="bg-gray-100">
-                    <div class="text-gray-600 text-sm px-4 py-3 border-b-2 border-gray-300 text-left leading-4 tracking-wider cursor-pointer">
+                    <div
+                        class="text-gray-600 text-sm px-4 py-3 border-b-2 border-gray-300 text-left leading-4 tracking-wider cursor-pointer">
                         <span class="ml-4">Current Search Results: <span id="resultsCount">0</span></span>
                     </div>
                 </div>
-                <div class="table-container" id="tableContainer" style="overflow-y: scroll; height: 460px; background-color:rgba(255, 255, 255, 0.8);">
+                <div class="table-container" id="tableContainer"
+                     style="overflow-y: scroll; height: 460px; background-color:rgba(255, 255, 255, 0.8);">
                     <table id="locationsTable" class="w-full">
                         <tbody>
-                            <!-- The code will be injected here dynamically -->
+                        <!-- The code will be injected here dynamically -->
                         </tbody>
                     </table>
 
@@ -171,8 +185,11 @@
                                     <div class="flex items-center justify-center h-full">
                                         <div class="image-container">
                                             <div class="flex items-center justify-center">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" class="w-5 h-5 ml-2 location-status" fill="red">
-                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 000-1.5h-3.25V5z" clip-rule="evenodd" />
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                                     class="w-5 h-5 ml-2 location-status" fill="red">
+                                                    <path fill-rule="evenodd"
+                                                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 000-1.5h-3.25V5z"
+                                                          clip-rule="evenodd"/>
                                                 </svg>
                                             </div>
                                         </div>
@@ -185,10 +202,13 @@
                                     <button type="button" class="details-button">
                                         <div class="image-container">
                                             <div class="flex items-center justify-center">
-                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                                     stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                          d="M11.25 11.25l.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z"/>
                                                 </svg>
-                                                <span class="tooltip text-gray-500" style="z-index: 10; transform: translateX(-90%);">Show Details</span>
+                                                <span class="tooltip text-gray-500"
+                                                      style="z-index: 10; transform: translateX(-90%);">Show Details</span>
                                             </div>
                                         </div>
                                     </button>
@@ -217,14 +237,17 @@
             </div>
 
 
-
             <div>
                 <div class="w-full flex flex-col items-center justify-center">
-                    <button @click="showResultClass = !showResultClass" class="w-full mx-auto bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded flex items-center justify-between" type="button">
+                    <button @click="showResultClass = !showResultClass"
+                            class="w-full mx-auto bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded flex items-center justify-between"
+                            type="button">
                         <span>Show Results</span>
-                        <div class="transform transition-transform duration-600" :class="{ 'rotate-180': !showResultClass }">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="text-white w-5 h-5" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
+                        <div class="transform transition-transform duration-600"
+                             :class="{ 'rotate-180': !showResultClass }">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" class="text-white w-5 h-5"
+                                 viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5"/>
                             </svg>
                         </div>
                     </button>
@@ -234,16 +257,18 @@
     </div>
 
     <div x-show="isHidden"
-        x-transition:enter="transition ease-out duration-300"
-        x-transition:enter-start="opacity-0 transform scale-90"
-        x-transition:enter-end="opacity-100 transform scale-100"
-        x-transition:leave="transition ease-in duration-300"
-        x-transition:leave-start="opacity-100 transform scale-100"
-        x-transition:leave-end="opacity-0 transform scale-90"
-        class="fixed bottom-4 right-4 cursor-pointer bg-indigo-600 text-white p-3 rounded-full shadow-lg"
-        @click="isHidden = false" style="z-index: 10;">
-        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-            <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+         x-transition:enter="transition ease-out duration-300"
+         x-transition:enter-start="opacity-0 transform scale-90"
+         x-transition:enter-end="opacity-100 transform scale-100"
+         x-transition:leave="transition ease-in duration-300"
+         x-transition:leave-start="opacity-100 transform scale-100"
+         x-transition:leave-end="opacity-0 transform scale-90"
+         class="fixed bottom-4 right-4 cursor-pointer bg-indigo-600 text-white p-3 rounded-full shadow-lg"
+         @click="isHidden = false" style="z-index: 10;">
+        <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+             stroke="currentColor" class="size-6">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"/>
         </svg>
     </div>
     <div class="w-full transition-all duration-2000 bg-white">
@@ -289,7 +314,7 @@
 
         }
 
-        @media screen and (min-width:768px) {
+        @media screen and (min-width: 768px) {
             .visible-buttons {
                 visibility: visible !important;
             }
@@ -356,12 +381,11 @@
         let mouseOverMarker = false;
         let searchMarker = null; // Global variable to store the search marker
 
-        map.on('load', function() {
+        map.on('load', function () {
             map.addSource('your-tileset-source', {
                 'type': 'vector',
                 'url': 'mapbox://elsenmedia.ckvsnxal129qg27qrclgdhekc-330dh'
             });
-
 
 
             map.addLayer({
@@ -381,7 +405,7 @@
 
             function debounce(func, delay) {
                 let timeout;
-                return function(...args) {
+                return function (...args) {
                     clearTimeout(timeout);
                     timeout = setTimeout(() => func.apply(this, args), delay);
                 };
@@ -435,10 +459,10 @@
 
                     // Add a new search marker
                     searchMarker = new mapboxgl.Marker({
-                            color: 'blue',
-                            draggable: false,
-                            scale: 0.8
-                        })
+                        color: 'blue',
+                        draggable: false,
+                        scale: 0.8
+                    })
                         .setLngLat([coordinates.longitude, coordinates.latitude])
                         .addTo(map);
 
@@ -808,7 +832,7 @@
                     }
 
                     // Add an event listener for zooming and showing a popup when the line is clicked
-                    clone.querySelector('tr').addEventListener('click', function() {
+                    clone.querySelector('tr').addEventListener('click', function () {
                         const coordinates = feature.geometry.coordinates;
                         flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds, address)
                         highlightLocation(feature);
@@ -816,7 +840,7 @@
                     });
 
                     // Add an event handler for the "Show Details" button
-                    clone.querySelector('.details-button').addEventListener('click', function(event) {
+                    clone.querySelector('.details-button').addEventListener('click', function (event) {
                         event.stopPropagation(); // Prevent the click event from propagating to the cloned line
                         const detailsRow = this.closest('tr').nextElementSibling;
                         const detailsContent = detailsRow.querySelector('.details-content');
@@ -870,17 +894,35 @@
                             serviceBadge = '';
                         }
 
-                        // Update the details content 
+                        // Update the details content
                         locationInfoSpan.innerHTML = `
                                                         <div class="text-sm text-gray-800">
                                                             <div style="display: flex; align-items: center; justify-content: start; margin-bottom: 5px;">
                                                                 ${productBadge}
                                                                 <div> ${productNamesList}</div>
                                                             </div>
-                                                            <div style="display: flex; align-items: center; justify-content: start; margin-bottom: 5px;">
-                                                                ${serviceBadge}             
+                                                        <div class="mt-4 mb-4 flex items-center space-x-2">
+                                                            <x-svg-icon icon="euro" class="h-6 w-6 text-indigo-800" />
+                                                            <span class="pr-2">Preis coming soon</span>
                                                             </div>
-                                                            <div style="margin-bottom: 5px;">Open hours : ${opening_start} - ${opening_end}</div>
+
+                                                            <div style="display: flex; align-items: center; justify-content: start; margin-bottom: 5px;">
+                                                                ${serviceBadge}
+                                                            </div>
+                                                            <!--<div style="margin-bottom: 5px;">Öffnungszeit: ${opening_start} - ${opening_end}</div> -->
+                                                           <!-- Icon mit angepasster Größe und Farbe -->
+                                                            <div class="mt-4 mb-4 flex items-center space-x-2">
+                                                            <x-svg-icon icon="24" class="h-6 w-6 text-green-500" />
+                                                            <span class="pr-2">24h geöffnet</span>
+                                                            </div>
+
+                                                            <div class="mt-4 mb-4 flex items-center space-x-2">
+                                                            <x-svg-icon icon="vacuumer" class="h-6 w-6 text-grey-700" />
+                                                            <x-svg-icon icon="carwash" class="h-6 w-6 text-grey-700" />
+                                                            <x-svg-icon icon="bistro" class="h-6 w-6 text-grey-700" />
+                                                            </div>
+
+
                                                             <div style="margin-bottom: 5px;" class="text-gray-500 hover:text-indigo-600 hover:cursor-pointer hover:bg-gray-100" data-toggle="tooltip" data-placement="bottom" title="Copy address">
                                                                 <div x-data="{ showMsg: false }">
                                                                     <p style="display: inline; cursor: pointer;" @click="
@@ -893,7 +935,7 @@
                                                                             console.error('Clipboard API not supported');
                                                                         }
                                                                     ">
-                                                                        <span>Address : ${address}</span>
+                                                                        <span>Address: ${address}</span>
                                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5" style="display: inline; vertical-align: middle;">
                                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
                                                                         </svg>
@@ -905,14 +947,14 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="w-full flex flex-col items-start justify-center">
-                                                                <div style="margin-bottom: 5px;" class="items-start text-center rounded-md bg-white px-3 py-2 hover:cursor-pointer text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100 whitespace-nowrap overflow-hidden text-ellipsis">
-                                                                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}" target="_blank">Routenplaner</a>
-                                                                </div>
-                                                                <div style="margin-bottom: 5px;" class="items-start text-center rounded-md bg-white px-3 py-2 hover:cursor-pointer text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100 whitespace-nowrap overflow-hidden text-ellipsis">
-                                                                    <a href="/find/${tenantId}" target="_blank">More Details</a>
-                                                                </div>
-                                                            </div>
+                                                           <div class="w-full flex flex-row items-start justify-start space-x-2">
+    <div class="text-center rounded-md bg-white px-2 py-1 hover:cursor-pointer text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100 whitespace-nowrap overflow-hidden text-ellipsis">
+        <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}" target="_blank">Google Maps</a>
+    </div>
+    <div class="text-center rounded-md bg-white px-2 py-1 hover:cursor-pointer text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100 whitespace-nowrap overflow-hidden text-ellipsis">
+        <a href="/find/${tenantId}" target="_blank">Details</a>
+    </div>
+</div>
                                                         </div>
                                                     `;
 
@@ -930,7 +972,7 @@
             function updateMarkers(closestFeatures) {
 
 
-                // Remove the layer if it already exists    
+                // Remove the layer if it already exists
                 if (map.getLayer('locations-layer')) {
                     map.removeLayer('locations-layer');
                     map.removeSource('closest-features');
@@ -1040,7 +1082,7 @@
             }
 
 
-            map.on('mouseenter', 'highlighted-location', function(e) {
+            map.on('mouseenter', 'highlighted-location', function (e) {
                 if (activePopup) activePopup.remove(); // Remove the active popup if it exists
 
                 const coordinates = e.features[0].geometry.coordinates.slice();
@@ -1107,10 +1149,10 @@
                 `;
 
                 activePopup = new mapboxgl.Popup({
-                        closeButton: false,
-                        closeOnClick: false,
-                        offset: [0, -20] // Offset to raise the popup by 20px
-                    })
+                    closeButton: false,
+                    closeOnClick: false,
+                    offset: [0, -20] // Offset to raise the popup by 20px
+                })
                     .setLngLat(coordinates)
                     .setHTML(popupContent)
                     .addTo(map);
@@ -1128,12 +1170,12 @@
 
                 map.getCanvas().style.cursor = 'pointer';
 
-                map.on('mouseenter', 'highlighted-location', function() {
+                map.on('mouseenter', 'highlighted-location', function () {
                     mouseOverMarker = true;
 
                 });
 
-                map.on('mouseleave', 'highlighted-location', function() {
+                map.on('mouseleave', 'highlighted-location', function () {
                     mouseOverMarker = false;
                     setTimeout(isPopup, 50)
 
@@ -1150,7 +1192,7 @@
             });
 
 
-            map.on('mouseenter', 'locations-layer', function(e) {
+            map.on('mouseenter', 'locations-layer', function (e) {
                 if (activePopup) activePopup.remove(); // Remove the active popup
 
                 const coordinates = e.features[0].geometry.coordinates.slice();
@@ -1219,10 +1261,10 @@
 
                 // Display the popup with the content
                 activePopup = new mapboxgl.Popup({
-                        closeButton: false,
-                        closeOnClick: false,
-                        offset: [0, -20] // Offset from the top
-                    })
+                    closeButton: false,
+                    closeOnClick: false,
+                    offset: [0, -20] // Offset from the top
+                })
                     .setLngLat(coordinates)
                     .setHTML(popupContent)
                     .addTo(map);
@@ -1241,12 +1283,12 @@
 
                 map.getCanvas().style.cursor = 'pointer';
 
-                map.on('mouseenter', 'locations-layer', function() {
+                map.on('mouseenter', 'locations-layer', function () {
                     mouseOverMarker = true;
 
                 });
 
-                map.on('mouseleave', 'locations-layer', function() {
+                map.on('mouseleave', 'locations-layer', function () {
                     mouseOverMarker = false;
                     setTimeout(isPopup, 50)
 
@@ -1261,7 +1303,6 @@
                 }
 
             });
-
 
 
             // Show a popup and zoom to a specific location
@@ -1338,17 +1379,18 @@
                                         `;
 
                 activePopup = new mapboxgl.Popup({
-                        closeButton: true,
-                        closeOnClick: false,
-                        offset: [0, -20]
+                    closeButton: true,
+                    closeOnClick: false,
+                    offset: [0, -20]
 
-                    })
+                })
                     .setLngLat(coordinates)
                     .setHTML(popupContent)
                     .addTo(map);
             }
+
             // Hide the popup if the user clicks elsewhere
-            map.on('click', function(e) {
+            map.on('click', function (e) {
                 if (activePopup) {
                     const features = map.queryRenderedFeatures(e.point, {
                         layers: ['locations-layer']
@@ -1361,7 +1403,7 @@
                 }
             });
 
-            map.on('click', 'locations-layer', function(e) {
+            map.on('click', 'locations-layer', function (e) {
                 const clickedFeature = e.features[0]; // Get the clicked feature
                 const coordinates = clickedFeature.geometry.coordinates;
                 const name = clickedFeature.properties.name;
@@ -1383,20 +1425,19 @@
             });
 
 
-
             const debouncedGermanyCenter = debounce(germanyCenter, 1000);
 
             // Listen for input on the search bar
             document.getElementById('searchBar').addEventListener('input', debouncedGermanyCenter);
-            document.getElementById('searchBar').addEventListener('input', function(e) {
+            document.getElementById('searchBar').addEventListener('input', function (e) {
                 if (e.target.value === '') {
                     reset();
                 }
             });
-            document.getElementById('resetButton').addEventListener('click', function(e) {
+            document.getElementById('resetButton').addEventListener('click', function (e) {
                 reset();
             });
-            document.getElementById('searchAreaButton').addEventListener('click', function(e) {
+            document.getElementById('searchAreaButton').addEventListener('click', function (e) {
                 germanyCenter();
             });
 
@@ -1417,6 +1458,7 @@
                     map.removeSource('radius-circle');
                 }
             }
+
             document.addEventListener('filterChanged', () => {
                 germanyCenter();
             });
@@ -1490,16 +1532,7 @@
         });
 
 
-
-
-
-
-
-
-
-
-
-        var TxtRotate = function(el, toRotate, period) {
+        var TxtRotate = function (el, toRotate, period) {
             this.toRotate = toRotate;
             this.el = el;
             this.loopNum = 0;
@@ -1509,7 +1542,7 @@
             this.isDeleting = false;
         };
 
-        TxtRotate.prototype.tick = function() {
+        TxtRotate.prototype.tick = function () {
             var i = this.loopNum % this.toRotate.length;
             var fullTxt = this.toRotate[i];
 
@@ -1537,12 +1570,12 @@
                 delta = 500;
             }
 
-            setTimeout(function() {
+            setTimeout(function () {
                 that.tick();
             }, delta);
         };
 
-        window.onload = function() {
+        window.onload = function () {
             var elements = document.getElementsByClassName('txt-rotate');
             for (var i = 0; i < elements.length; i++) {
                 var toRotate = elements[i].getAttribute('data-rotate');
@@ -1560,7 +1593,7 @@
 
         const texts = ['Search for a name...', 'Search for a city...', 'Search for a product...', 'Search for a service...', 'Search for a zipcode...'];
         const input = document.querySelector('#searchBar');
-        const animationWorker = function(input, texts) {
+        const animationWorker = function (input, texts) {
             this.input = input;
             this.defaultPlaceholder = this.input.getAttribute('placeholder');
             this.texts = texts;

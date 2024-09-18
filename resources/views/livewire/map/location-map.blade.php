@@ -6,11 +6,11 @@
             <div class="relative" style="width: 100%; height: auto;">
 
                 <!-- Search bar floating in the top-left corner -->
-                <div x-data="{ 
-                        showResultClass: false, 
+                <div x-data="{
+                        showResultClass: false,
                         openHeight: '0px',
                         isHvo100: true,
-                        isHvoBlend: true, 
+                        isHvoBlend: true,
                         radius: 100,
                         test() {
                             setTimeout(() => {
@@ -113,7 +113,7 @@
                             x-transition:leave-end="opacity-0"
                             class="overflow-hidden"
                             :style="{ height: openHeight }">
-                            <!-- 
+                            <!--
                 <div class="mx-auto mt-4 mb-4">
                     <div class="w-full flex flex-col items-center space-y-4 justify-center">
                         <button id="searchAreaButton" class="mx-auto bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded" type="button">Search in that area</button>
@@ -873,7 +873,7 @@
                             serviceBadge = '';
                         }
 
-                        // Update the details content 
+                        // Update the details content
                         locationInfoSpan.innerHTML = `
                                                         <div class="text-sm text-gray-800">
                                                             <div style="display: flex; align-items: center; justify-content: start; margin-bottom: 5px;">
@@ -881,9 +881,9 @@
                                                                 <div> ${productNamesList}</div>
                                                             </div>
                                                             <div style="display: flex; align-items: center; justify-content: start; margin-bottom: 5px;">
-                                                                ${serviceBadge}             
+                                                                ${serviceBadge}
                                                             </div>
-                                                            <div style="margin-bottom: 5px;">Open hours : ${opening_start} - ${opening_end}</div>
+                                                            <div style="margin-bottom: 5px;">Öffnungszeit: ${opening_start} - ${opening_end}</div>
                                                             <div style="margin-bottom: 5px;" class="text-gray-500 hover:text-indigo-600 hover:cursor-pointer hover:bg-gray-100" data-toggle="tooltip" data-placement="bottom" title="Copy address">
                                                                 <div x-data="{ showMsg: false }">
                                                                     <p style="display: inline; cursor: pointer;" @click="
@@ -930,7 +930,7 @@
             function updateMarkers(closestFeatures) {
 
 
-                // Remove the layer if it already exists    
+                // Remove the layer if it already exists
                 if (map.getLayer('locations-layer')) {
                     map.removeLayer('locations-layer');
                     map.removeSource('closest-features');
