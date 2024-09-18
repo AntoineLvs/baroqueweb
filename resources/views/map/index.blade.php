@@ -41,11 +41,7 @@
         </div>
 
 
-
-                    @livewire('map.location-map', ['tenant_id' => session('tenant_id')])
-        
-
-
+        @livewire('map.edit-map', ['tenant_id' => session('tenant_id')])
 
     </div>
 

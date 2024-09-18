@@ -8,7 +8,7 @@ use App\Scopes\TenantScope;
 use Livewire\Attributes\On;
 use Livewire\Component;
 
-class LocationMap extends Component
+class LocationsMap extends Component
 {
 
     public $tenant_id;
@@ -22,6 +22,6 @@ class LocationMap extends Component
 
     public function render()
     {
-        return view('livewire.map.location-map');
+        return view('livewire.map.locations-map');
     }
 }

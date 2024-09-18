@@ -30,18 +30,12 @@
                             <!-- Container for the map and search bar -->
                             <div class="relative" style="width: 100%; height: auto;">
 
-<<<<<<< HEAD
-                <!-- Search bar floating in the top-left corner -->
-                <div x-data="{
-                        showResultClass: false,
-=======
                                 <!-- Search bar floating in the top-left corner -->
-                                <div x-data="{
-                        showResultClass: false,
->>>>>>> dev_test
+                                <div x-data="{ 
+                        showResultClass: false, 
                         openHeight: '0px',
                         isHvo100: true,
-                        isHvoBlend: true,
+                        isHvoBlend: true, 
                         radius: 100,
                         test() {
                             setTimeout(() => {
@@ -135,18 +129,6 @@
                         openHeight = '0px';
                     }
                 })">
-<<<<<<< HEAD
-                        <div x-show="showResultClass"
-                            x-transition:enter="transition-all ease-out duration-500"
-                            x-transition:enter-start="opacity-0"
-                            x-transition:enter-end="opacity-100"
-                            x-transition:leave="transition-all ease-in duration-500"
-                            x-transition:leave-start="opacity-100"
-                            x-transition:leave-end="opacity-0"
-                            class="overflow-hidden"
-                            :style="{ height: openHeight }">
-                            <!--
-=======
                                         <div x-show="showResultClass"
                                             x-transition:enter="transition-all ease-out duration-500"
                                             x-transition:enter-start="opacity-0"
@@ -156,8 +138,7 @@
                                             x-transition:leave-end="opacity-0"
                                             class="overflow-hidden"
                                             :style="{ height: openHeight }">
-                                            
->>>>>>> dev_test
+                                            <!-- 
                 <div class="mx-auto mt-4 mb-4">
                     <div class="w-full flex flex-col items-center space-y-4 justify-center">
                         <button id="searchAreaButton" class="mx-auto bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded" type="button">Search in that area</button>
@@ -332,7 +313,7 @@
 
                         }
 
-                        @media screen and (min-width:768px) {
+                        @media screen and (min-width: 768px) {
                             .visible-buttons {
                                 visibility: visible !important;
                             }
@@ -407,7 +388,6 @@
                             });
 
 
-
                             map.addLayer({
                                 'id': 'initial-locations-layer',
                                 'type': 'symbol',
@@ -422,7 +402,7 @@
                                     'text-size': 0,
                                     'icon-size': 0,
                                 },
-                                'filter': ['==', ['get', 'tenant'], tenant] // Filter to display only the locations where 'active' is equal to 1
+                                'filter': ['==', ['get', 'tenant'], tenant] // Filter to display only the locations that belong to the current tenant
                             });
                             setTimeout(germanyCenter, 500);
 
@@ -811,7 +791,7 @@
 
                                     const tenantImg = feature.properties.tenant_logo || '';
                                     const tenantId = feature.properties.tenant_id || '';
-                                    const imageUrl = tenantImg ? `${s3BaseUrl}${tenantId}/${tenantImg}` : '/assets/img/hvo.png';
+                                    const imageUrl = tenantImg ? `/images/${tenantId}/${tenantImg}` : '/assets/img/hvo.png';
                                     const tenantLogo = `<img style="background: lightgrey;" class="h-10 w-10 rounded-full ring-2 ring-green location-img" src="${imageUrl}" alt="">`;
 
                                     // Inject the name
@@ -917,22 +897,35 @@
                                             serviceBadge = '';
                                         }
 
-<<<<<<< HEAD
-                        // Update the details content
-                        locationInfoSpan.innerHTML = `
-=======
                                         // Update the details content
                                         locationInfoSpan.innerHTML = `
->>>>>>> dev_test
                                                         <div class="text-sm text-gray-800">
                                                             <div style="display: flex; align-items: center; justify-content: start; margin-bottom: 5px;">
                                                                 ${productBadge}
                                                                 <div> ${productNamesList}</div>
                                                             </div>
+                                                        <div class="mt-4 mb-4 flex items-center space-x-2">
+                                                            <x-svg-icon icon="euro" class="h-6 w-6 text-indigo-800" />
+                                                            <span class="pr-2">Preis coming soon</span>
+                                                            </div>
+
                                                             <div style="display: flex; align-items: center; justify-content: start; margin-bottom: 5px;">
                                                                 ${serviceBadge}
                                                             </div>
-                                                            <div style="margin-bottom: 5px;">Öffnungszeit: ${opening_start} - ${opening_end}</div>
+                                                            <!--<div style="margin-bottom: 5px;">Öffnungszeit: ${opening_start} - ${opening_end}</div> -->
+                                                           <!-- Icon mit angepasster Größe und Farbe -->
+                                                            <div class="mt-4 mb-4 flex items-center space-x-2">
+                                                            <x-svg-icon icon="24" class="h-6 w-6 text-green-500" />
+                                                            <span class="pr-2">24h geöffnet</span>
+                                                            </div>
+
+                                                            <div class="mt-4 mb-4 flex items-center space-x-2">
+                                                            <x-svg-icon icon="vacuumer" class="h-6 w-6 text-grey-700" />
+                                                            <x-svg-icon icon="carwash" class="h-6 w-6 text-grey-700" />
+                                                            <x-svg-icon icon="bistro" class="h-6 w-6 text-grey-700" />
+                                                            </div>
+
+
                                                             <div style="margin-bottom: 5px;" class="text-gray-500 hover:text-indigo-600 hover:cursor-pointer hover:bg-gray-100" data-toggle="tooltip" data-placement="bottom" title="Copy address">
                                                                 <div x-data="{ showMsg: false }">
                                                                     <p style="display: inline; cursor: pointer;" @click="
@@ -945,7 +938,7 @@
                                                                             console.error('Clipboard API not supported');
                                                                         }
                                                                     ">
-                                                                        <span>Address : ${address}</span>
+                                                                        <span>Address: ${address}</span>
                                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5" style="display: inline; vertical-align: middle;">
                                                                             <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
                                                                         </svg>
@@ -957,11 +950,14 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="w-full flex flex-col items-start justify-center">
-                                                                <div style="margin-bottom: 5px;" class="items-start text-center rounded-md bg-white px-3 py-2 hover:cursor-pointer text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100 whitespace-nowrap overflow-hidden text-ellipsis">
-                                                                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}" target="_blank">Routenplaner</a>
-                                                                </div>
-                                                            </div>
+                                                           <div class="w-full flex flex-row items-start justify-start space-x-2">
+    <div class="text-center rounded-md bg-white px-2 py-1 hover:cursor-pointer text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100 whitespace-nowrap overflow-hidden text-ellipsis">
+        <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}" target="_blank">Google Maps</a>
+    </div>
+    <div class="text-center rounded-md bg-white px-2 py-1 hover:cursor-pointer text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100 whitespace-nowrap overflow-hidden text-ellipsis">
+        <a href="/find/${tenantId}" target="_blank">Details</a>
+    </div>
+</div>
                                                         </div>
                                                     `;
 
@@ -979,17 +975,6 @@
                             function updateMarkers(closestFeatures) {
 
 
-<<<<<<< HEAD
-                // Remove the layer if it already exists
-                if (map.getLayer('locations-layer')) {
-                    map.removeLayer('locations-layer');
-                    map.removeSource('closest-features');
-                }
-                if (map.getLayer('highlighted-location')) {
-                    map.removeLayer('highlighted-location');
-                    map.removeSource('highlighted-location');
-                }
-=======
                                 // Remove the layer if it already exists
                                 if (map.getLayer('locations-layer')) {
                                     map.removeLayer('locations-layer');
@@ -999,7 +984,6 @@
                                     map.removeLayer('highlighted-location');
                                     map.removeSource('highlighted-location');
                                 }
->>>>>>> dev_test
 
                                 // Create a new source with the closest 20 features
                                 map.addSource('closest-features', {
@@ -1016,7 +1000,10 @@
                                     'type': 'symbol',
                                     'source': 'closest-features',
                                     'layout': {
-                                        'icon-image': 'blue-location',
+                                        'icon-image': [
+                                            'case',
+                                            ['==', ['get', 'active'], 1], 'blue-location', 'black-location' // If 'active' is 1, use 'blue-location', Otherwise, use 'red-location'
+                                        ],
                                         'text-field': ['get', 'name'],
                                         'text-size': 0,
                                         'icon-size': [
@@ -1026,7 +1013,7 @@
                                             22, 0.6
                                         ],
                                     },
-                                    'filter': ['==', ['get', 'active'], 1] // Filter to display only the locations where 'active' is equal to 1
+                                    'filter': ['==', ['get', 'tenant'], tenant] // Filter to display only the locations that belong to the current tenant
                                 });
 
                             }
@@ -1324,7 +1311,6 @@
                             });
 
 
-
                             // Show a popup and zoom to a specific location
                             function flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds, address) {
 
@@ -1408,6 +1394,7 @@
                                     .setHTML(popupContent)
                                     .addTo(map);
                             }
+
                             // Hide the popup if the user clicks elsewhere
                             map.on('click', function(e) {
                                 if (activePopup) {
@@ -1444,7 +1431,6 @@
                             });
 
 
-
                             const debouncedGermanyCenter = debounce(germanyCenter, 1000);
 
                             // Listen for input on the search bar
@@ -1478,6 +1464,7 @@
                                     map.removeSource('radius-circle');
                                 }
                             }
+
                             document.addEventListener('filterChanged', () => {
                                 germanyCenter();
                             });
@@ -1549,15 +1536,6 @@
                             }
 
                         });
-
-
-
-
-
-
-
-
-
 
 
                         var TxtRotate = function(el, toRotate, period) {
@@ -1703,16 +1681,8 @@
                         });
                     </script>
                     @endscript
-
                 </div>
-
-<<<<<<< HEAD
-</div>
-=======
-
-
             </div>
         </div>
     </div>
 </div>
->>>>>>> dev_test

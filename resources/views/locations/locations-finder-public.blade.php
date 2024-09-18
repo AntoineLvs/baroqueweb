@@ -14,7 +14,7 @@
     <x-navigation />
 
     <main>
-        @livewire('locations.find-locations-test-mapbox')
+        @livewire('locations.locations-finder-public')
     </main>
 </div>
 
