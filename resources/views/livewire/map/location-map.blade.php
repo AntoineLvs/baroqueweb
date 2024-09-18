@@ -30,12 +30,18 @@
                             <!-- Container for the map and search bar -->
                             <div class="relative" style="width: 100%; height: auto;">
 
+<<<<<<< HEAD
+                <!-- Search bar floating in the top-left corner -->
+                <div x-data="{
+                        showResultClass: false,
+=======
                                 <!-- Search bar floating in the top-left corner -->
-                                <div x-data="{ 
-                        showResultClass: false, 
+                                <div x-data="{
+                        showResultClass: false,
+>>>>>>> dev_test
                         openHeight: '0px',
                         isHvo100: true,
-                        isHvoBlend: true, 
+                        isHvoBlend: true,
                         radius: 100,
                         test() {
                             setTimeout(() => {
@@ -129,6 +135,18 @@
                         openHeight = '0px';
                     }
                 })">
+<<<<<<< HEAD
+                        <div x-show="showResultClass"
+                            x-transition:enter="transition-all ease-out duration-500"
+                            x-transition:enter-start="opacity-0"
+                            x-transition:enter-end="opacity-100"
+                            x-transition:leave="transition-all ease-in duration-500"
+                            x-transition:leave-start="opacity-100"
+                            x-transition:leave-end="opacity-0"
+                            class="overflow-hidden"
+                            :style="{ height: openHeight }">
+                            <!--
+=======
                                         <div x-show="showResultClass"
                                             x-transition:enter="transition-all ease-out duration-500"
                                             x-transition:enter-start="opacity-0"
@@ -138,7 +156,8 @@
                                             x-transition:leave-end="opacity-0"
                                             class="overflow-hidden"
                                             :style="{ height: openHeight }">
-                                            <!-- 
+                                            
+>>>>>>> dev_test
                 <div class="mx-auto mt-4 mb-4">
                     <div class="w-full flex flex-col items-center space-y-4 justify-center">
                         <button id="searchAreaButton" class="mx-auto bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded" type="button">Search in that area</button>
@@ -898,17 +917,22 @@
                                             serviceBadge = '';
                                         }
 
-                                        // Update the details content 
+<<<<<<< HEAD
+                        // Update the details content
+                        locationInfoSpan.innerHTML = `
+=======
+                                        // Update the details content
                                         locationInfoSpan.innerHTML = `
+>>>>>>> dev_test
                                                         <div class="text-sm text-gray-800">
                                                             <div style="display: flex; align-items: center; justify-content: start; margin-bottom: 5px;">
                                                                 ${productBadge}
                                                                 <div> ${productNamesList}</div>
                                                             </div>
                                                             <div style="display: flex; align-items: center; justify-content: start; margin-bottom: 5px;">
-                                                                ${serviceBadge}             
+                                                                ${serviceBadge}
                                                             </div>
-                                                            <div style="margin-bottom: 5px;">Open hours : ${opening_start} - ${opening_end}</div>
+                                                            <div style="margin-bottom: 5px;">Öffnungszeit: ${opening_start} - ${opening_end}</div>
                                                             <div style="margin-bottom: 5px;" class="text-gray-500 hover:text-indigo-600 hover:cursor-pointer hover:bg-gray-100" data-toggle="tooltip" data-placement="bottom" title="Copy address">
                                                                 <div x-data="{ showMsg: false }">
                                                                     <p style="display: inline; cursor: pointer;" @click="
@@ -955,7 +979,18 @@
                             function updateMarkers(closestFeatures) {
 
 
-                                // Remove the layer if it already exists    
+<<<<<<< HEAD
+                // Remove the layer if it already exists
+                if (map.getLayer('locations-layer')) {
+                    map.removeLayer('locations-layer');
+                    map.removeSource('closest-features');
+                }
+                if (map.getLayer('highlighted-location')) {
+                    map.removeLayer('highlighted-location');
+                    map.removeSource('highlighted-location');
+                }
+=======
+                                // Remove the layer if it already exists
                                 if (map.getLayer('locations-layer')) {
                                     map.removeLayer('locations-layer');
                                     map.removeSource('closest-features');
@@ -964,6 +999,7 @@
                                     map.removeLayer('highlighted-location');
                                     map.removeSource('highlighted-location');
                                 }
+>>>>>>> dev_test
 
                                 // Create a new source with the closest 20 features
                                 map.addSource('closest-features', {
@@ -1670,9 +1706,13 @@
 
                 </div>
 
+<<<<<<< HEAD
+</div>
+=======
 
 
             </div>
         </div>
     </div>
 </div>
+>>>>>>> dev_test

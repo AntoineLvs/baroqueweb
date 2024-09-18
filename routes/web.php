@@ -1,27 +1,16 @@
 <?php
 
-use App\Http\Controllers\ImageController;
-use App\Http\Controllers\ShippingController;
-use App\Http\Controllers\SourceController;
-use App\Http\Controllers\SubsiteController;
-use App\Livewire\ContactForm;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ApiTokenController;
 use App\Http\Controllers\ApiTokenTypeController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\LogoutController;
-use App\Http\Controllers\BaseProductController;
 use App\Http\Controllers\BaseServiceController;
-
 use App\Http\Controllers\DirectoryController;
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\EngineController;
 use App\Http\Controllers\HomeController;
-
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\ImpersonationController;
 use App\Http\Controllers\ImportExportController;
 use App\Http\Controllers\LocationController;
@@ -29,16 +18,13 @@ use App\Http\Controllers\ManufacturerController;
 use App\Http\Controllers\MapboxRecordController;
 use App\Http\Controllers\MapController;
 use App\Http\Controllers\OrderController;
-use App\Http\Controllers\ProductController;
-use App\Http\Controllers\ProductFinderController;
-
-use App\Http\Controllers\ProductTypeController;
 use App\Http\Controllers\ProfileController;
-
 use App\Http\Controllers\ReleaseController;
 use App\Http\Controllers\SepaMandateController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\SourceController;
 use App\Http\Controllers\StandardController;
+use App\Http\Controllers\SubsiteController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\VehicleController;
 use App\Livewire\Auth\Login;
@@ -47,9 +33,14 @@ use App\Livewire\Auth\Passwords\Email;
 use App\Livewire\Auth\Passwords\Reset;
 use App\Livewire\Auth\Register;
 use App\Livewire\Auth\Verify;
-use App\Models\Engine;
-use App\Models\Manufacturer;
+use App\Livewire\ContactForm;
+use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
+use Modules\Order\Http\Controllers\ProductFinderController;
+use Modules\Product\Http\Controllers\BaseProductController;
+use Modules\Product\Http\Controllers\ProductController;
+use Modules\Product\Http\Controllers\ProductTypeController;
+use Modules\Shipping\Http\Controllers\ShippingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -207,10 +198,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 
 
-        // Order Routes
-        Route::resource('orders', OrderController::class)->except(['update']);
-        Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
-        Route::get('orders/create', [OrderController::class, 'create'])->name('orders.create');
 
         // Shipping Routes
         Route::resource('shippings', ShippingController::class)->except(['update']);
@@ -248,6 +235,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('product-types/create', [ProductTypeController::class, 'create'])->name('product-types.create');
         Route::get('product-types/{product-type}/edit', [ProductTypeController::class, 'edit'])->name('product-types.edit');
 
+        // Order Routes
+        Route::resource('orders', OrderController::class)->except(['update']);
+        Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
+        Route::get('orders/create', [OrderController::class, 'create'])->name('orders.create');
+
 
         Route::controller(ImportExportController::class)->group(function () {
             Route::get('admin/import_export', 'importExport');
@@ -257,6 +249,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             // Route::get('event/export-attendees', 'exportEventAttendees')->name('eventAttendees.export');
         });
     });
+
+
+
 
     // Dashboard Routes
     Route::get('dashboard', [HomeController::class, 'index'])->name('dashboard');
