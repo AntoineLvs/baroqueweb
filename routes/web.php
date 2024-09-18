@@ -112,7 +112,7 @@ Route::get('/test-s3', function () {
 Route::get('product-finder/', [ProductFinderController::class, 'index'])->name('product-finder.index-public');
 Route::get('request-product/{product}', [OrderController::class, 'createProductRequest'])->name('orders.public-product-request');
 
-Route::get('find/', [LocationController::class, 'showLocationFinder'])->name('locations.find-locations-public');
+Route::get('find/', [LocationController::class, 'showLocationFinder'])->name('locations.locations-finder-public');
 
 Route::get('/find/locations/{id}', [LocationController::class, 'showLocationProfile'])->name('locations.profile-locations-public');
 Route::get('/find/{tenant_id}', [LocationController::class, 'showTenantProfile'])->name('locations.profile-tenants');

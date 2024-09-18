@@ -15,7 +15,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\View\View;
 use Panoscape\History\Events\ModelChanged;
-
 use function PHPUnit\Framework\isNull;
 
 class LocationController extends Controller
@@ -325,6 +324,6 @@ class LocationController extends Controller
 
     public function showLocationFinder(): View
     {
-        return view('locations.find-locations-public');
+        return view('locations.locations-finder-public');
     }
 }
