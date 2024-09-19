@@ -1,6 +1,12 @@
 <div class="max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
     <div class="py-4">
-        <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
+        <div class="bg-white overflow-hidden shadow border border-gray-200 rounded-lg divide-y divide-gray-200">
+            @if (request()->is('find*'))
+            <div class="px-4 py-5 sm:px-6">
+                <h3 class="card-title"> You can find here all the active locations of {{ $tenant }}</h3>
+            </div>
+            @endif
+
             <div x-data="{ isHidden: false, isMobile: window.innerWidth <= 640 }"
                 @resize.window="isMobile = window.innerWidth <= 640" class="max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
                 <div class="py-4">

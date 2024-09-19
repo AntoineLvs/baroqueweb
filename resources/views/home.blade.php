@@ -56,7 +56,7 @@
                             <h2 class="mt-4 text-2xl leading-8 text-gray-50">Erneuerbare Kraftstoffe einfach
                                 finden.</h2>
                             <div class="mt-6 flex items-center justify-center gap-x-6">
-                                <a href="{{route('locations.find-locations-public')}}"
+                                <a href="{{route('locations.locations-finder-public')}}"
                                    class="rounded-md bg-indigo-500 px-5 py-4 text-lg font-semibold text-white shadow-sm hover:bg-indigo-400
                                    focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-400">
                                     HVO Tankstellen Karte</a>

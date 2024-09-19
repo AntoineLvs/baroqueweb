@@ -36,6 +36,10 @@ class Demo extends Component
     public $token_type_1;
     public $token_type_2;
 
+
+    public $tenantId;
+
+    
     public function updateCustomLogo()
     {
         $this->validate([
@@ -94,6 +98,7 @@ class Demo extends Component
         $this->customLogoUrl = $ciSettings['customLogoUrl'] ?? 'https://refuelos.com/assets/img/xtl-logo.png';
         $this->personalText = $ciSettings['personalText'] ?? "Suchen Sie nach einer XTL Freigabe.";
 
+        $this->tenantId = $user->tenant_id ?? null;
 
 
         $this->checkUserToken();

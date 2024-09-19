@@ -59,6 +59,7 @@ class Index extends Component
         $this->api_token_types = TokenType::withoutGlobalScope(TenantScope::class)->get();
         $this->token_type_1 = TokenType::withoutGlobalScope(TenantScope::class)->find(1);
         $this->token_type_2 = TokenType::withoutGlobalScope(TenantScope::class)->find(2);
+        $this->tenantId = Auth::user()->tenant_id ?? null;
     }
 
 
