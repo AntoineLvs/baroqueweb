@@ -24,18 +24,18 @@
         <div class="py-4">
             <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
                 <div x-data="{ isHidden: false, isMobile: window.innerWidth <= 640 }"
-                    @resize.window="isMobile = window.innerWidth <= 640" class="max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
+                     @resize.window="isMobile = window.innerWidth <= 640" class="max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
                     <div class="py-4">
                         <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
                             <!-- Container for the map and search bar -->
                             <div class="relative" style="width: 100%; height: auto;">
 
                                 <!-- Search bar floating in the top-left corner -->
-                                <div x-data="{ 
-                        showResultClass: false, 
+                                <div x-data="{
+                        showResultClass: false,
                         openHeight: '0px',
                         isHvo100: true,
-                        isHvoBlend: true, 
+                        isHvoBlend: true,
                         radius: 100,
                         test() {
                             setTimeout(() => {
@@ -43,9 +43,9 @@
                             }, 100);
                         }
                     }"
-                                    :class="{ 'hidden': isHidden }"
-                                    style="z-index: 5; min-width: 400px; position: absolute; top: 30px; left: 30px; margin-top: 20px; margin-left: 20px;"
-                                    class="relative bg-white shadow rounded-md border border-gray-300">
+                                     :class="{ 'hidden': isHidden }"
+                                     style="z-index: 5; min-width: 400px; position: absolute; top: 30px; left: 30px; margin-top: 20px; margin-left: 20px;"
+                                     class="relative bg-white shadow rounded-md border border-gray-300">
 
                                     <!-- Closure button -->
                                     <div class="absolute top-1 right-1 cursor-pointer text-sm text-gray-500 hover:text-red-600-500 mr-2" @click="isHidden = true">
@@ -84,9 +84,9 @@
                                                     <!-- Button HVO 100 -->
                                                     <div>
                                                         <button type="button"
-                                                            :class="isHvo100 ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600' : 'bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50'"
-                                                            @click="isHvo100 = !isHvo100; test()"
-                                                            class="rounded-full px-2.5 py-1 text-xs font-semibold shadow-sm">
+                                                                :class="isHvo100 ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600' : 'bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50'"
+                                                                @click="isHvo100 = !isHvo100; test()"
+                                                                class="rounded-full px-2.5 py-1 text-xs font-semibold shadow-sm">
                                                             HVO 100
                                                         </button>
                                                     </div>
@@ -94,9 +94,9 @@
                                                     <!-- Button HVO Blend -->
                                                     <div class="ml-2">
                                                         <button type="button"
-                                                            :class="isHvoBlend ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600' : 'bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50'"
-                                                            @click="isHvoBlend = !isHvoBlend; test()"
-                                                            class="rounded-full px-2.5 py-1 text-xs font-semibold shadow-sm">
+                                                                :class="isHvoBlend ? 'bg-indigo-600 text-white hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600' : 'bg-white text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50'"
+                                                                @click="isHvoBlend = !isHvoBlend; test()"
+                                                                class="rounded-full px-2.5 py-1 text-xs font-semibold shadow-sm">
                                                             HVO Blend
                                                         </button>
                                                     </div>
@@ -130,15 +130,15 @@
                     }
                 })">
                                         <div x-show="showResultClass"
-                                            x-transition:enter="transition-all ease-out duration-500"
-                                            x-transition:enter-start="opacity-0"
-                                            x-transition:enter-end="opacity-100"
-                                            x-transition:leave="transition-all ease-in duration-500"
-                                            x-transition:leave-start="opacity-100"
-                                            x-transition:leave-end="opacity-0"
-                                            class="overflow-hidden"
-                                            :style="{ height: openHeight }">
-                                            <!-- 
+                                             x-transition:enter="transition-all ease-out duration-500"
+                                             x-transition:enter-start="opacity-0"
+                                             x-transition:enter-end="opacity-100"
+                                             x-transition:leave="transition-all ease-in duration-500"
+                                             x-transition:leave-start="opacity-100"
+                                             x-transition:leave-end="opacity-0"
+                                             class="overflow-hidden"
+                                             :style="{ height: openHeight }">
+                                            <!--
                 <div class="mx-auto mt-4 mb-4">
                     <div class="w-full flex flex-col items-center space-y-4 justify-center">
                         <button id="searchAreaButton" class="mx-auto bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded" type="button">Search in that area</button>
@@ -152,7 +152,7 @@
                                             <div class="table-container" id="tableContainer" style="overflow-y: scroll; height: 460px; background-color:rgba(255, 255, 255, 0.8);">
                                                 <table id="locationsTable" class="w-full">
                                                     <tbody>
-                                                        <!-- The code will be injected here dynamically -->
+                                                    <!-- The code will be injected here dynamically -->
                                                     </tbody>
                                                 </table>
 
@@ -256,14 +256,14 @@
                                     </div>
                                 </div>
                                 <div x-show="isHidden"
-                                    x-transition:enter="transition ease-out duration-300"
-                                    x-transition:enter-start="opacity-0 transform scale-90"
-                                    x-transition:enter-end="opacity-100 transform scale-100"
-                                    x-transition:leave="transition ease-in duration-300"
-                                    x-transition:leave-start="opacity-100 transform scale-100"
-                                    x-transition:leave-end="opacity-0 transform scale-90"
-                                    class="fixed bottom-4 right-4 cursor-pointer bg-indigo-600 text-white p-3 rounded-full shadow-lg"
-                                    @click="isHidden = false" style="z-index: 10;">
+                                     x-transition:enter="transition ease-out duration-300"
+                                     x-transition:enter-start="opacity-0 transform scale-90"
+                                     x-transition:enter-end="opacity-100 transform scale-100"
+                                     x-transition:leave="transition ease-in duration-300"
+                                     x-transition:leave-start="opacity-100 transform scale-100"
+                                     x-transition:leave-end="opacity-0 transform scale-90"
+                                     class="fixed bottom-4 right-4 cursor-pointer bg-indigo-600 text-white p-3 rounded-full shadow-lg"
+                                     @click="isHidden = false" style="z-index: 10;">
                                     <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
                                     </svg>
@@ -462,10 +462,10 @@
 
                                     // Add a new search marker
                                     searchMarker = new mapboxgl.Marker({
-                                            color: 'blue',
-                                            draggable: false,
-                                            scale: 0.8
-                                        })
+                                        color: 'blue',
+                                        draggable: false,
+                                        scale: 0.8
+                                    })
                                         .setLngLat([coordinates.longitude, coordinates.latitude])
                                         .addTo(map);
 
@@ -1155,10 +1155,10 @@
                 `;
 
                                 activePopup = new mapboxgl.Popup({
-                                        closeButton: false,
-                                        closeOnClick: false,
-                                        offset: [0, -20] // Offset to raise the popup by 20px
-                                    })
+                                    closeButton: false,
+                                    closeOnClick: false,
+                                    offset: [0, -20] // Offset to raise the popup by 20px
+                                })
                                     .setLngLat(coordinates)
                                     .setHTML(popupContent)
                                     .addTo(map);
@@ -1267,10 +1267,10 @@
 
                                 // Display the popup with the content
                                 activePopup = new mapboxgl.Popup({
-                                        closeButton: false,
-                                        closeOnClick: false,
-                                        offset: [0, -20] // Offset from the top
-                                    })
+                                    closeButton: false,
+                                    closeOnClick: false,
+                                    offset: [0, -20] // Offset from the top
+                                })
                                     .setLngLat(coordinates)
                                     .setHTML(popupContent)
                                     .addTo(map);
@@ -1385,11 +1385,11 @@
                                         `;
 
                                 activePopup = new mapboxgl.Popup({
-                                        closeButton: true,
-                                        closeOnClick: false,
-                                        offset: [0, -20]
+                                    closeButton: true,
+                                    closeOnClick: false,
+                                    offset: [0, -20]
 
-                                    })
+                                })
                                     .setLngLat(coordinates)
                                     .setHTML(popupContent)
                                     .addTo(map);
