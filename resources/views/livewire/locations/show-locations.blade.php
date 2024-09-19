@@ -1,5 +1,5 @@
-<div>
-    <div class="bg-gray-50 max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
+<div class="bg-gray-50">
+    <div class="max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
         <div class="py-4">
             <div class="bg-white overflow-hidden shadow rounded-lg border border-gray-200 divide-y divide-gray-200">
                 <div class="px-4 py-5 sm:px-6 flex items-center justify-between flex-wrap sm:flex-nowrap">
@@ -52,7 +52,7 @@
     </div>
 
     <!-- Location start div-->
-    <div class="bg-gray-50 max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
+    <div class="max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
         <div class="py-4">
             <div class="bg-white overflow-hidden shadow border border-gray-200 rounded-lg divide-y divide-gray-200">
 
@@ -232,14 +232,6 @@
 
 
     <!-- map div-->
-    <div class="bg-gray-50 max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
-        <div class="py-4">
-            <div class="bg-white overflow-hidden shadow border border-gray-200 rounded-lg divide-y divide-gray-200">
-                <div class="px-4 py-5 sm:px-6">
-                    <h3 class="card-title"> You can find here all the active locations of {{ $tenant->name }}</h3>
-                </div>
-                @livewire('map.locations-map', ['tenant_id' => $tenant->id])
-            </div>
-        </div>
-    </div>
+    @livewire('map.locations-map', ['tenant_id' => $tenant->id])
+
 </div>
