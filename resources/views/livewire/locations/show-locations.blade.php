@@ -1,5 +1,5 @@
-<div>
-    <div class="bg-gray-50 max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
+<div class="bg-gray-50">
+    <div class="max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
         <div class="py-4">
             <div class="bg-white overflow-hidden shadow rounded-lg border border-gray-200 divide-y divide-gray-200">
                 <div class="px-4 py-5 sm:px-6 flex items-center justify-between flex-wrap sm:flex-nowrap">
@@ -11,7 +11,7 @@
 
                     <div class="ml-4 flex items-center justify-between">
                         <div>
-                            <a href="{{ route('locations.find-locations-public') }}" class="relative inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Back to map</a>
+                            <a href="{{ route('locations.locations-finder-public') }}" class="relative inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Back to map</a>
 
                         </div>
                     </div>
@@ -52,7 +52,7 @@
     </div>
 
     <!-- Location start div-->
-    <div class="bg-gray-50 max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
+    <div class="max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
         <div class="py-4">
             <div class="bg-white overflow-hidden shadow border border-gray-200 rounded-lg divide-y divide-gray-200">
 
@@ -232,14 +232,6 @@
 
 
     <!-- map div-->
-    <div class="bg-gray-50 max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
-        <div class="py-4">
-            <div class="bg-white overflow-hidden shadow border border-gray-200 rounded-lg divide-y divide-gray-200">
-                <div class="px-4 py-5 sm:px-6">
-                    <h3 class="card-title"> You can find here all the active locations of {{ $tenant->name }}</h3>
-                </div>
-                @livewire('map.location-map', ['tenant_id' => $tenant->id])
-            </div>
-        </div>
-    </div>
+    @livewire('map.locations-map', ['tenant_id' => $tenant->id])
+
 </div>

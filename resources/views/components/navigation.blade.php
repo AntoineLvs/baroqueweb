@@ -1,5 +1,5 @@
 <div x-data="{ open: false }">
-    <header class="inset-x-0 top-0 z-50 {{ request()->routeIs('locations.find-locations-public') ? 'bg-gray-800' : '' }}" style="z-index: 5; position: absolute;">
+    <header class="inset-x-0 top-0 z-50 {{ request()->routeIs('locations.locations-finder-public') ? 'bg-gray-800' : '' }}" style="z-index: 5; position: absolute;">
         <nav class="flex items-center justify-between p-6 lg:px-8" aria-label="Global">
             <div class="flex lg:flex-1">
                 <a href="{{ URL::route('home') }}" class="-m-1.5 p-1.5">
@@ -24,7 +24,7 @@
 
 
             <div class="hidden lg:flex lg:gap-x-12">
-                <a href="{{route('locations.find-locations-public')}}" class="text-m font-semibold leading-6 text-white">HVO Map</a>
+                <a href="{{route('locations.locations-finder-public')}}" class="text-m font-semibold leading-6 text-white">HVO Map</a>
                 <a href="{{route('fuer-unternehmen')}}" class="text-m font-semibold leading-6 text-white hover:underline">Für Unternehmen</a>
                 <a href="{{route('contact')}}" class="text-m font-semibold leading-6 text-white hover:underline">Kontakt</a>
                 <a href="{{route('legal-informations')}}" class="text-m font-semibold leading-6 text-white hover:underline">Nutzungsbedingungen</a>

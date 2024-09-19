@@ -22,7 +22,7 @@
 
                         <nav class="mt-5 flex-1 px-2 bg-gray-800 space-y-1">
 
-                            <div x-data="{ showAdminLinks: {{ in_array(request()->route()->getName(), ['admin.dashboard', 'product-types.index','base-products.index','map.index','documents.index','base-services.index']) ? 'true' : 'false' }} }">
+                            <div x-data="{ showAdminLinks: {{ in_array(request()->route()->getName(), ['admin.dashboard', 'product-types.index','base-products.index','documents.index','base-services.index']) ? 'true' : 'false' }} }">
                                 @if($super)
                                 <button @click="showAdminLinks = !showAdminLinks" :class="{ 'bg-teal-700': showAdminLinks, 'text-white': showAdminLinks, 'hover:text-white': showAdminLinks }" class="w-full hover:bg-gray-700 flex items-center text-left rounded-md p-2 gap-x-3 text-sm leading-6 font-semibold text-gray-300" aria-controls="sub-menu-1" aria-expanded="false">
                                     <svg class="h-6 w-6 shrink-0 text-gray-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" aria-hidden="true">

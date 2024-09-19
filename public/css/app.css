@@ -1089,6 +1089,9 @@ h1, h2, h3, h4, h5, h6, p, span {
 .order-first {
   order: -9999;
 }
+.col-span-1 {
+  grid-column: span 1 / span 1;
+}
 .col-span-2 {
   grid-column: span 2 / span 2;
 }
@@ -4184,6 +4187,10 @@ h1, h2, h3, h4, h5, h6, p, span {
   --tw-text-opacity: 1;
   color: rgb(67 56 202 / var(--tw-text-opacity));
 }
+.text-indigo-800 {
+  --tw-text-opacity: 1;
+  color: rgb(55 48 163 / var(--tw-text-opacity));
+}
 .text-lime-400 {
   --tw-text-opacity: 1;
   color: rgb(163 230 53 / var(--tw-text-opacity));
@@ -5746,6 +5753,11 @@ input[type="number"].appearance-number-none {
 .hover\:text-red-500:hover {
   --tw-text-opacity: 1;
   color: rgb(239 68 68 / var(--tw-text-opacity));
+}
+
+.hover\:text-red-600:hover {
+  --tw-text-opacity: 1;
+  color: rgb(220 38 38 / var(--tw-text-opacity));
 }
 
 .hover\:text-red-700:hover {
@@ -8744,14 +8756,6 @@ input[type="number"].appearance-number-none {
 
   .xl\:h-\[34rem\] {
     height: 34rem;
-  }
-
-  .xl\:w-1\/4 {
-    width: 25%;
-  }
-
-  .xl\:w-1\/5 {
-    width: 20%;
   }
 
   .xl\:w-\[34rem\] {

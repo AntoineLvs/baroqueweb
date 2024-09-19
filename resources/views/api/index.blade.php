@@ -31,11 +31,9 @@
             </ul>
         </div>
         @endif
-        <div class="max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
 
-            @livewire('api.index')
+        @livewire('api.index')
 
-        </div>
     </div>
 </main>
 @endsection
