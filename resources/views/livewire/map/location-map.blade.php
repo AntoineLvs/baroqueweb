@@ -156,7 +156,7 @@
                                             x-transition:leave-end="opacity-0"
                                             class="overflow-hidden"
                                             :style="{ height: openHeight }">
-                                            
+
 >>>>>>> dev_test
                 <div class="mx-auto mt-4 mb-4">
                     <div class="w-full flex flex-col items-center space-y-4 justify-center">
