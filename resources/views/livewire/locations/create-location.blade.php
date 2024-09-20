@@ -185,11 +185,10 @@
                                         <div>
                                             <div>
                                                 <div class="flex items-center">
-                                                    <label for="allday" class="block text-sm font-medium leading-6 text-gray-900 mr-2">Open 24 Hours</label>
+                                                    <label for="allDay" class="block text-sm font-medium leading-6 text-gray-900 mr-2">Open 24 Hours</label>
                                                 </div>
                                                 <div class="mt-2">
-                                                    <!-- Ajoutez wire:click pour appeler la méthode toggleAllDay -->
-                                                    <input id="allday" wire:model="allday" wire:click="toggleAllDay" aria-describedby="candidates-description" name="allday" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                                                    <input id="allDay" wire:model="allDay" wire:click="toggleAllDay" aria-describedby="candidates-description" name="allDay" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
                                                 </div>
                                             </div>
                                         </div>

@@ -813,7 +813,7 @@
                     // Add an event listener for zooming and showing a popup when the line is clicked
                     clone.querySelector('tr').addEventListener('click', function() {
                         const coordinates = feature.geometry.coordinates;
-                        flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds, address)
+                        flyToLocation(coordinates, name, opening_start, opening_end, productType, serviceType, productIds, address)
                         highlightLocation(feature);
                         hightLightLocationInTable(id);
                     });
@@ -863,14 +863,30 @@
                             .join(', ');
 
 
+                        let serviceBadge = '';
+
                         if (serviceType.includes(1)) {
-                            serviceBadge = `Services available : Vacuum cleaner`;
-                        } else if (serviceType.includes(2)) {
-                            serviceBadge = `Services available : Wash station`;
-                        } else if (serviceType.includes(3)) {
-                            serviceBadge = `Services available : Tire pressure`;
-                        } else {
-                            serviceBadge = '';
+                            serviceBadge += `<div class="image-container ml-2">
+                            <x-svg-icon icon="vacuumer" class="h-6 w-6 text-gray-700" />
+                            <span class="tooltip text-gray-500" style="z-index: 10; transform: translateX(-40%);">Vacuum</span>
+                            </div>`;
+                        }
+                        if (serviceType.includes(2)) {
+                            serviceBadge += `<div class="image-container ml-2">
+                            <x-svg-icon icon="carwash" class="h-6 w-6 text-gray-700" />
+                            <span class="tooltip text-gray-500" style="z-index: 10; transform: translateX(-50%);">Car Wash</span>
+                            </div>`;
+                        }
+                        if (serviceType.includes(3)) {
+                            serviceBadge += `<div class="image-container ml-2">
+                            <x-svg-icon icon="bistro" class="h-6 w-6 text-gray-700" />
+                            <span class="tooltip text-gray-500" style="z-index: 10; transform: translateX(-50%);">Bistro</span>
+                            </div>`;
+                        }
+
+
+                        if (serviceBadge !== '') {
+                            serviceBadge = `Services available : ${serviceBadge}`;
                         }
 
                         // Update the details content
@@ -880,10 +896,22 @@
                                                                 ${productBadge}
                                                                 <div> ${productNamesList}</div>
                                                             </div>
-                                                            <div style="display: flex; align-items: center; justify-content: start; margin-bottom: 5px;">
-                                                                ${serviceBadge}
+                                                        <div class="mt-4 mb-4 flex items-center space-x-2">
+                                                            <x-svg-icon icon="euro" class="h-6 w-6 text-indigo-800" />
+                                                            <span class="pr-2">Preis coming soon</span>
                                                             </div>
-                                                            <div style="margin-bottom: 5px;">Öffnungszeiten: ${opening_start} - ${opening_end}</div>
+
+                                                             <div class="mt-4 mb-4 flex items-center space-x-2">
+                                                                 ${serviceBadge}
+                                                            </div>
+                                                            <!--<div style="margin-bottom: 5px;">Öffnungszeit: ${opening_start} - ${opening_end}</div> -->
+                                                           <!-- Icon mit angepasster Größe und Farbe -->
+                                                            <div class="mt-4 mb-4 flex items-center space-x-2">
+                                                            <x-svg-icon icon="24" class="h-6 w-6 text-green-500" />
+                                                            <span class="pr-2">24h geöffnet</span>
+                                                            </div>
+
+                                    
                                                             <div style="margin-bottom: 5px;" class="text-gray-500 hover:text-indigo-600 hover:cursor-pointer hover:bg-gray-100" data-toggle="tooltip" data-placement="bottom" title="Copy address">
                                                                 <div x-data="{ showMsg: false }">
                                                                     <p style="display: inline; cursor: pointer;" @click="
@@ -908,9 +936,12 @@
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            <div class="w-full flex flex-col items-start justify-center">
-                                                                <div style="margin-bottom: 5px;" class="items-start text-center rounded-md bg-white px-3 py-2 hover:cursor-pointer text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100 whitespace-nowrap overflow-hidden text-ellipsis">
-                                                                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}" target="_blank">Routenplaner</a>
+                                                           <div class="w-full flex flex-row items-start justify-start space-x-2">
+                                                                <div class="text-center rounded-md bg-white px-2 py-1 hover:cursor-pointer text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100 whitespace-nowrap overflow-hidden text-ellipsis">
+                                                                    <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}" target="_blank">Google Maps</a>
+                                                                </div>
+                                                                <div class="text-center rounded-md bg-white px-2 py-1 hover:cursor-pointer text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100 whitespace-nowrap overflow-hidden text-ellipsis">
+                                                                    <a href="/find/${tenantId}" target="_blank">Details</a>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -984,10 +1015,11 @@
                     const opening_end = features[0].properties.opening_end || "23:59";
                     const productType = features[0].properties.product_types || []; // Changed 'e.features[0]' to 'features[0]'
                     let productIds = features[0].properties.products; // Same here
+                    const serviceType = features[0].properties.service_types || [];
                     const id = features[0].properties.id;
                     const address = features[0].properties.address;
 
-                    flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds, address);
+                    flyToLocation(coordinates, name, opening_start, opening_end, productType, serviceType, productIds, address);
                     hightLightLocationInTable(id);
                 } else {
                     // Adjust the map bounds to include all the matches
@@ -1048,6 +1080,7 @@
                 const opening_start = e.features[0].properties.opening_start || "00:00";
                 const opening_end = e.features[0].properties.opening_end || "23:59";
                 const productType = e.features[0].properties.product_types || [];
+                const serviceType = e.features[0].properties.service_types || [];
                 let productIds = e.features[0].properties.products;
                 const address = e.features[0].properties.address;
 
@@ -1061,6 +1094,42 @@
                     productBadge = `<div class="mr-2 text-xs text-center w-[80px]  rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
                                         HVO Blend
                                     </div>`;
+                }
+
+                let openHours = '';
+
+                if (opening_start == '00:00' && opening_end == '23:59' || opening_start == '00:00' && opening_end == '00:00') {
+                    openHours = `<div class="mt-1 mb-1 flex items-center space-x-2 justify-center">
+                                    <x-svg-icon icon="24" class="h-5 w-5 text-green-500" />
+                                    <span class="pr-2">24h geöffnet</span>
+                                </div>`;
+                } else {
+                    openHours = `Open from ${opening_start} to ${opening_end}`
+                }
+                let serviceBadge = '';
+
+                if (serviceType.includes(1)) {
+                    serviceBadge += `<div class="image-container ml-2">
+                        <x-svg-icon icon="vacuumer" class="h-5 w-5 text-gray-700" />
+                        <span class="tooltip text-gray-500" style="z-index: 10; transform: translateX(-40%);">Vacuum</span>
+                     </div>`;
+                }
+                if (serviceType.includes(2)) {
+                    serviceBadge += `<div class="image-container ml-2">
+                        <x-svg-icon icon="carwash" class="h-5 w-5 text-gray-700" />
+                        <span class="tooltip text-gray-500" style="z-index: 10; transform: translateX(-50%);">Car Wash</span>
+                     </div>`;
+                }
+                if (serviceType.includes(3)) {
+                    serviceBadge += `<div class="image-container ml-2">
+                        <x-svg-icon icon="bistro" class="h-5 w-5 text-gray-700" />
+                        <span class="tooltip text-gray-500" style="z-index: 10; transform: translateX(-50%);">Bistro</span>
+                     </div>`;
+                }
+
+
+                if (serviceBadge !== '') {
+                    serviceBadge = `${serviceBadge}`;
                 }
 
                 const productNames = {
@@ -1088,22 +1157,29 @@
                 const encodedAddress = encodeURIComponent(address);
 
                 const popupContent = `
-                    <div style="text-align: center; border-radius: 10px">
-                        <div style="font-size: 14px; font-weight: bold; margin-bottom:5px;">${name}</div>
-                        <div style="display: flex; align-items: center; justify-content: center;">
-                            ${productBadge}
-                            <div class="text-sm">${productNamesList}</div>
-                        </div>
-                        <div style="margin-top: 5px;" class="text-sm">Open from ${opening_start} to ${opening_end}</div>
-                        <div style="margin-top: 5px;" class="text-gray-500 hover:text-indigo-600 hover:cursor-pointer hover:bg-gray-100 text-sm" data-toggle="tooltip" data-placement="bottom" title="Open On Google Maps">
-                            <p style="display: inline; cursor: pointer;" @click="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}', '_blank')">
-                                <span>Google Maps Route</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4" style="display: inline; vertical-align: middle;">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-                                </svg>
-                            </p>
-                        </div>
-                    </div>
+                                    <div style="text-align: center; border-radius: 10px">
+                                        <div style="font-size: 14px; font-weight: bold; margin-bottom:5px;">${name}</div>
+                                            <div style="display: flex; align-items: center; justify-content: center;">
+                                                ${productBadge}
+                                                <div class="text-sm">${productNamesList}</div>
+                                            </div>
+                                            <div style="margin-top: 5px;" class="text-sm">
+                                                    <div class="mt-1 mb-1 flex items-center space-x-2 justify-center">
+                                                        <x-svg-icon icon="euro" class="h-5 w-5 text-indigo-800" />
+                                                        <span class="pr-2">Preis coming soon</span>
+                                                    </div>
+                                            </div>
+                                            <div style="margin-top: 5px;" class="text-sm">${openHours}</div>
+                                            <div style="margin-top: 5px;" class="text-sm">${serviceBadge}</div>
+                                            <div style="margin-top: 5px;" class="text-gray-500 hover:text-indigo-600 hover:cursor-pointer hover:bg-gray-100 text-sm" data-toggle="tooltip" data-placement="bottom" title="Open On Google Maps">
+                                            <p style="display: inline; cursor: pointer;" @click="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}', '_blank')">
+                                                <span>Google Maps Route</span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4" style="display: inline; vertical-align: middle;">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                                                </svg>
+                                            </p>
+                                        </div>
+                                    </div>
                 `;
 
                 activePopup = new mapboxgl.Popup({
@@ -1158,6 +1234,7 @@
                 const opening_start = e.features[0].properties.opening_start || "00:00";
                 const opening_end = e.features[0].properties.opening_end || "23:59";
                 const productType = e.features[0].properties.product_types || [];
+                const serviceType = e.features[0].properties.service_types || [];
                 let productIds = e.features[0].properties.products;
                 const address = e.features[0].properties.address;
 
@@ -1167,6 +1244,42 @@
                     productBadge = `<div class="mr-2 text-xs text-center w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">HVO 100</div>`;
                 } else if (productType.includes(2)) {
                     productBadge = `<div class="mr-2 text-xs text-center w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">HVO Blend</div>`;
+                }
+
+                let openHours = '';
+
+                if (opening_start == '00:00' && opening_end == '23:59' || opening_start == '00:00' && opening_end == '00:00') {
+                    openHours = `<div class="mt-1 mb-1 flex items-center space-x-2 justify-center">
+                                    <x-svg-icon icon="24" class="h-5 w-5 text-green-500" />
+                                    <span class="pr-2">24h geöffnet</span>
+                                </div>`;
+                } else {
+                    openHours = `Open from ${opening_start} to ${opening_end}`
+                }
+                let serviceBadge = '';
+
+                if (serviceType.includes(1)) {
+                    serviceBadge += `<div class="image-container ml-2">
+                        <x-svg-icon icon="vacuumer" class="h-5 w-5 text-gray-700" />
+                        <span class="tooltip text-gray-500" style="z-index: 10; transform: translateX(-40%);">Vacuum</span>
+                     </div>`;
+                }
+                if (serviceType.includes(2)) {
+                    serviceBadge += `<div class="image-container ml-2">
+                        <x-svg-icon icon="carwash" class="h-5 w-5 text-gray-700" />
+                        <span class="tooltip text-gray-500" style="z-index: 10; transform: translateX(-50%);">Car Wash</span>
+                     </div>`;
+                }
+                if (serviceType.includes(3)) {
+                    serviceBadge += `<div class="image-container ml-2">
+                        <x-svg-icon icon="bistro" class="h-5 w-5 text-gray-700" />
+                        <span class="tooltip text-gray-500" style="z-index: 10; transform: translateX(-50%);">Bistro</span>
+                     </div>`;
+                }
+
+
+                if (serviceBadge !== '') {
+                    serviceBadge = `${serviceBadge}`;
                 }
 
                 // Product name table
@@ -1199,22 +1312,29 @@
 
                 // Create the HTML content for the popup
                 const popupContent = `
-                    <div style="text-align: center; border-radius: 10px">
-                        <div style="font-size: 14px; font-weight: bold; margin-bottom:5px;">${name}</div>
-                        <div style="display: flex; align-items: center; justify-content: center;">
-                            ${productBadge}
-                            <div class="text-sm">${productNamesList}</div>
-                        </div>
-                        <div style="margin-top: 5px;" class="text-sm">Open from ${opening_start} to ${opening_end}</div>
-                        <div style="margin-top: 5px;" class="text-gray-500 hover:text-indigo-600 hover:cursor-pointer hover:bg-gray-100 text-sm" data-toggle="tooltip" data-placement="bottom" title="Open On Google Maps">
-                            <p style="display: inline; cursor: pointer;" @click="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}', '_blank')">
-                                <span>Google Maps Route</span>
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4" style="display: inline; vertical-align: middle;">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
-                                </svg>
-                            </p>
-                        </div>
-                    </div>
+                                    <div style="text-align: center; border-radius: 10px">
+                                        <div style="font-size: 14px; font-weight: bold; margin-bottom:5px;">${name}</div>
+                                            <div style="display: flex; align-items: center; justify-content: center;">
+                                                ${productBadge}
+                                                <div class="text-sm">${productNamesList}</div>
+                                            </div>
+                                            <div style="margin-top: 5px;" class="text-sm">
+                                                    <div class="mt-1 mb-1 flex items-center space-x-2 justify-center">
+                                                        <x-svg-icon icon="euro" class="h-5 w-5 text-indigo-800" />
+                                                        <span class="pr-2">Preis coming soon</span>
+                                                    </div>
+                                            </div>
+                                            <div style="margin-top: 5px;" class="text-sm">${openHours}</div>
+                                            <div style="margin-top: 5px;" class="text-sm">${serviceBadge}</div>
+                                            <div style="margin-top: 5px;" class="text-gray-500 hover:text-indigo-600 hover:cursor-pointer hover:bg-gray-100 text-sm" data-toggle="tooltip" data-placement="bottom" title="Open On Google Maps">
+                                            <p style="display: inline; cursor: pointer;" @click="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}', '_blank')">
+                                                <span>Google Maps Route</span>
+                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4" style="display: inline; vertical-align: middle;">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                                                </svg>
+                                            </p>
+                                        </div>
+                                    </div>
                 `;
 
                 // Display the popup with the content
@@ -1265,7 +1385,7 @@
 
 
             // Show a popup and zoom to a specific location
-            function flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds, address) {
+            function flyToLocation(coordinates, name, opening_start, opening_end, productType, serviceType, productIds, address) {
 
                 map.flyTo({
                     center: coordinates,
@@ -1287,6 +1407,42 @@
                     productBadge = `<div class="mr-2 text-xs text-center w-[80px] rounded-full bg-indigo-600 px-1 py-0.5 text-white shadow-sm whitespace-nowrap overflow-hidden text-ellipsis">
                         HVO Blend
                     </div>`;
+                }
+
+                let openHours = '';
+
+                if (opening_start == '00:00' && opening_end == '23:59' || opening_start == '00:00' && opening_end == '00:00') {
+                    openHours = `<div class="mt-1 mb-1 flex items-center space-x-2 justify-center">
+                                    <x-svg-icon icon="24" class="h-5 w-5 text-green-500" />
+                                    <span class="pr-2">24h geöffnet</span>
+                                </div>`;
+                } else {
+                    openHours = `Open from ${opening_start} to ${opening_end}`
+                }
+                let serviceBadge = '';
+
+                if (serviceType.includes(1)) {
+                    serviceBadge += `<div class="image-container ml-2">
+                        <x-svg-icon icon="vacuumer" class="h-5 w-5 text-gray-700" />
+                        <span class="tooltip text-gray-500" style="z-index: 10; transform: translateX(-40%);">Vacuum</span>
+                     </div>`;
+                }
+                if (serviceType.includes(2)) {
+                    serviceBadge += `<div class="image-container ml-2">
+                        <x-svg-icon icon="carwash" class="h-5 w-5 text-gray-700" />
+                        <span class="tooltip text-gray-500" style="z-index: 10; transform: translateX(-50%);">Car Wash</span>
+                     </div>`;
+                }
+                if (serviceType.includes(3)) {
+                    serviceBadge += `<div class="image-container ml-2">
+                        <x-svg-icon icon="bistro" class="h-5 w-5 text-gray-700" />
+                        <span class="tooltip text-gray-500" style="z-index: 10; transform: translateX(-50%);">Bistro</span>
+                     </div>`;
+                }
+
+
+                if (serviceBadge !== '') {
+                    serviceBadge = `${serviceBadge}`;
                 }
 
                 // Product name mapping
@@ -1319,14 +1475,21 @@
 
                 // Create the HTML content for the popup
                 const popupContent = `
-                                         <div style="text-align: center; border-radius: 10px">
-                                                 <div style="font-size: 14px; font-weight: bold; margin-bottom:5px;">${name}</div>
-                                                <div style="display: flex; align-items: center; justify-content: center;">
-                                                    ${productBadge}
-                                                    <div class="text-sm">${productNamesList}</div>
-                                                </div>
-                                                <div style="margin-top: 5px;" class="text-sm">Open from ${opening_start} to ${opening_end}</div>
-                                                <div style="margin-top: 5px;" class="text-gray-500 hover:text-indigo-600 hover:cursor-pointer hover:bg-gray-100 text-sm" data-toggle="tooltip" data-placement="bottom" title="Open On Google Maps">
+                                        <div style="text-align: center; border-radius: 10px">
+                                                <div style="font-size: 14px; font-weight: bold; margin-bottom:5px;">${name}</div>
+                                                    <div style="display: flex; align-items: center; justify-content: center;">
+                                                        ${productBadge}
+                                                        <div class="text-sm">${productNamesList}</div>
+                                                    </div>
+                                                    <div style="margin-top: 5px;" class="text-sm">
+                                                            <div class="mt-1 mb-1 flex items-center space-x-2 justify-center">
+                                                                <x-svg-icon icon="euro" class="h-5 w-5 text-indigo-800" />
+                                                                <span class="pr-2">Preis coming soon</span>
+                                                            </div>
+                                                    </div>
+                                                    <div style="margin-top: 5px;" class="text-sm">${openHours}</div>
+                                                    <div style="margin-top: 5px;" class="text-sm">${serviceBadge}</div>
+                                                    <div style="margin-top: 5px;" class="text-gray-500 hover:text-indigo-600 hover:cursor-pointer hover:bg-gray-100 text-sm" data-toggle="tooltip" data-placement="bottom" title="Open On Google Maps">
                                                     <p style="display: inline; cursor: pointer;" @click="window.open('https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}', '_blank')">
                                                         <span>Google Maps Route</span>
                                                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-4 w-4" style="display: inline; vertical-align: middle;">
@@ -1334,7 +1497,7 @@
                                                         </svg>
                                                     </p>
                                                 </div>
-                                            </div>
+                                        </div>
                                         `;
 
                 activePopup = new mapboxgl.Popup({
@@ -1368,13 +1531,14 @@
                 const opening_start = e.features[0].properties.opening_start || "00:00";
                 const opening_end = e.features[0].properties.opening_end || "23:59";
                 const productType = e.features[0].properties.product_types || [];
+                const serviceType = e.features[0].properties.service_types || [];
                 let productIds = e.features[0].properties.products;
                 const id = clickedFeature.properties.id;
                 const address = e.features[0].properties.address || '';
 
 
                 // Zoom to the location and show a popup
-                flyToLocation(coordinates, name, opening_start, opening_end, productType, productIds, address);
+                flyToLocation(coordinates, name, opening_start, opening_end, productType, serviceType, productIds, address);
 
                 // Move the table line to the top
                 hightLightLocationInTable(id);

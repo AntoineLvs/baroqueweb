@@ -34,6 +34,7 @@ class EditLocation extends Component
     public $opening_end;
     public $opening_info;
 
+    public $allDay;
 
 
 
@@ -54,6 +55,11 @@ class EditLocation extends Component
         $this->opening_end = $location->opening_end;
         $this->opening_info = $location->opening_info;
 
+        if ($this->opening_start == '00:00:00' && $this->opening_end == '00:00:00') {
+            $this->allDay = true;
+        } else {
+            $this->allDay = false;
+        }
         $this->location_types = LocationType::all();
 
         $this->options = $this->location_types->pluck('name', 'id')->toArray();
@@ -106,6 +112,18 @@ class EditLocation extends Component
             ->with('message', 'Location wurde erstellt.');
     }
 
+
+    public function toggleAllDay()
+    {
+        if ($this->allDay == true) {
+            $this->opening_start = '00:00';
+            $this->opening_end = '00:00';
+        } else {
+            $this->opening_start = '06:00';
+            $this->opening_end = '22:00';
+        }
+    }
+
     public function getProducts(Request $request)
     {
         $selected = json_decode($request->get('selected', ''), true);
@@ -115,7 +133,7 @@ class EditLocation extends Component
         return Product::withoutGlobalScope(TenantScope::class)
             ->when(
                 $search = $request->get('search'),
-                fn ($query) => $query->where('name', 'like', "%{$search}%")
+                fn($query) => $query->where('name', 'like', "%{$search}%")
             )
             ->when(!$search && $selected, function ($query) use ($selected) {
                 $query->whereIn('id', $selected)
@@ -126,7 +144,7 @@ class EditLocation extends Component
             })
             ->limit(10)
             ->get()
-            ->map(fn (Product $product) => $product->only('id', 'name'));
+            ->map(fn(Product $product) => $product->only('id', 'name'));
     }
     public function getServices(Request $request)
     {
@@ -135,7 +153,7 @@ class EditLocation extends Component
         return Service::withoutGlobalScope(TenantScope::class)
             ->when(
                 $search = $request->get('search'),
-                fn ($query) => $query->where('name', 'like', "%{$search}%")
+                fn($query) => $query->where('name', 'like', "%{$search}%")
             )
             ->when(!$search && $selected, function ($query) use ($selected) {
                 $query->whereIn('id', $selected)
@@ -146,7 +164,7 @@ class EditLocation extends Component
             })
             ->limit(10)
             ->get()
-            ->map(fn (Service $service) => $service->only('id', 'name'));
+            ->map(fn(Service $service) => $service->only('id', 'name'));
     }
     public function render()
     {
