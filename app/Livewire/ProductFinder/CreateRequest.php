@@ -2,7 +2,6 @@
 
 namespace App\Livewire\ProductFinder;
 
-use App\Mail\Order\NewProductRequest;
 use App\Models\Order;
 use App\Models\OrderedProduct;
 use App\Models\Product;
@@ -10,6 +9,7 @@ use App\Models\ProductUnit;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Mail;
+use Modules\Order\Mail\NewProductRequest;
 
 class CreateRequest extends Component
 {

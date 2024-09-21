@@ -2,15 +2,12 @@
 
 namespace App\Livewire\Order;
 
-use App\Mail\Order\NewProductOffer;
 use App\Models\Order;
-use App\Models\Product;
-use App\Models\ProductUnit;
 use App\Models\OrderedProduct;
-use Livewire\Component;
-use Illuminate\Support\Collection;
+use App\Models\Product;
 use Illuminate\Support\Facades\Mail;
-
+use Livewire\Component;
+use Modules\Order\Mail\NewProductOffer;
 
 
 class EditOrder extends Component
