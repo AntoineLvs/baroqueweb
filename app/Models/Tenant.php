@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Carbon\Carbon;
 
 use Livewire\Attributes\Validate;
 
@@ -209,6 +210,36 @@ class Tenant extends Model
 
         return $count;
 
+    }
+
+    public function checkUserToken($tenant)
+    {
+
+        $this->tenantId = $tenant->id;
+
+        $this->apiToken = ApiToken::where('tenant_id', $this->tenantId)->first();
+
+        if ($this->apiToken) {
+            $this->userStatus = $this->apiToken->user->status;
+            $this->tokenType = TokenType::withoutGlobalScopes()->find($this->apiToken->token_type_id);
+
+            $currentDate = now();
+            $expirationDate = Carbon::parse($this->apiToken->expires_at);
+
+            if ($expirationDate->isPast()) {
+                $this->daysRemaining = 'Expired';
+            } else {
+                $this->daysRemaining = $currentDate->diffInDays($expirationDate);
+            }
+        } else {
+            $otherUserWithStatus = User::where('tenant_id', $this->tenantId)
+                ->where('status', '<>', 0)
+                ->first();
+
+            $this->userStatus = $otherUserWithStatus ? $otherUserWithStatus->status : 0;
+        }
+
+        $this->hasToken = $this->apiToken ? true : false;
     }
 
     public function getLocationNumber(Tenant $tenant)

@@ -57,7 +57,7 @@
 
                       <div class="form-group{{ $errors->has('description') ? ' has-danger' : '' }}">
 
-                        <input type="text" name="description" id="description" class="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('description') }}" value="{{ old('description', $location->description) }}" >
+                        <input type="text" name="description" id="description" class="block max-w-lg w-full shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md{{ $errors->has('name') ? ' is-invalid' : '' }}" placeholder="{{ __('description') }}" value="{{ old('description', $location->description) }}">
 
                       </div>
                     </div>
@@ -125,24 +125,37 @@
                       Provide Opening Informations for this locations.<br>You can also write further informations<br>(We are close on Christmas Day).
                     </p>
                   </div>
-                  <div class="flex items-center">
-                    <div class="mr-4">
-                      <div class="flex items-center">
-                        <label for="opening_end" class="block text-sm font-medium leading-6 text-gray-900 mr-2">Start</label>
-                      </div>
-                      <div class="mt-2">
-                        <input type="time" name="opening_start" id="opening_start" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="HH:MM" pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]" value="{{ old('opening_start', $location->opening_start) }}">
-                      </div>
-                    </div>
-                    <div class=" mr-4 mt-6">
-                      --
-                    </div>
+                  <div class="flex_col items-center">
                     <div>
-                      <div class="flex items-center">
-                        <label for="opening_end" class="block text-sm font-medium leading-6 text-gray-900 mr-2">End</label>
+                      <div>
+                        <div class="flex items-center">
+                          <label for="allday" class="block text-sm font-medium leading-6 text-gray-900 mr-2">Open 24 Hours</label>
+                        </div>
+                        <div class="mt-2">
+                          <!-- Ajoutez wire:click pour appeler la méthode toggleAllDay -->
+                          <input id="allday" wire:model="allDay" wire:click="toggleAllDay" aria-describedby="candidates-description" name="allday" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600">
+                        </div>
                       </div>
-                      <div class="mt-2">
-                        <input type="time" name="opening_end" id="opening_end" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="HH:MM" pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]" value="{{ old('opening_end', $location->opening_end) }}">
+                    </div>
+                    <div class="flex mt-6">
+                      <div class="mr-4">
+                        <div class="flex items-center">
+                          <label for="opening_start" class="block text-sm font-medium leading-6 text-gray-900 mr-2">Start</label>
+                        </div>
+                        <div class="mt-2">
+                          <input type="time" name="opening_start" id="opening_start" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="HH:MM" pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]" wire:model="opening_start">
+                        </div>
+                      </div>
+
+                      <div class="mr-4 mt-6">--</div>
+
+                      <div>
+                        <div class="flex items-center">
+                          <label for="opening_end" class="block text-sm font-medium leading-6 text-gray-900 mr-2">End</label>
+                        </div>
+                        <div class="mt-2">
+                          <input type="time" name="opening_end" id="opening_end" class="mt-1 focus:ring-indigo-500 focus:border-indigo-500 block shadow-sm sm:text-sm border-gray-300 rounded-md" placeholder="HH:MM" pattern="([01]?[0-9]|2[0-3]):[0-5][0-9]" wire:model="opening_end">
+                        </div>
                       </div>
                     </div>
                   </div>

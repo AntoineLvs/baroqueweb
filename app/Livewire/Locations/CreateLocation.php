@@ -39,7 +39,7 @@ class CreateLocation extends Component
     public $opening_start = '06:00';
     public $opening_end = '22:00';
     public $opening_info;
-    public $allday = false;
+    public $allDay = false;
 
     public $toggleMapButton = false;
     public $getCoordinatesButton = false;
@@ -52,7 +52,7 @@ class CreateLocation extends Component
 
     public function toggleAllDay()
     {
-        if ($this->allday) {
+        if ($this->allDay == true) {
             $this->opening_start = '00:00';
             $this->opening_end = '00:00';
         } else {
