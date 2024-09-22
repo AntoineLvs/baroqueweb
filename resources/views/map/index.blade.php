@@ -28,7 +28,26 @@
                                 </h3>
                             </div>
                             <div class="ml-4 mt-2 flex-shrink-0">
+                                <a href="{{ route('api.manager') }}" class="relative inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Map Manager</a>
+                                <a href="{{ route('locations.profile-tenants', ['tenant_id' => $tenant_id ?? 1]) }}" class="relative inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Show Public Map</a>
+                                <div class="image-container">
+                                    <button id="copyLink" data-clipboard-text="{{ $link }}" class="relative inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Copy my Public Map Link</button>
+                                    <span class="tooltip text-gray-500" style="z-index: 10; transform: translate(-50%, 230%);">{{ $link }}</span>
+                                </div>
+
                                 <a href="{{ route('locations.index') }}" class="relative inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Zurück</a>
+
+                                @section('scripts')
+                                <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js"></script>
+                                <script>
+                                    var clipboard = new ClipboardJS('#copyLink');
+
+                                    clipboard.on('success', function(e) {
+                                        console.log(e);
+                                        alert("Link copied to clipboard");
+                                    });
+                                </script>
+                                @endsection
                             </div>
                         </div>
                     </div>
@@ -41,7 +60,7 @@
         </div>
 
 
-        @livewire('map.edit-map', ['tenant_id' => session('tenant_id')])
+        @livewire('map.edit-map', ['tenant_id' => $tenant_id])
 
     </div>
 

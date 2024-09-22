@@ -20,7 +20,23 @@
             @foreach ($tenants as $tenant)
             <tr>
                 <td class="whitespace-nowrap py-3 px-3 pl-6 text-sm text-gray-900">
-                    {{ $tenant->id }}
+
+                    <div class="flex items-center">
+                        <span class="mr-2">{{ $tenant->id }}</span>
+                        @if($super)
+                        <div>
+                            <div class="image-container ml-2">
+                                <a wire:click="impersonate({{$tenant->id}})" href="#" class="text-xs text-indigo-600">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-indigo-600">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                                    </svg>
+                                </a>
+                                <span class="tooltip text-gray-500" style="z-index: 10; transform: translateX(-30%);">Impersonate user</span>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+
                 </td>
 
                 <td class="whitespace-nowrap py-3 px-3 pl-6 text-sm text-gray-900">
@@ -55,7 +71,7 @@
 
                 <td class="whitespace-nowrap py-3 px-3 pl-6 text-sm text-gray-900">
                     @php
-                        $tenant->checkUserToken($tenant);
+                    $tenant->checkUserToken($tenant);
                     @endphp
                     @if($tenant->userStatus == 0)
                     <span class="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10">Noch keine Lizenz aktiviert </span>
@@ -64,8 +80,10 @@
                     <span class="inline-flex items-center rounded-md bg-yellow-50 px-2 py-1 text-xs font-medium text-yellow-800 ring-1 ring-inset ring-yellow-600/20">Lizenz wartet auf Freischaltung</span>
 
                     @elseif($tenant->userStatus == 100)
-                    <span class="inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Lizenz aktiv</span>
-                
+                    <div class="flex flex-col items-center ">
+                        <span class="mb-1 inline-flex items-center rounded-md bg-green-50 px-2 py-1 text-xs font-medium text-green-700 ring-1 ring-inset ring-green-600/20">Lizenz aktiv</span>
+                        <span class="text-xs text-gray-500">{{ $tenant->token_type_name }}</span>
+                    </div>
                     @elseif($tenant->userStatus == 99)
                     <span class="inline-flex items-center rounded-md bg-red-50 px-2 py-1 text-xs font-medium text-red-700 ring-1 ring-inset ring-red-600/10"> Request rejected </span>
                     @endif
@@ -87,7 +105,7 @@
                     <div class="image-container ml-2">
                         @if ($service->base_service_id === 1)
                         <x-svg-icon icon="vacuumer" class="h-6 w-6 text-gray-700" />
-                        <span class="tooltip text-gray-500" style="z-index: 10; transform: translateX(-40%);">Vacuum</span>
+                        <span class="tooltip text-gray-500" style="z-index: 10; transform: translateX(-50%);">Vacuum</span>
                         @elseif ($service->base_service_id === 2)
                         <x-svg-icon icon="carwash" class="h-6 w-6 text-gray-700" />
                         <span class="tooltip text-gray-500" style="z-index: 10; transform: translateX(-50%);">Car Wash</span>
