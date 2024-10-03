@@ -53,6 +53,7 @@ class CreateRequest extends Component
     {
         $this->product = $product;
         $this->product_units = ProductUnit::all();
+        $this->tenant_id = Auth::user()->tenant_id ?? null;
     }
 
     public function save()
@@ -109,10 +110,10 @@ class CreateRequest extends Component
         $order->fresh();
 
         // E-Mail an den Benutzer, der die Anfrage sendet
-        Mail::to($order->customer_email)->send(new NewProductRequest($order, $ordered_product));
+        // Mail::to($order->customer_email)->send(new NewProductRequest($order, $ordered_product));
 
         // E-Mail an den Empfänger (Tenant, der das Produkt anbietet)
-        Mail::to($this->product->tenant->email)->send(new NewProductRequest($order, $ordered_product));
+        // Mail::to($this->product->tenant->email)->send(new NewProductRequest($order, $ordered_product));
 
 
         $message = 'Ihre Anfrage wurde erfolgreich übermittelt. ';

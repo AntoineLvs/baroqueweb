@@ -110,7 +110,9 @@ Route::get('/test-s3', function () {
 
 // PRODUCT FINDER
 Route::get('product-finder/', [ProductFinderController::class, 'index'])->name('product-finder.index-public');
+Route::get('product-finder-shop/{product}', [ProductFinderController::class, 'showProductPage'])->name('product-finder.product-finder-shop');
 Route::get('request-product/{product}', [OrderController::class, 'createProductRequest'])->name('orders.public-product-request');
+
 
 Route::get('find/', [LocationController::class, 'showLocationFinder'])->name('locations.locations-finder-public');
 
