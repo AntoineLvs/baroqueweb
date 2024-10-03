@@ -1,25 +1,5 @@
 <div>
-    <div class="max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
-        <div class="py-4">
-            <!-- This example requires Tailwind CSS v2.0+ -->
-            <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
-                <!-- This example requires Tailwind CSS v2.0+ -->
-                <div class="bg-white px-4 py-5 border-b border-gray-200 sm:px-6">
-                    <div class="-ml-4 -mt-2 flex items-center justify-between flex-wrap sm:flex-nowrap">
-                        <div class="ml-4 mt-2">
-                            <h3 class="text-lg leading-6 font-medium text-gray-900">
-                                Edit Map tool
-                            </h3>
-                        </div>
-                    </div>
-                </div>
-                <div class="px-4 py-5 sm:p-6">
-                    <!-- Content goes here -->
-                    Edit Panel
-                </div>
-            </div>
-        </div>
-    </div>
+    
     <div class="max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
         <div class="py-4">
             <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">

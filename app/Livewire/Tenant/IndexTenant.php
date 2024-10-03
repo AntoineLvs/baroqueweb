@@ -7,6 +7,7 @@ use App\Models\Location;
 use App\Models\Tenant;
 use App\Models\TokenType;
 use App\Models\User;
+use App\Scopes\TenantScope;
 use Livewire\Component;
 use Carbon\Carbon;
 
@@ -25,17 +26,24 @@ class IndexTenant extends Component
     public $sortField = 'id';
     public $sortDirection = 'asc';
 
+    public $super;
 
     public function mount()
     {
-        // Récupérer tous les tenants
         $this->tenants = Tenant::all();
 
         foreach ($this->tenants as $tenant) {
             $tenant->locations_count = Location::where('tenant_id', $tenant->id)->count();
 
+            $tenant->api_token = ApiToken::where('tenant_id', $tenant->id)->first();
+            if($tenant->api_token){
+                $tenant->token_type_name = TokenType::where('id', $tenant->api_token->token_type_id)->first()->name;
+            }else {
+                $tenant->token_type = "-";
+            }
+
             $tenant->locations = Location::where('tenant_id', $tenant->id)->get();
-            
+
             $allProducts = [];
 
             foreach ($tenant->locations as $location) {
@@ -56,6 +64,12 @@ class IndexTenant extends Component
 
             $tenant->products = collect($allProducts)->values();
             $tenant->services = collect($allServices)->values();
+        }
+
+        if (session()->has('tenant_id')) {
+            $this->super = false;
+        } else {
+            $this->super = true;
         }
     }
 
@@ -113,6 +127,21 @@ class IndexTenant extends Component
         if ($this->sortDirection === 'desc') {
             $this->tenants = $this->tenants->reverse();
         }
+    }
+
+
+    public function impersonate($tenantId)
+    {
+        if (! is_null(auth()->user()->tenant_id)) {
+            return;
+        }
+
+        $originalId = auth()->user()->id;
+        session()->put('impersonate', $originalId);
+        $userId = User::withoutGlobalScope(TenantScope::class)->where('tenant_id', $tenantId)->first()->id;
+        auth()->loginUsingId($userId);
+
+        return redirect('/team');
     }
 
 

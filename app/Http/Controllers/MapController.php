@@ -10,9 +10,13 @@ use Panoscape\History\Events\ModelChanged;
 
 class MapController extends Controller
 {
-
-
     // mapbox
+    public function index()
+    {
+        $tenant_id = session('tenant_id');
+        $link = env('APP_URL') . '/find/' . $tenant_id ?? 1;
+        return view('map.index', compact('tenant_id', 'link'));
+    }
 
     public function getResponse()
     {
