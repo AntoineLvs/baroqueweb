@@ -110,6 +110,18 @@ class ProductFinderController extends Controller
 
         return view('hub.show-profile', ['tenant' => $tenant]);
     }
+    
 
+    public function showProductPage($productId): View
+    {
+        // Entferne den TenantScope und finde das Produkt manuell
+        $product = Product::withoutGlobalScope(TenantScope::class)->find($productId);
 
+        if (!$product) {
+            // Wenn das Produkt nicht gefunden wird, gib eine 404-Seite zurück
+            abort(404, 'Produkt nicht gefunden.');
+        }
+
+        return view('product-finder.product-finder-shop', compact('product'));
+    }
 }
