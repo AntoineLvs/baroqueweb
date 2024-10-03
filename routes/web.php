@@ -36,11 +36,11 @@ use App\Livewire\Auth\Verify;
 use App\Livewire\ContactForm;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
-use Modules\Order\Http\Controllers\ProductFinderController;
-use Modules\Product\Http\Controllers\BaseProductController;
-use Modules\Product\Http\Controllers\ProductController;
-use Modules\Product\Http\Controllers\ProductTypeController;
-use Modules\Shipping\Http\Controllers\ShippingController;
+use App\Http\Controllers\ProductFinderController;
+use App\Http\Controllers\BaseProductController;
+use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductTypeController;
+use App\Http\Controllers\ShippingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -235,10 +235,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('product-types/create', [ProductTypeController::class, 'create'])->name('product-types.create');
         Route::get('product-types/{product-type}/edit', [ProductTypeController::class, 'edit'])->name('product-types.edit');
 
-        // Order Routes
-        Route::resource('orders', OrderController::class)->except(['update']);
-        Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
-        Route::get('orders/create', [OrderController::class, 'create'])->name('orders.create');
 
 
         Route::controller(ImportExportController::class)->group(function () {
@@ -288,6 +284,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('services', [ServiceController::class, 'index'])->name('services.index');
     Route::get('services/create', [ServiceController::class, 'create'])->name('services.create');
     Route::get('services/{service}/edit/delete-document', [ServiceController::class, 'destroyDocument'])->name('services.destroyDocument');
+
+    // Order Routes
+    Route::resource('orders', OrderController::class)->except(['update']);
+    Route::get('orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('orders/create', [OrderController::class, 'create'])->name('orders.create');
 
 
 

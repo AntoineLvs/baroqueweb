@@ -326,7 +326,7 @@
                                 </a>
                                 @endif
 
-                                {{-- <a @if (request()->routeIs('orders.index'))
+                                 <a @if (request()->routeIs('orders.index'))
                                     class="bg-teal-700 text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md"
                                     @endif
 
@@ -339,7 +339,7 @@
 
 
                                 Orders
-                                </a>--}}
+                                </a>
 
                                 {{--
                                 <a @if (request()->routeIs('shippings.index'))

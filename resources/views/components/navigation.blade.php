@@ -25,6 +25,7 @@
 
             <div class="hidden lg:flex lg:gap-x-12">
                 <a href="{{route('locations.locations-finder-public')}}" class="text-m font-semibold leading-6 text-white">HVO Map</a>
+                <a href="{{route('product-finder.index-public')}}" class="text-m font-semibold leading-6 text-white">Product Finder</a>
                 <a href="{{route('fuer-unternehmen')}}" class="text-m font-semibold leading-6 text-white hover:underline">Für Unternehmen</a>
                 <a href="{{route('contact')}}" class="text-m font-semibold leading-6 text-white hover:underline">Kontakt</a>
                 <a href="{{route('legal-informations')}}" class="text-m font-semibold leading-6 text-white hover:underline">Nutzungsbedingungen</a>

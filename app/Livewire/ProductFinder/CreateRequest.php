@@ -9,7 +9,7 @@ use App\Models\ProductUnit;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Mail;
-use Modules\Order\Mail\NewProductRequest;
+use App\Mail\NewProductRequest;
 
 class CreateRequest extends Component
 {

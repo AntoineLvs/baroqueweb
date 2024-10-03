@@ -7,7 +7,7 @@ use App\Models\OrderedProduct;
 use App\Models\Product;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
-use Modules\Order\Mail\NewProductOffer;
+
 
 
 class EditOrder extends Component
