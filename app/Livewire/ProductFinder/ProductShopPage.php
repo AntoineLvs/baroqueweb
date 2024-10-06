@@ -17,6 +17,10 @@ class ProductShopPage extends Component
     public $product;
     public $tenant_id;
     public $products;
+    public $product_units;
+    public $selected_unit = 1;
+    public $quantity = 0;
+
 
     public function mount(Product $product)
     {
@@ -26,6 +30,13 @@ class ProductShopPage extends Component
             ->where('id', '<>', $this->product->id)
             ->take(4)
             ->get();
+
+        $this->product_units = ProductUnit::withoutGlobalScope(TenantScope::class)->get();
+    }
+
+    public function updatedSelectedUnit($value)
+    {
+        $this->selected_unit = $value;
     }
 
 
@@ -34,6 +45,8 @@ class ProductShopPage extends Component
     {
         return view('livewire.product-finder.product-shop-page')->with([
             'product' => $this->product,
+            'product_units' => $this->product_units,
+
         ]);
     }
 }

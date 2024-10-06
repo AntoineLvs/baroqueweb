@@ -97,7 +97,7 @@
 
                 <!-- Quantity -->
                 <div>
-                    <label for="quantity" class="block text-sm font-semibold leading-6 text-gray-900">request_quantity</label>
+                    <label for="quantity" class="block text-sm font-semibold leading-6 text-gray-900">Quantity</label>
                     <div class="mt-2.5">
                         <input type="number" wire:model="request_quantity" id="quantity" min="1" class="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                     </div>
@@ -106,7 +106,7 @@
 
                 <!-- Unit -->
                 <div>
-                    <label for="price" class="block text-sm font-semibold leading-6 text-gray-900">product_unit_id</label>
+                    <label for="price" class="block text-sm font-semibold leading-6 text-gray-900">Product Unit</label>
                     <div class="mt-2.5">
 
                         <select wire:model.live="product_unit_id" id="product_unit_id" class="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md" required>

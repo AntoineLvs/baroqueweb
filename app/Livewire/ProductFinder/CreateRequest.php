@@ -25,7 +25,7 @@ class CreateRequest extends Component
     public $product_units;
     public $product_unit_id = 1;
 
-    public $request_quantity = 1000;
+    public $request_quantity;
 
     // Customer-related fields
     public $customer_tenant_id;
@@ -49,11 +49,15 @@ class CreateRequest extends Component
     public $date_customer_confirmed;
     public $date_customer_cancelled;
 
-    public function mount(Product $product)
+    public function mount(Product $product, $quantity, $unit)
     {
         $this->product = $product;
         $this->product_units = ProductUnit::all();
         $this->tenant_id = Auth::user()->tenant_id ?? null;
+
+        $this->request_quantity = $quantity;
+        $this->product_unit_id = $unit;
+
     }
 
     public function save()
@@ -133,9 +137,6 @@ class CreateRequest extends Component
 
     public function fillWithSampleData()
     {
-        // Order-related fields
-        $this->request_quantity = 2500;
-
         // Customer-related fields
 
         $this->customer_company_name = 'Musterfirma GmbH';

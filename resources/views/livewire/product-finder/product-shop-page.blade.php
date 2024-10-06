@@ -21,71 +21,39 @@
             <!-- Size picker -->
             <div class="mt-8">
                 <div class="flex items-center justify-between">
-                    <h2 class="text-sm font-medium text-gray-900">Size</h2>
+                    <h2 class="text-sm font-medium text-gray-900">Product Unit</h2>
                 </div>
 
                 <fieldset aria-label="Choose a size" class="mt-2">
                     <div class="grid grid-cols-3 gap-3 sm:grid-cols-6">
-                        <!--
-                  In Stock: "cursor-pointer", Out of Stock: "opacity-25 cursor-not-allowed"
-                  Active: "ring-2 ring-indigo-500 ring-offset-2"
-                  Checked: "border-transparent bg-indigo-600 text-white hover:bg-indigo-700", Not Checked: "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
-                -->
-                        <label class="flex cursor-pointer items-center justify-center rounded-md border px-3 py-3 text-sm font-medium uppercase focus:outline-none sm:flex-1">
-                            <input type="radio" name="size-choice" value="XXS" class="sr-only">
-                            <span>XXS</span>
+                        @foreach($product_units as $product_unit)
+                        <label
+                            class="flex cursor-pointer items-center justify-center rounded-md border px-3 py-3 text-sm font-medium focus:outline-none sm:flex-1
+                {{ $selected_unit == $product_unit->id ? 'bg-indigo-600 text-white' : 'bg-white text-gray-900 hover:bg-gray-50' }}">
+                            <input type="radio" name="size-choice" wire:model.live="selected_unit" value="{{ $product_unit->id }}" class="sr-only">
+                            <span>{{ $product_unit->name }}</span>
                         </label>
-                        <!--
-                  In Stock: "cursor-pointer", Out of Stock: "opacity-25 cursor-not-allowed"
-                  Active: "ring-2 ring-indigo-500 ring-offset-2"
-                  Checked: "border-transparent bg-indigo-600 text-white hover:bg-indigo-700", Not Checked: "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
-                -->
-                        <label class="flex cursor-pointer items-center justify-center rounded-md border px-3 py-3 text-sm font-medium uppercase focus:outline-none sm:flex-1">
-                            <input type="radio" name="size-choice" value="XS" class="sr-only">
-                            <span>XS</span>
-                        </label>
-                        <!--
-                  In Stock: "cursor-pointer", Out of Stock: "opacity-25 cursor-not-allowed"
-                  Active: "ring-2 ring-indigo-500 ring-offset-2"
-                  Checked: "border-transparent bg-indigo-600 text-white hover:bg-indigo-700", Not Checked: "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
-                -->
-                        <label class="flex cursor-pointer items-center justify-center rounded-md border px-3 py-3 text-sm font-medium uppercase focus:outline-none sm:flex-1">
-                            <input type="radio" name="size-choice" value="S" class="sr-only">
-                            <span>S</span>
-                        </label>
-                        <!--
-                  In Stock: "cursor-pointer", Out of Stock: "opacity-25 cursor-not-allowed"
-                  Active: "ring-2 ring-indigo-500 ring-offset-2"
-                  Checked: "border-transparent bg-indigo-600 text-white hover:bg-indigo-700", Not Checked: "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
-                -->
-                        <label class="flex cursor-pointer items-center justify-center rounded-md border px-3 py-3 text-sm font-medium uppercase focus:outline-none sm:flex-1">
-                            <input type="radio" name="size-choice" value="M" class="sr-only">
-                            <span>M</span>
-                        </label>
-                        <!--
-                  In Stock: "cursor-pointer", Out of Stock: "opacity-25 cursor-not-allowed"
-                  Active: "ring-2 ring-indigo-500 ring-offset-2"
-                  Checked: "border-transparent bg-indigo-600 text-white hover:bg-indigo-700", Not Checked: "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
-                -->
-                        <label class="flex cursor-pointer items-center justify-center rounded-md border px-3 py-3 text-sm font-medium uppercase focus:outline-none sm:flex-1">
-                            <input type="radio" name="size-choice" value="L" class="sr-only">
-                            <span>L</span>
-                        </label>
-                        <!--
-                  In Stock: "cursor-pointer", Out of Stock: "opacity-25 cursor-not-allowed"
-                  Active: "ring-2 ring-indigo-500 ring-offset-2"
-                  Checked: "border-transparent bg-indigo-600 text-white hover:bg-indigo-700", Not Checked: "border-gray-200 bg-white text-gray-900 hover:bg-gray-50"
-                -->
-                        <label class="flex cursor-not-allowed items-center justify-center rounded-md border px-3 py-3 text-sm font-medium uppercase opacity-25 sm:flex-1">
-                            <input type="radio" name="size-choice" value="XL" disabled class="sr-only">
-                            <span>XL</span>
-                        </label>
+                        @endforeach
                     </div>
                 </fieldset>
+
+
+            </div>
+            <div class="mt-8">
+                <div class="flex items-center justify-between">
+                    <h2 class="text-sm font-medium text-gray-900">Quantity</h2>
+                </div>
+                <div>
+                    <input type="number" wire:model.live="quantity" name="quantity" id="quantity" min="1" max="10" value="1" class="mt-4 max-w-lg block shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm border-gray-300 rounded-md">
+                </div>
+
+
             </div>
 
-            <a href="{{ route('orders.public-product-request', ['product' => $product ]) }}" type="submit" class="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Add to cart</a>
-
+            <a href="{{ route('orders.public-product-request', ['product' => $product->id, 'quantity' => $quantity, 'unit' => $selected_unit]) }}" type="submit" class="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2
+            {{ $quantity > 0 && $selected_unit !== null ? '' : 'cursor-not-allowed opacity-50' }}">
+                Add to cart
+            </a>
             <!-- Product details -->
             <div class="mt-10">
                 <h2 class="text-sm font-medium text-gray-900">Description</h2>
