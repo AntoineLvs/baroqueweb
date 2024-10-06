@@ -2,9 +2,12 @@
 
 namespace App\Livewire\Order;
 
+use App\Mail\Order\NewProductOffer;
 use App\Models\Order;
 use App\Models\OrderedProduct;
 use App\Models\Product;
+use App\Models\Tenant;
+use App\Scopes\TenantScope;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 
@@ -13,6 +16,9 @@ use Livewire\Component;
 class EditOrder extends Component
 {
     public $order;
+    public $loggedTenant;
+    public $toTenant;
+    public $fromTenant;
 
     // Order-related fields
     public $order_status_id;
@@ -47,6 +53,14 @@ class EditOrder extends Component
     // sonstige Felder
     public $order_notice;
 
+    //selected product 
+    public $selected_product;
+    public $selected_ordered_product_id;
+    public $selected_product_quantity;
+    public $selected_product_price;
+    public $selected_product_tax;
+
+
     public function mount(Order $order, $order_types, $order_statuses, $product_units)
     {
         $this->order = $order;
@@ -56,13 +70,13 @@ class EditOrder extends Component
 
         $this->products = Product::all();
 
-// Fülle die Felder aus der Order
+        // Fülle die Felder aus der Order
         $this->order_status_id = $order->order_status_id;
         $this->order_type_id = $order->order_type_id;
 
         $this->order_notice = $order->order_notice;
 
-// Kundeninformationen
+        // Kundeninformationen
         $this->customer_tenant_id = $order->customer_tenant_id;
         $this->customer_company_name = $order->customer_company_name;
         $this->customer_email = $order->customer_email;
@@ -75,10 +89,10 @@ class EditOrder extends Component
         $this->customer_country = $order->customer_country;
         $this->customer_order_notice = $order->customer_order_notice;
 
-// Lade die vorhandenen Produkte der Bestellung als Collection
-      //  $this->ordered_products = $order->orderedProducts()->get();
+        // Load the existing products of the order as a collection
+        //  $this->ordered_products = $order->orderedProducts()->get();
 
-        // Prüfen, ob der Benutzer der Empfänger der Order ist
+        // Check if the user is the recipient of the order
         if (auth()->user()->tenant_id === $order->to_tenant_id) {
             $this->ordered_products = $order->orderedProductsForRecipient();
         } else {
@@ -86,11 +100,14 @@ class EditOrder extends Component
         }
 
 
-        // Automatische Vorauswahl des ersten Produkts für den Tenant, falls vorhanden
+        // Automatic selection of the first product for the tenant, if available
         if ($this->products->isNotEmpty()) {
             $this->selected_product_id = $this->products->first()->id;
         }
 
+        $this->toTenant = Tenant::find($order->to_tenant_id);
+        $this->loggedTenant = Tenant::find(auth()->user()->tenant_id ?? 1);
+        $this->fromTenant = $this->order->tenant;
     }
 
     public function submit()
@@ -112,7 +129,7 @@ class EditOrder extends Component
             'order_notice' => 'nullable|string|max:500',
         ]);
 
-// Aktualisiere die Order-Informationen
+        // Aktualisiere die Order-Informationen
         $this->order->update([
             'order_status_id' => $this->order_status_id,
             'order_type_id' => $this->order_type_id,
@@ -212,10 +229,52 @@ class EditOrder extends Component
         }
     }
 
+    public function updatedSelectedOrderedProductId($value)
+    {
+        $this->selected_product = OrderedProduct::withoutGlobalScope(TenantScope::class)->where('id', $value)->first();
+        $this->selected_product_quantity = $this->selected_product->product_quantity;
+        $this->selected_product_price = $this->selected_product->product_price;
+        $this->selected_product_tax = $this->selected_product->product_tax;
+    }
+
+    public function updateOrder()
+    {
+        // Validierung für das ausgewählte Produkt und die Menge
+        $this->validate([
+            'selected_ordered_product_id' => 'required|integer',
+            'selected_product_price' => 'nullable|numeric|min:0',
+            'selected_product_tax' => 'nullable|numeric|min:0',
+        ]);
+
+        // Berechne den Gesamtbetrag (total_amount)
+        $total_amount = $this->product_quantity * $this->selected_product_price * (1 + $this->selected_product_tax / 100);
 
 
-// Send offer mail from the frontend edit view
-      public function handleOrderAction()
+
+        $ordered_product = OrderedProduct::withoutGlobalScope(TenantScope::class)->where('id', $this->selected_ordered_product_id)->first();
+
+        // edit ordered product if exists
+        if ($ordered_product) {
+
+            $ordered_product->update([
+                'product_price' => $this->selected_product_price,
+                'product_tax' => $this->selected_product_tax,
+                'total_amount' => $total_amount,
+            ]);
+
+            // Setze eine Session-Message, um die erfolgreiche Aktualisierung zu melden
+            session()->flash('message', 'Die Bestellung wurde erfolgreich aktualisiert.');
+        }
+
+        if (auth()->user()->tenant_id === $this->order->to_tenant_id) {
+            $this->ordered_products = $this->order->orderedProductsForRecipient();
+        } else {
+            $this->ordered_products = $this->order->orderedProducts;
+        }
+    }
+
+    // Send offer mail from the frontend edit view
+    public function handleOrderAction()
     {
         try {
             switch ($this->order->order_status_id) {
@@ -249,13 +308,11 @@ class EditOrder extends Component
             //ddd($this->order);
 
             $this->order->save();
-
         } catch (\Exception $e) {
             // Falls ein Fehler auftritt, protokolliere diesen und setze eine Fehlermeldung
             \Log::error('Fehler beim Senden der E-Mail: ' . $e->getMessage());
             session()->flash('error', 'Es gab ein Problem beim Senden der E-Mail oder Speichern des Status.');
         }
-
     }
 
     public function getActionButtonLabel()
@@ -271,5 +328,4 @@ class EditOrder extends Component
                 return 'Aktion ausführen';
         }
     }
-
 }

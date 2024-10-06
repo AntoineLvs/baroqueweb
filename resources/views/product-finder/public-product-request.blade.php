@@ -35,7 +35,7 @@
             {{-- "Zurück" Button absolut positioniert --}}
             <div class="isolate bg-white px-6 py-2 sm:py-2 lg:px-8">
 
-                @livewire('product-finder.create-request', ['product' => $product])
+                @livewire('product-finder.create-request', ['product' => $product, 'quantity' => $quantity, 'unit' => $selectedUnit])
             </div>
 
 

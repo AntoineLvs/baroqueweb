@@ -12,10 +12,11 @@ use App\Models\Standard;
 use App\Scopes\TenantScope;
 use Auth;
 use Illuminate\View\View;
+use Illuminate\Http\Request;
 
 class OrderController extends Controller
 {
-   /* public function index(): View
+    /* public function index(): View
     {
 
         if(Auth::user()->tenant_id)
@@ -37,10 +38,8 @@ class OrderController extends Controller
 
     public function index(): View
     {
-        if (Auth::user()->tenant_id) {
-            $tenantId = Auth::user()->tenant_id;
-
-            // Lade die Orders und ihre Produkte ohne den TenantScope
+        if (session('tenant_id')) {
+            $tenantId = session('tenant_id');
             $orders = Order::withoutGlobalScope(TenantScope::class)
                 ->where('tenant_id', $tenantId)
                 ->orWhere('to_tenant_id', $tenantId)
@@ -49,7 +48,7 @@ class OrderController extends Controller
                 }])
                 ->paginate(25);
         } else {
-            // Lade alle Orders und ihre Produkte ohne den TenantScope
+            // This will load every orders and their products without the TenantScope
             $orders = Order::with(['orderedProducts' => function ($query) {
                 $query->withoutGlobalScope(TenantScope::class);
             }])->paginate(25);
@@ -69,7 +68,6 @@ class OrderController extends Controller
         $order_statuses = OrderStatus::all();
         $product_units = ProductUnit::all();
         $standards = Standard::all();
-
         return view('orders.edit', compact('order', 'order_types', 'order_statuses', 'product_units', 'standards'));
     }
 
@@ -108,19 +106,19 @@ class OrderController extends Controller
         return redirect()->route('orders.index');
     }
 
-    public function createProductRequest($productId): View
+    public function createProductRequest($productId, Request $request): View
     {
-        // Entferne den TenantScope und finde das Produkt manuell
+        // Récupère le produit sans le TenantScope
         $product = Product::withoutGlobalScope(TenantScope::class)->find($productId);
 
         if (!$product) {
-            // Wenn das Produkt nicht gefunden wird, gib eine 404-Seite zurück
-            abort(404, 'Produkt nicht gefunden.');
+            abort(404, 'Produit non trouvé.');
         }
 
-        return view('product-finder.public-product-request', compact('product'));
+        // Récupérer les valeurs de l'URL
+        $quantity = $request->get('quantity', 0); 
+        $selectedUnit = $request->get('unit', null); 
+
+        return view('product-finder.public-product-request', compact('product', 'quantity', 'selectedUnit'));
     }
-
-
-
 }
