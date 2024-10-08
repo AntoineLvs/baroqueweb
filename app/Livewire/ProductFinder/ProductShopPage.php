@@ -15,7 +15,6 @@ use App\Scopes\TenantScope;
 class ProductShopPage extends Component
 {
     public $product;
-    public $tenant_id;
     public $products;
     public $product_units;
     public $selected_unit = 1;
@@ -25,7 +24,6 @@ class ProductShopPage extends Component
     public function mount(Product $product)
     {
         $this->product = $product;
-        $this->tenant_id = Auth::user()->tenant_id;
         $this->products = Product::withoutGlobalScope(TenantScope::class)
             ->where('id', '<>', $this->product->id)
             ->take(4)

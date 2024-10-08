@@ -15,25 +15,47 @@ class SearchProducts extends Component
 
     public $tenant_id;
     public $products;
+    public $listProducts;
 
     public $product_types;
-    public $selectedProductType = null; // Ajoute cette propriété
+    public $selectedProductType = null;
+    public $mobileFilterDialogOpen = false;
 
     function mount($products)
     {
         $this->products = $products;
+        $this->listProducts = $products;
         $this->tenant_id = Auth::user()->tenant_id ?? null;
         $this->product_types = ProductType::withoutGlobalScope(TenantScope::class)->get();
+        $this->selectedProductType = null;
     }
 
     public function updatedSelectedProductType($productTypeId)
     {
-        // Met à jour la liste des produits filtrés
-        $this->products = Product::withoutGlobalScope(TenantScope::class)->where('product_type_id', $productTypeId)
-            ->get();
+        // Filter products based on the selected product type
+        if ($productTypeId) {
+            $this->products = Product::withoutGlobalScope(TenantScope::class)
+                ->where('product_type_id', $productTypeId)
+                ->get();
+        } else {
+            // Show all products if no product type is selected
+            $this->products = Product::withoutGlobalScope(TenantScope::class)->get();
+        }
+    }
+
+    public function resetFilters()
+    {
+        // Reset the selected product type and reload all products
+        $this->selectedProductType = null;
+        $this->products = Product::withoutGlobalScope(TenantScope::class)->get();
     }
 
 
+
+    public function toggleMobileFilterDialog()
+    {
+        $this->mobileFilterDialogOpen = !$this->mobileFilterDialogOpen;
+    }
 
     public function render()
     {
