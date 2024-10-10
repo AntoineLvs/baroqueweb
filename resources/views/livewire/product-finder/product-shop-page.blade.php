@@ -11,10 +11,8 @@
         <div class="mt-8 lg:col-span-7 lg:col-start-1 lg:row-span-3 lg:row-start-1 lg:mt-0">
             <h2 class="sr-only">Images</h2>
 
-            <div class="grid lg:gap-8">
-                <img src="https://tailwindui.com/plus/img/ecommerce-images/category-page-01-image-card-01.jpg" alt="Person using a pen to cross a task off a productivity paper card." class="rounded-lg lg:col-span-2 lg:row-span-2">
+            <img src="{{ asset('assets/img/xtl-freigaben.jpg') }}" alt="Product Image" class="h-full rounded-lg  object-cover object-center lg:col-span-2 lg:row-span-2">
 
-            </div>
         </div>
 
         <div class="mt-8 lg:col-span-5">
@@ -112,7 +110,7 @@
             @foreach($products as $product)
             <div class="group relative">
                 <div class="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none group-hover:opacity-75 lg:h-80">
-                    <img src="https://tailwindui.com/plus/img/ecommerce-images/category-page-01-image-card-01.jpg" alt="Front of men&#039;s Basic Tee in white." class="h-full w-full object-cover object-center lg:h-full lg:w-full">
+                    <img src="{{ asset('assets/img/xtl-freigaben.jpg') }}" class="h-full w-full object-cover object-center lg:h-full lg:w-full">
                 </div>
                 <div class="mt-4 flex justify-between">
                     <div>

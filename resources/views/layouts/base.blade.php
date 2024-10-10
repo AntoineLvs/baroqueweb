@@ -32,6 +32,7 @@
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    @fluxStyles
 </head>
 
 <body>
@@ -69,7 +70,7 @@
             </div>
         </div>
     @endif
-
+    @fluxScripts
 </body>
 
 @yield('footer')

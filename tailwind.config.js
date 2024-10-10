@@ -23,6 +23,8 @@ module.exports = {
         './app/Providers/AppServiceProvider.php',
         './app/TallStackUi/**/*.php',
         './resources/css/custom-styles.css',
+        './vendor/livewire/flux-pro/stubs/**/*.blade.php',
+        './vendor/livewire/flux/stubs/**/*.blade.php',
     ],
 
     theme: {

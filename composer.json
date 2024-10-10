@@ -19,6 +19,8 @@
         "laravel/sanctum": "^3.3",
         "laravel/tinker": "^2.8",
         "league/flysystem-aws-s3-v3": "^3.0",
+        "livewire/flux": "^1.0",
+        "livewire/flux-pro": "^1.0",
         "livewire/livewire": "^3.0",
         "maatwebsite/excel": "^3.1",
         "panoscape/history": "^2.5",
@@ -72,5 +74,11 @@
         "sort-packages": true
     },
     "minimum-stability": "stable",
-    "prefer-stable": true
+    "prefer-stable": true,
+    "repositories": {
+        "flux-pro": {
+            "type": "composer",
+            "url": "https://composer.fluxui.dev"
+        }
+    }
 }
