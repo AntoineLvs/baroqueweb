@@ -78,7 +78,7 @@
                 <!-- Background backdrop, show/hide based on slide-over state. -->
                 <div class="fixed inset-0 z-50"></div>
                 <div
-                    class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+                    class="fixed inset-y-0 right-0 z-50 w-full whitespace-nowrap overflow-y-hidden bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
                     <div class="flex items-center justify-between">
                         <a href="#" class="-m-1.5 p-1.5">
                             <span class="sr-only">XTL</span>
@@ -97,22 +97,74 @@
                     <div class="mt-6 flow-root">
                         <div class="-my-6 divide-y divide-gray-500/10">
                             <div class="space-y-2 py-6">
-                                <a href="{{route('home')}}"
-                                    class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Start</a>
-                                <a href="{{route('check.efueltoday')}}"
-                                    class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Freigabe-Check</a>
-                                <a href="{{route('imprint')}}"
-                                    class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Impressum</a>
+                                <a href="{{route('locations.locations-finder-public')}}"
+                                    class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">HVO Map</a>
+                                <a href="{{route('product-finder.index-public')}}"
+                                    class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Product Finder</a>
+                                <a href="{{route('fuer-unternehmen')}}"
+                                    class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Für Unternehmen</a>
+                                <a href="{{route('contact')}}"
+                                    class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Kontakt</a>
                                 <a href="{{route('legal-informations')}}"
                                     class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Nutzungsbedingungen</a>
-                                <a href="{{route('privacy')}}"
-                                    class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Datenschutz</a>
 
                             </div>
-                            <div class="py-6">
 
-                            </div>
                         </div>
+                    </div>
+
+
+                    <div class="mt-6 flow-root items-end justify-end" style="height: 60%; display: flex; flex-direction: column; align-items: flex-start;">
+                        <div class="w-full border-t border-gray-500/10 px-4"></div>
+                        @if (Route::has('login'))
+                        @auth
+                        <div class="flex items-center pt-6">
+                            @php $auth = Auth::user(); @endphp
+
+                            <div class="flex-shrink-0">
+                                <svg class="h-10 w-10 rounded-full" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                                </svg>
+                            </div>
+                            <div class="ml-3">
+                                <div class="text-base font-medium text-gray-800">{{ $auth->name }}</div>
+                                <div class="text-sm font-medium text-gray-500">{{ $auth->email }}</div>
+                            </div>
+
+                        </div>
+                        <div class="-my-6 divide-y divide-gray-500/10 w-full">
+                            <div class="space-y-2 py-6">
+                                <a href="{{ route('dashboard') }}"
+                                    class="mt-6 -mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Dashboard</a>
+                                @auth
+                                <a href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Sign out</a>
+
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                    @csrf
+                                </form>
+                                @endauth
+                            </div>
+
+                        </div>
+
+                        @else
+                        {{-- @if (Route::has('register'))
+                              <a href="{{ route('register') }}" class="pl-4 text-sm font-semibold leading-6 text-white">Register</a>
+                        @endif--}}
+
+                        <a href="{{ route('login') }}" class="text-sm font-semibold leading-6 text-white">Log in <span
+                                aria-hidden="true">&rarr;</span></a>
+
+                        <div class="-my-6 divide-y divide-gray-500/10 w-full">
+                            <div class="space-y-2 py-6">
+                                <a href="{{ route('login') }}" class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Log in <span
+                                        aria-hidden="true">&rarr;</span></a>
+                            </div>
+
+                        </div>
+                        @endauth
+                        @endif
+
                     </div>
                 </div>
             </div>

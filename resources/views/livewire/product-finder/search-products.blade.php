@@ -87,7 +87,20 @@
                                                         {{ $product->id }}
                                                     </td>
                                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                                                        {{ $product->name }}
+                                                        <div class="sm:block hidden">
+                                                            {{ $product->name }}
+                                                        </div>
+                                                        <div class="sm:hidden block">
+                                                            <a href="{{ route('product-finder.product-finder-shop', ['product' => $product ]) }}" class="inline-flex items-center text-indigo-600 hover:text-indigo-900 space-x-2">
+                                                                <span>{{ $product->name }} - </span>
+                                                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="h-5 w-5">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" d="m11.25 11.25.041-.02a.75.75 0 0 1 1.063.852l-.708 2.836a.75.75 0 0 0 1.063.853l.041-.021M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9-3.75h.008v.008H12V8.25Z" />
+                                                                </svg>
+
+                                                                <span class="sr-only">{{ $product->name }}</span>
+                                                            </a>
+                                                        </div>
+
                                                     </td>
 
                                                     <td class="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
@@ -133,7 +146,7 @@
                                         <path d="M10.75 4.75a.75.75 0 0 0-1.5 0v4.5h-4.5a.75.75 0 0 0 0 1.5h4.5v4.5a.75.75 0 0 0 1.5 0v-4.5h4.5a.75.75 0 0 0 0-1.5h-4.5v-4.5Z" />
                                     </svg>
                                 </button>
-                                <div class="fixed inset-0 z-40 flex lg:hidden z-50" x-data="{ open: @entangle('mobileFilterDialogOpen') }" x-show="open" style="display: none; z-index: 999;">
+                                <div class="fixed inset-0 z-40 flex lg:hidden z-50" x-data="{ open: @entangle('mobileFilterDialogOpen') }" x-show="open" style="display: none; z-index: 999;" @click.away="$wire.toggleMobileFilterDialog()">
                                     <div class="fixed inset-0 bg-black bg-opacity-25" aria-hidden="true"></div>
 
                                     <div class="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-white py-4 pb-12 shadow-xl">
@@ -156,13 +169,13 @@
                                                 <div class="space-y-3 pt-6">
                                                     @foreach($product_types as $product_type)
                                                     <div class="flex items-center">
-                                                        <input id="product-{{ $product_type->id }}"
+                                                        <input id="product-type-{{ $product_type->id }}"
                                                             name="product_type"
                                                             wire:model.live="selectedProductType"
                                                             value="{{ $product_type->id }}"
                                                             type="radio"
                                                             class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                        <label for="product-{{ $product_type->id }}" class="ml-3 text-sm text-gray-600">
+                                                        <label for="product-type-{{ $product_type->id }}" class="ml-3 text-sm text-gray-600">
                                                             {{ $product_type->name }}
                                                         </label>
                                                     </div>
@@ -172,59 +185,21 @@
 
                                             <!-- Categories -->
                                             <fieldset class="pt-6">
-                                                <legend class="text-sm font-medium text-gray-900">Category</legend>
+                                                <legend class="text-sm font-medium text-gray-900">Product Units</legend>
                                                 <div class="space-y-6 pt-4">
+                                                    @foreach($product_units as $product_unit)
                                                     <div class="flex items-center">
-                                                        <input id="category-0-mobile" name="category[]" value="new-arrivals" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                        <label for="category-0-mobile" class="ml-3 text-sm text-gray-500">All New Arrivals</label>
+                                                        <input id="product-unit-{{ $product_unit->id }}"
+                                                            name="product_unit"
+                                                            wire:model.live="selectedProductUnit"
+                                                            value="{{ $product_unit->id }}"
+                                                            type="radio"
+                                                            class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                                        <label for="product-unit-{{ $product_unit->id }}" class="ml-3 text-sm text-gray-600">
+                                                            {{ $product_unit->name }}
+                                                        </label>
                                                     </div>
-                                                    <div class="flex items-center">
-                                                        <input id="category-1-mobile" name="category[]" value="tees" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                        <label for="category-1-mobile" class="ml-3 text-sm text-gray-500">Tees</label>
-                                                    </div>
-                                                    <div class="flex items-center">
-                                                        <input id="category-2-mobile" name="category[]" value="crewnecks" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                        <label for="category-2-mobile" class="ml-3 text-sm text-gray-500">Crewnecks</label>
-                                                    </div>
-                                                    <div class="flex items-center">
-                                                        <input id="category-3-mobile" name="category[]" value="sweatshirts" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                        <label for="category-3-mobile" class="ml-3 text-sm text-gray-500">Sweatshirts</label>
-                                                    </div>
-                                                    <div class="flex items-center">
-                                                        <input id="category-4-mobile" name="category[]" value="pants-shorts" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                        <label for="category-4-mobile" class="ml-3 text-sm text-gray-500">Pants &amp; Shorts</label>
-                                                    </div>
-                                                </div>
-                                            </fieldset>
-
-                                            <!-- Sizes -->
-                                            <fieldset class="pt-6">
-                                                <legend class="text-sm font-medium text-gray-900">Sizes</legend>
-                                                <div class="space-y-6 pt-4">
-                                                    <div class="flex items-center">
-                                                        <input id="sizes-0-mobile" name="sizes[]" value="xs" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                        <label for="sizes-0-mobile" class="ml-3 text-sm text-gray-500">XS</label>
-                                                    </div>
-                                                    <div class="flex items-center">
-                                                        <input id="sizes-1-mobile" name="sizes[]" value="s" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                        <label for="sizes-1-mobile" class="ml-3 text-sm text-gray-500">S</label>
-                                                    </div>
-                                                    <div class="flex items-center">
-                                                        <input id="sizes-2-mobile" name="sizes[]" value="m" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                        <label for="sizes-2-mobile" class="ml-3 text-sm text-gray-500">M</label>
-                                                    </div>
-                                                    <div class="flex items-center">
-                                                        <input id="sizes-3-mobile" name="sizes[]" value="l" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                        <label for="sizes-3-mobile" class="ml-3 text-sm text-gray-500">L</label>
-                                                    </div>
-                                                    <div class="flex items-center">
-                                                        <input id="sizes-4-mobile" name="sizes[]" value="xl" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                        <label for="sizes-4-mobile" class="ml-3 text-sm text-gray-500">XL</label>
-                                                    </div>
-                                                    <div class="flex items-center">
-                                                        <input id="sizes-5-mobile" name="sizes[]" value="2xl" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                        <label for="sizes-5-mobile" class="ml-3 text-sm text-gray-500">2XL</label>
-                                                    </div>
+                                                    @endforeach
                                                 </div>
                                             </fieldset>
                                         </form>
@@ -258,62 +233,25 @@
                                             </div>
                                             <div class="pt-10">
                                                 <fieldset>
-                                                    <legend class="block text-sm font-medium text-gray-900">Category</legend>
+                                                    <legend class="block text-sm font-medium text-gray-900">Product Units</legend>
                                                     <div class="space-y-3 pt-6">
+                                                        @foreach($product_units as $product_unit)
                                                         <div class="flex items-center">
-                                                            <input id="category-0" name="category[]" value="new-arrivals" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                            <label for="category-0" class="ml-3 text-sm text-gray-600">All New Arrivals</label>
+                                                            <input id="product-{{ $product_unit->id }}"
+                                                                name="product_unit"
+                                                                wire:model.live="selectedProductUnit"
+                                                                value="{{ $product_unit->id }}"
+                                                                type="radio"
+                                                                class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
+                                                            <label for="product-{{ $product_unit->id }}" class="ml-3 text-sm text-gray-600">
+                                                                {{ $product_unit->name }}
+                                                            </label>
                                                         </div>
-                                                        <div class="flex items-center">
-                                                            <input id="category-1" name="category[]" value="tees" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                            <label for="category-1" class="ml-3 text-sm text-gray-600">Tees</label>
-                                                        </div>
-                                                        <div class="flex items-center">
-                                                            <input id="category-2" name="category[]" value="crewnecks" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                            <label for="category-2" class="ml-3 text-sm text-gray-600">Crewnecks</label>
-                                                        </div>
-                                                        <div class="flex items-center">
-                                                            <input id="category-3" name="category[]" value="sweatshirts" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                            <label for="category-3" class="ml-3 text-sm text-gray-600">Sweatshirts</label>
-                                                        </div>
-                                                        <div class="flex items-center">
-                                                            <input id="category-4" name="category[]" value="pants-shorts" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                            <label for="category-4" class="ml-3 text-sm text-gray-600">Pants &amp; Shorts</label>
-                                                        </div>
+                                                        @endforeach
                                                     </div>
                                                 </fieldset>
                                             </div>
-                                            <div class="pt-10">
-                                                <fieldset>
-                                                    <legend class="block text-sm font-medium text-gray-900">Sizes</legend>
-                                                    <div class="space-y-3 pt-6">
-                                                        <div class="flex items-center">
-                                                            <input id="sizes-0" name="sizes[]" value="xs" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                            <label for="sizes-0" class="ml-3 text-sm text-gray-600">XS</label>
-                                                        </div>
-                                                        <div class="flex items-center">
-                                                            <input id="sizes-1" name="sizes[]" value="s" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                            <label for="sizes-1" class="ml-3 text-sm text-gray-600">S</label>
-                                                        </div>
-                                                        <div class="flex items-center">
-                                                            <input id="sizes-2" name="sizes[]" value="m" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                            <label for="sizes-2" class="ml-3 text-sm text-gray-600">M</label>
-                                                        </div>
-                                                        <div class="flex items-center">
-                                                            <input id="sizes-3" name="sizes[]" value="l" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                            <label for="sizes-3" class="ml-3 text-sm text-gray-600">L</label>
-                                                        </div>
-                                                        <div class="flex items-center">
-                                                            <input id="sizes-4" name="sizes[]" value="xl" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                            <label for="sizes-4" class="ml-3 text-sm text-gray-600">XL</label>
-                                                        </div>
-                                                        <div class="flex items-center">
-                                                            <input id="sizes-5" name="sizes[]" value="2xl" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500">
-                                                            <label for="sizes-5" class="ml-3 text-sm text-gray-600">2XL</label>
-                                                        </div>
-                                                    </div>
-                                                </fieldset>
-                                            </div>
+
                                         </form>
                                     </div>
                                 </aside>
