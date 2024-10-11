@@ -7,9 +7,12 @@ use App\Models\BaseProduct;
 use App\Models\Document;
 use App\Models\Product;
 use App\Models\ProductType;
+use App\Models\ProductUnit;
 use App\Models\Standard;
+use App\Scopes\TenantScope;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use Illuminate\Http\Request;
 
 class CreateProduct extends Component
 {
@@ -27,7 +30,7 @@ class CreateProduct extends Component
     public $document_id;
 
     public $base_products;
-    public $base_product_id =1;
+    public $base_product_id = 1;
 
     public $standards;
     public $standard_id;
@@ -37,7 +40,7 @@ class CreateProduct extends Component
     public $showContent;
 
 
-    public $product_unit_id = 1;
+    public $product_unit_id;
     public $product_units;
 
     public $selectedBaseProduct;
@@ -52,7 +55,6 @@ class CreateProduct extends Component
     {
         $this->base_products = $base_products;
         $this->product_units = $product_units;
-
     }
 
 
@@ -94,6 +96,31 @@ class CreateProduct extends Component
             ->with('message', $message);
     }
 
+
+    public function getProductUnits(Request $request)
+    {
+
+        $search = $request->get('search');
+        dd($search);
+
+        $selected = json_decode($request->get('selected', ''), true);
+
+        return ProductUnit::query()
+            ->when(
+                $search = $request->get('search'),
+                fn($query) => $query->where('name', 'like', "%{$search}%")
+            )
+            ->when(!$search && $selected, function ($query) use ($selected) {
+                $query->whereIn('id', $selected)
+                    ->orWhere(function ($query) use ($selected) {
+                        $query->whereNotIn('id', $selected)
+                            ->orderBy('created_at');
+                    });
+            })
+            ->limit(10)
+            ->get()
+            ->map(fn(ProductUnit $product_unit) => $product_unit->only('id', 'name'));
+    }
 
 
     public function render()

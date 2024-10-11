@@ -66,9 +66,11 @@ Route::view('check', 'check')->name('check');
 
 Route::get('/get/products', [\App\Livewire\Locations\CreateLocation::class, 'getProducts'])->name('get.products');
 Route::get('/get/services', [\App\Livewire\Locations\CreateLocation::class, 'getServices'])->name('get.services');
+Route::get('/get/product-units', [\App\Livewire\Product\CreateProduct::class, 'getProductUnits'])->name('get.product-units');
 
 Route::get('/get/products', [\App\Livewire\Locations\EditLocation::class, 'getProducts'])->name('get.products');
 Route::get('/get/services', [\App\Livewire\Locations\EditLocation::class, 'getServices'])->name('get.services');
+Route::get('/get/product-units', [\App\Livewire\Product\EditProduct::class, 'getProductUnits'])->name('get.product-units');
 
 
 

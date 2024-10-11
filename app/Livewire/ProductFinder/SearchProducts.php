@@ -4,6 +4,7 @@ namespace App\Livewire\ProductFinder;
 
 use App\Models\Product;
 use App\Models\ProductType;
+use App\Models\ProductUnit;
 use App\Models\Release;
 use App\Scopes\TenantScope;
 use Illuminate\Support\Facades\Auth;
@@ -18,8 +19,10 @@ class SearchProducts extends Component
     public $listProducts;
 
     public $product_types;
+    public $product_units;
     public $selectedProductType = null;
     public $mobileFilterDialogOpen = false;
+    public $selectedProductUnit = null;
 
     function mount($products)
     {
@@ -28,25 +31,44 @@ class SearchProducts extends Component
         $this->tenant_id = Auth::user()->tenant_id ?? null;
         $this->product_types = ProductType::withoutGlobalScope(TenantScope::class)->get();
         $this->selectedProductType = null;
+        $this->product_units = ProductUnit::get();
+    }
+
+    public function updatedSelectedFilters($productTypeId = null, $productUnitId = null)
+    {
+        // Create the base query without the TenantScope
+        $query = Product::withoutGlobalScope(TenantScope::class);
+
+        // Apply the product type filter if selected
+        if ($productTypeId) {
+            $query->where('product_type_id', $productTypeId);
+        }
+
+        // Apply the product unit filter if selected
+        if ($productUnitId) {
+            $query->where('product_unit_id', $productUnitId);
+        }
+
+        // Obtain the filtered results
+        $this->products = $query->get();
     }
 
     public function updatedSelectedProductType($productTypeId)
     {
-        // Filter products based on the selected product type
-        if ($productTypeId) {
-            $this->products = Product::withoutGlobalScope(TenantScope::class)
-                ->where('product_type_id', $productTypeId)
-                ->get();
-        } else {
-            // Show all products if no product type is selected
-            $this->products = Product::withoutGlobalScope(TenantScope::class)->get();
-        }
+        $this->updatedSelectedFilters($productTypeId, $this->selectedProductUnit);
     }
+
+    public function updatedSelectedProductUnit($productUnitId)
+    {
+        $this->updatedSelectedFilters($this->selectedProductType, $productUnitId);
+    }
+
 
     public function resetFilters()
     {
         // Reset the selected product type and reload all products
         $this->selectedProductType = null;
+        $this->selectedProductUnit = null;
         $this->products = Product::withoutGlobalScope(TenantScope::class)->get();
     }
 

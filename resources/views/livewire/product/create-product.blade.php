@@ -17,41 +17,41 @@
 
 
 
-      <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 mt-4 pb-4">
-        <label for="type" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-          Ausgangsprodukt
-        </label>
-        <div class="mt-1 sm:mt-0 sm:col-span-2">
-          <div class="mt-1 sm:mt-0 sm:col-span-2 w-full md:w-64">
+    <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 mt-4 pb-4">
+      <label for="type" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+        Ausgangsprodukt
+      </label>
+      <div class="mt-1 sm:mt-0 sm:col-span-2">
+        <div class="mt-1 sm:mt-0 sm:col-span-2 w-full md:w-64">
 
-              <select wire:model.live="base_product_id" id="base_product_id" class="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md" required>
-                  <option value="">-- Choose Product Type first --</option>
+          <select wire:model.live="base_product_id" id="base_product_id" class="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md" required>
+            <option value="">-- Choose Product Type first --</option>
 
-                      @foreach ($base_products as $base_product)
-                          <option value="{{ $base_product->id }}">{{ $base_product->name }}</option>
-                      @endforeach
+            @foreach ($base_products as $base_product)
+            <option value="{{ $base_product->id }}">{{ $base_product->name }}</option>
+            @endforeach
 
-              </select>
-          </div>
+          </select>
         </div>
       </div>
+    </div>
 
 
 
 
-@if($base_product_id == 2)
-      <div class="pt-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 overflow-hidden" style="max-height: 100px; transition: max-height 0.4s ease-in-out;">
-        <label for="blend_percent" class="block font-medium text-sm text-gray-700">
-          Bitte die genauen Prozent des HVO-Anteils angeben(%)
-        </label>
-        <div class="mt-1 sm:mt-0 sm:col-span-2">
-          <div class="pt-2 pb-2 pr-8 sm:mt-0 sm:col-span-2 w-full md:w-64"">
+    @if($base_product_id == 2)
+    <div class="pt-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5 overflow-hidden" style="max-height: 100px; transition: max-height 0.4s ease-in-out;">
+      <label for="blend_percent" class="block font-medium text-sm text-gray-700">
+        Bitte die genauen Prozent des HVO-Anteils angeben(%)
+      </label>
+      <div class="mt-1 sm:mt-0 sm:col-span-2">
+        <div class="pt-2 pb-2 pr-8 sm:mt-0 sm:col-span-2 w-full md:w-64"">
 
-              <x-number class="w-40" wire:model.live="blend_percent" id="blend_percent" min="1" max="99" />
+              <x-number class=" w-40" wire:model.live="blend_percent" id="blend_percent" min="1" max="99" />
 
-          </div>
-        </div>
-      </div> @endif
+      </div>
+    </div>
+    @endif
 
 
 
@@ -60,7 +60,7 @@
     <div class="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
       <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
         <label for="name" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-         Produkt-Name (öffentlich sichtbar)
+          Produkt-Name (öffentlich sichtbar)
         </label>
         <div class="mt-1 sm:mt-0 sm:col-span-2">
           <div class="mt-1 sm:mt-0 sm:col-span-2">
@@ -90,7 +90,7 @@
         </label>
         <div class="mt-1 sm:mt-0 sm:col-span-2">
           <div class="mt-1 sm:mt-0 sm:col-span-2">
-            <select wire:model="product_unit_id" name="product_unit_id" id="product_unit_id" class="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md" >
+            <select wire:model.live="product_unit_id" name="product_unit_id" id="product_unit_id" class="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md">
               <option value="">-- Please choose --</option>
               @foreach ($product_units as $product_unit)
               @if($product_unit['id'] == old('document'))
@@ -105,6 +105,25 @@
       </div>
     </div>
 
+
+    <div class="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
+      <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+        <label for="type" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+          Produkt-Einheit
+        </label>
+        <div class="mt-1 sm:mt-0 sm:col-span-2">
+          <x-select.styled wire:model="product_unit_id" multiple :request="[
+                                    'url' => route('get.product-units'),
+                                    'method' => 'get',
+                                    'class' => '',
+                                    'params' => ['library' => 'TallStackUi'],
+                                     ]" select="label:name|value:id" />
+          <input name="product_unit_id" id="product_unit_id" wire:model.live="product_unit_id" type="hidden" /> <!-- need to add type="hidden" not to see it displayed, may have a problem to retrieve the data if type="hidden" -->
+        </div>
+      </div>
+    </div>
+
+
     <div class="mt-8 border-t border-gray-200 pt-5">
       <div class="pt-5">
         <div class="flex justify-end">
@@ -117,7 +136,6 @@
         </div>
       </div>
     </div>
-
 
 
 
