@@ -1,6 +1,6 @@
 <div x-data="{ isHidden: false, isMobile: window.innerWidth <= 640 }"
     @resize.window="isMobile = window.innerWidth <= 640"
-    class=" select-menu flex flex-col md:flex-row md:mt-32 mt-18 ml-5">
+    class=" select-menu flex flex-col md:flex-row mt-32 ml-5">
 
     <div x-data="{
             showResultClass: false,
