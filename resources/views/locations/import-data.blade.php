@@ -11,11 +11,6 @@
 
             <h1 class="text-2xl font-bold text-gray-900">Locations importieren</h1>
 
-
-            <x-message-component></x-message-component>
-
-
-
         </div>
 
         <div class="max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
@@ -65,7 +60,7 @@
                                         <h3>CSV oder EXCEL File wählen</h3>
 
                                         <div class="mt-4">
-                                            <a href="{{ route('locations.download-template') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">CSV Ideal Template</a>
+                                            <a href="{{ route('locations.download-template') }}" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">CSV Ideal Template</a>
                                         </div>
 
                                     </div>
@@ -85,7 +80,7 @@
                                             <input id="file" type="file" name="file" class="form-control">
                                         </div>
 
-                                        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                        <button type="button" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                                             Import starten
                                         </button>
 
@@ -98,8 +93,8 @@
                                             <input id="file" type="file" name="file" class="form-control">
                                         </div>
 
-                                        <button class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
-                                           Admin Import starten
+                                        <button type="button" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                            Admin Import starten
                                         </button>
 
                                     </form>
@@ -107,7 +102,14 @@
                                 </div>
                             </div>
                         </div>
+
                     </div>
+                    @if(session('tenant_id') === null)
+
+                    <div class="px-4 py-5 sm:p-6">
+                        @livewire('locations.import-mapbox')
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>
