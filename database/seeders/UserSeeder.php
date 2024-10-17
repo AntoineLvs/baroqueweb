@@ -16,17 +16,17 @@ class UserSeeder extends Seeder
     {
 
         $admin = User::factory()->create([
-            'email' => 'admin@elsenmedia.com',
-            'name' => 'elsenmedia',
+            'email' => 'antoine.lavenseau@gmail.com',
+            'name' => 'admin',
             'tenant_id' => null,
             'password' => bcrypt('h3londerasd'),
         ]);
 
         User::factory()->create([
-            'email' => 'antoine@elsenmedia.com',
-            'name' => 'antoine',
+            'email' => 'baroque.web@gmail.com',
+            'name' => 'Baroque Web',
             'tenant_id' => '1',
-            'password' => bcrypt('homesteadsecret'),
+            'password' => bcrypt('Baroquew3b!'),
           ]);
 
 

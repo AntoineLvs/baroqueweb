@@ -24,11 +24,11 @@
 
 
             <div class="hidden lg:flex lg:gap-x-12">
-                <a href="{{route('locations.locations-finder-public')}}" class="text-m font-semibold leading-6 text-white">HVO Map</a>
-                <a href="{{route('product-finder.index-public')}}" class="text-m font-semibold leading-6 text-white">Product Finder</a>
-                <a href="{{route('fuer-unternehmen')}}" class="text-m font-semibold leading-6 text-white hover:underline">Für Unternehmen</a>
-                <a href="{{route('contact')}}" class="text-m font-semibold leading-6 text-white hover:underline">Kontakt</a>
-                <a href="{{route('legal-informations')}}" class="text-m font-semibold leading-6 text-white hover:underline">Nutzungsbedingungen</a>
+                <a href="#" class="text-m font-semibold leading-6 text-white">HVO Map</a>
+                <a href="#" class="text-m font-semibold leading-6 text-white">Product Finder</a>
+                <a href="#" class="text-m font-semibold leading-6 text-white hover:underline">Für Unternehmen</a>
+                <a href="#" class="text-m font-semibold leading-6 text-white hover:underline">Kontakt</a>
+                <a href="#" class="text-m font-semibold leading-6 text-white hover:underline">Nutzungsbedingungen</a>
             </div>
 
 
@@ -97,15 +97,15 @@
                     <div class="mt-6 flow-root">
                         <div class="-my-6 divide-y divide-gray-500/10">
                             <div class="space-y-2 py-6">
-                                <a href="{{route('locations.locations-finder-public')}}"
+                                <a href="#"
                                     class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">HVO Map</a>
-                                <a href="{{route('product-finder.index-public')}}"
+                                <a href="#"
                                     class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Product Finder</a>
-                                <a href="{{route('fuer-unternehmen')}}"
+                                <a href="#"
                                     class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Für Unternehmen</a>
-                                <a href="{{route('contact')}}"
+                                <a href="#"
                                     class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Kontakt</a>
-                                <a href="{{route('legal-informations')}}"
+                                <a href="#"
                                     class="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-100">Nutzungsbedingungen</a>
 
                             </div>

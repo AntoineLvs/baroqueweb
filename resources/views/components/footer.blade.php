@@ -8,17 +8,17 @@
             </div>
 
             <div class="pb-6">
-                <a href="{{route('legal-informations')}}" class="text-sm leading-6 text-gray-600 hover:text-gray-900">Nutzungsbedingungen</a>
+                <a href="#" class="text-sm leading-6 text-gray-600 hover:text-gray-900">Nutzungsbedingungen</a>
             </div>
             <div class="pb-6">
-                <a href="{{route('contact')}}" class="text-sm leading-6 text-gray-600 hover:text-gray-900">Kontakt</a>
+                <a href="#" class="text-sm leading-6 text-gray-600 hover:text-gray-900">Kontakt</a>
             </div>
             <div class="pb-6">
-                <a href="{{route('privacy')}}"
+                <a href="#"
                    class="text-sm leading-6 text-gray-600 hover:text-gray-900">Datenschutz</a>
             </div>
             <div class="pb-6">
-                <a href="{{route('imprint')}}" class="text-sm leading-6 text-gray-600 hover:text-gray-900">Impressum</a>
+                <a href="#" class="text-sm leading-6 text-gray-600 hover:text-gray-900">Impressum</a>
             </div>
 
         </nav>
