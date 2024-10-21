@@ -18,6 +18,7 @@ class Project extends Model
         'status',
         'client_id',
         'project_type_id',
+        'active',
         'updated_at',
         'created_at'
     ];
@@ -37,5 +38,45 @@ class Project extends Model
     public function tasks()
     {
         return $this->hasMany(Task::class);
+    }
+
+
+    public function getStatus()
+    {
+        $statusText = '';
+        $statusColor = '';
+
+        if ($this->active == 1) {
+            switch ($this->status) {
+                case 0:
+                    $statusText = 'New';
+                    $statusColor = 'emerald';
+                    break;
+                case 1:
+                    $statusText = 'In Dev';
+                    $statusColor = 'fuchsia';
+                    break;
+                case 2:
+                    $statusText = 'Testing';
+                    $statusColor = 'indigo';
+                    break;
+                case 3:
+                    $statusText = 'Approved';
+                    $statusColor = 'green';
+                    break;
+                default:
+                    $statusText = 'Unknown';
+                    break;
+            }
+            return [
+                'text' => $statusText,
+                'color' => $statusColor,
+            ];
+        } else {
+            return [
+                'text' => 'Disabled',
+                'color' => 'red',
+            ];
+        }
     }
 }

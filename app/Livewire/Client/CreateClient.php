@@ -15,6 +15,7 @@ class CreateClient extends Component
     public $description;
     public $status;
     public $client_type_id;
+    public $active = 0;
 
     public function mount()
     {

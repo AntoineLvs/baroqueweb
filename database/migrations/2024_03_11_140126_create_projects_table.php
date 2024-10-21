@@ -20,6 +20,8 @@ return new class extends Migration
             $table->integer('status')->default(0);
             $table->unsignedBigInteger('client_id')->default(1);
             $table->unsignedBigInteger('project_type_id')->default(1);
+            $table->integer('active')->default(0);
+
             $table->unsignedBigInteger('tenant_id')->nullable();
 
 

@@ -2,76 +2,64 @@
 
 namespace App\Livewire\Client;
 
+use App\Models\ClientType;
+use App\Models\Project;
+use App\Scopes\TenantScope;
 use Livewire\Component;
 
 class ShowClient extends Component
 {
-    public $sepa_mandate;
+    public $client;
 
+    public $name;
     public $description;
-    public $creditor_informations;
-    public $mandate_reference;
-    public $mandate_type;
-    public $payer_name;
-    public $payer_address;
-    public $payer_iban;
-    public $payer_bic;
-    public $payer_bank;
-    public $payment_type;
+    public $status;
+    public $client_type_id;
+    public $client_type;
 
+    public $client_types;
 
+    public $projects;
 
-    public function mount($sepa_mandate)
+    public function mount($client)
     {
 
-        $this->sepa_mandate = $sepa_mandate;
+        $this->client = $client;
 
-        $this->description = $sepa_mandate->description;
-        $this->creditor_informations = $sepa_mandate->creditor_informations;
-        $this->mandate_reference = $sepa_mandate->mandate_reference;
-        $this->mandate_type = $sepa_mandate->mandate_type;
-        $this->payer_name = $sepa_mandate->payer_name;
-        $this->payer_address = $sepa_mandate->payer_address;
-        $this->payer_iban = $sepa_mandate->payer_iban;
-        $this->payer_bic = $sepa_mandate->payer_bic;
-        $this->payer_bank = $sepa_mandate->payer_bank;
-        $this->payment_type = $sepa_mandate->payment_type;
+        $this->name = $client->name;
+        $this->description = $client->description;
+        $this->status = $client->status;
+        $this->client_type_id = $client->client_type_id;
+
+        $this->client_type = ClientType::find($client->client_type_id);
+
+        $this->projects = Project::withoutGlobalScope(TenantScope::class)->where('client_id', $client->id)->get();
     }
 
     public function submit()
     {
         $data = $this->validate([
+            'name' => 'string|max:500|nullable',
             'description' => 'string|max:500|nullable',
-            'creditor_informations' => 'string|max:500|nullable',
-            'mandate_reference' => 'string|max:100|nullable',
-            'mandate_type' => 'string|max:100|nullable',
-            'payer_name' => 'string|max:100|nullable',
-            'payer_address' => 'string|max:100|nullable',
-            'payer_iban' => 'string|max:100|nullable',
-            'payer_bic' => 'string|max:100|nullable',
-            'payer_bank' => 'string|max:100|nullable',
-            'payment_type' => 'string|max:100|nullable',
+            'status' => 'string|max:500|nullable',
+            'client_type_id' => 'string|max:100|nullable',
+
         ]);
 
-        $this->sepa_mandate->description = $this->description;
-        $this->sepa_mandate->creditor_informations = $this->creditor_informations;
-        $this->sepa_mandate->mandate_reference = $this->mandate_reference;
-        $this->sepa_mandate->mandate_type = $this->mandate_type;
-        $this->sepa_mandate->payer_name = $this->payer_name;
-        $this->sepa_mandate->payer_address = $this->payer_address;
-        $this->sepa_mandate->payer_iban = $this->payer_iban;
-        $this->sepa_mandate->payer_bic = $this->payer_bic;
-        $this->sepa_mandate->payer_bank = $this->payer_bank;
-        $this->sepa_mandate->payment_type = $this->payment_type;
-        $this->sepa_mandate->fresh();
-        $this->sepa_mandate->save();
+        $this->client->name = $this->name;
+        $this->client->description = $this->description;
+        $this->client->status = $this->status;
+        $this->client->client_type_id = $this->client_type_id;
+
+        $this->client->fresh();
+        $this->client->save();
 
         return redirect()
-            ->route('sepa-mandates.edit', $this->sepa_mandate)
-            ->with('message', 'Sepamandate wurde aktualisiert.');
+            ->route('clients.show', $this->client)
+            ->with('message', 'Client has been updated.');
     }
     public function render()
     {
-        return view('livewire.sepa-mandate.edit-sepa-mandate');
+        return view('livewire.client.show-client');
     }
 }

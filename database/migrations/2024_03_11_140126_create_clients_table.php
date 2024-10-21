@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->integer('status')->default(0);
             $table->unsignedBigInteger('client_type_id')->default(1);
+            $table->integer('active')->default(0);
 
             $table->unsignedBigInteger('tenant_id')->nullable();
             $table->timestamps();

@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page' => 'Api Token Type', 'pageSlug' => 'clients', 'section' => 'main'])
+@extends('layouts.app', ['page' => 'Task', 'pageSlug' => 'create-task', 'section' => 'main'])
 @section('content')
 
 
@@ -7,7 +7,7 @@
 
     <div class="py-10">
         <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 class="text-2xl font-bold text-gray-900">Client</h1>
+            <h1 class="text-2xl font-bold text-gray-900">Tasks</h1>
             @if (session()->has('message'))
 
             <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md" role="alert">
@@ -44,17 +44,17 @@
                         <div class="-ml-4 -mt-2 flex items-center justify-between flex-wrap sm:flex-nowrap">
                             <div class="ml-4 mt-2">
                                 <h3 class="text-lg leading-6 font-medium text-gray-900">
-                                    Client Profile
+                                    Create a new Task
                                 </h3>
                             </div>
                             <div class="ml-4 mt-2 flex-shrink-0">
-                                <a href="{{ route('clients.index') }}" class="relative inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Back</a>
+                                <a href="{{ route('tasks.index') }}" class="relative inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Back</a>
                             </div>
                         </div>
                     </div>
                     <div class="px-4 py-5 sm:p-6">
                         <!-- Content goes here -->
-
+                        Fill out the information below to create a new task.
                     </div>
                 </div>
             </div>
@@ -64,14 +64,34 @@
 
 
         <!-- CONTENT -->
+        <div class="max-w-8xl mx-auto px-4 sm:px-6 md:px-8">
+            <div class="py-4">
+
+                <!-- This example requires Tailwind CSS v2.0+ -->
+                <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
+
+
+                    <div class="px-4 py-5 sm:px-6">
+                        <h3 class="card-title">tasks</h3>
+                        <!-- We use less vertical padding on card headers on desktop than on body sections -->
+                    </div>
+
+
+                    <div class="px-4 py-5 sm:p-6">
+                        <div class="space-y-8 divide-y divide-gray-200 sm:space-y-5">
+                            <div>
+
+                                <div>
 
 
 
+                                    @livewire('task.create-task')
 
-        @livewire('client.show-client',
-        [
-        'client' => $client
-        ])
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
 
 
 

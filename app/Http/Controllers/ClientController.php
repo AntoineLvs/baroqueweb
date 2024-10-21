@@ -109,7 +109,7 @@ class ClientController extends Controller
         $client_types = ClientType::all();
         $projects = Project::where('client_id', $client->id)->get();
 
-        return view('locations.edit', compact('client_types', 'projects'));
+        return view('clients.show', compact('client', 'client_types', 'projects'));
     }
 
     /**

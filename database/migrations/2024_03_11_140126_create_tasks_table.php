@@ -19,7 +19,8 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->integer('status')->default(0);
             $table->unsignedBigInteger('project_id')->default(1);
-            $table->string('timer')->nullable();
+            $table->time('timer')->nullable();
+            $table->integer('priority')->default(0);
 
             $table->unsignedBigInteger('tenant_id')->nullable();
             $table->timestamps();

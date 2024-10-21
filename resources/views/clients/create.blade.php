@@ -1,4 +1,4 @@
-@extends('layouts.app', ['page' => 'Api Token Type', 'pageSlug' => 'apitokentypes', 'section' => 'main'])
+@extends('layouts.app', ['page' => 'Api Token Type', 'pageSlug' => 'create-client', 'section' => 'main'])
 @section('content')
 
 
@@ -7,7 +7,7 @@
 
     <div class="py-10">
         <div class="max-w-8xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 class="text-2xl font-bold text-gray-900">Clents</h1>
+            <h1 class="text-2xl font-bold text-gray-900">Clients</h1>
             @if (session()->has('message'))
 
             <div class="bg-teal-100 border-t-4 border-teal-500 rounded-b text-teal-900 px-4 py-3 shadow-md" role="alert">

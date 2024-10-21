@@ -17,6 +17,7 @@ class Client extends Model
         'description',
         'status',
         'client_type_id',
+        'active',
         'updated_at',
         'created_at'
     ];
@@ -37,35 +38,33 @@ class Client extends Model
         $statusText = '';
         $statusColor = '';
 
-
-        switch ($this->status) {
-            case 0:
-                $statusText = 'Discussion';
-                $statusColor = 'emerald';
-                break;
-            case 1:
-                $statusText = 'Maquette';
-                $statusColor = 'fuchsia';
-                break;
-            case 2:
-                $statusText = 'Developpement';
-                $statusColor = 'indigo';
-                break;
-            case 3:
-                $statusText = 'Test';
-                $statusColor = 'yellow';
-                break;
-            case 6:
-                $statusText = 'Approuvé';
-                $statusColor = 'green';
-                break;
-            default:
-                $statusText = 'Unknown';
-                break;
+        if ($this->active == 1) {
+            switch ($this->status) {
+                case 0:
+                    $statusText = 'Discussion';
+                    $statusColor = 'yellow';
+                    break;
+                case 1:
+                    $statusText = 'Working for';
+                    $statusColor = 'indigo';
+                    break;
+                case 2:
+                    $statusText = 'Done';
+                    $statusColor = 'green';
+                    break;
+                default:
+                    $statusText = 'Unknown';
+                    break;
+            }
+            return [
+                'text' => $statusText,
+                'color' => $statusColor,
+            ];
+        } else {
+            return [
+                'text' => 'Disabled',
+                'color' => 'red',
+            ];
         }
-        return [
-            'text' => $statusText,
-            'color' => $statusColor,
-        ];
     }
 }

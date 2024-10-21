@@ -18,6 +18,7 @@ class Task extends Model
         'status',
         'project_id',
         'timer',
+        'priority',
         'updated_at',
         'created_at',
     ];
@@ -31,5 +32,42 @@ class Task extends Model
     public function project()
     {
         return $this->belongsTo(Project::class);
+    }
+
+    public function getStatus()
+    {
+        $statusText = '';
+        $statusColor = '';
+
+
+        switch ($this->status) {
+            case 0:
+                $statusText = 'To Do';
+                $statusColor = 'emerald';
+                break;
+            case 1:
+                $statusText = 'In Dev';
+                $statusColor = 'fuchsia';
+                break;
+            case 2:
+                $statusText = 'To Test';
+                $statusColor = 'indigo';
+                break;
+            case 3:
+                $statusText = 'To Redo';
+                $statusColor = 'red';
+                break;
+            case 4:
+                $statusText = 'Approved';
+                $statusColor = 'green';
+                break;
+            default:
+                $statusText = 'Unknown';
+                break;
+        }
+        return [
+            'text' => $statusText,
+            'color' => $statusColor,
+        ];
     }
 }

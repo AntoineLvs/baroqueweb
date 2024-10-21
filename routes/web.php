@@ -10,7 +10,9 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\ImpersonationController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\SepaMandateController;
+use App\Http\Controllers\TaskController;
 use App\Livewire\Auth\Login;
 use App\Livewire\Auth\Passwords\Confirm;
 use App\Livewire\Auth\Passwords\Email;
@@ -119,7 +121,27 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('clients', [ClientController::class, 'index'])->name('clients.index');
     Route::get('clients/create', [ClientController::class, 'create'])->name('clients.create');
     Route::get('clients/{client}/edit', [ClientController::class, 'edit'])->name('clients.edit');
-    Route::get('clients/{base-service}/edit/delete-document', [ClientController::class, 'destroyDocument'])->name('clients.destroyDocument');
+    Route::get('clients/{client}/show', [ClientController::class, 'show'])->name('clients.show');
+    Route::get('clients/{client}/edit/delete-document', [ClientController::class, 'destroyDocument'])->name('clients.destroyDocument');
+
+
+    // Project Routes
+    Route::resource('projects', ProjectController::class);
+    Route::get('projects', [ProjectController::class, 'index'])->name('projects.index');
+    Route::get('projects/create', [ProjectController::class, 'create'])->name('projects.create');
+    Route::get('projects/{project}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
+    Route::get('projects/{project}/show', [ProjectController::class, 'show'])->name('projects.show');
+    Route::get('projects/{project}/edit/delete-document', [ProjectController::class, 'destroyDocument'])->name('projects.destroyDocument');
+
+
+    // Task Routes
+    Route::resource('tasks', TaskController::class);
+    Route::get('tasks', [TaskController::class, 'index'])->name('tasks.index');
+    Route::get('tasks/create', [TaskController::class, 'create'])->name('tasks.create');
+    Route::get('tasks/{task}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
+    Route::get('tasks/{task}/show', [TaskController::class, 'show'])->name('tasks.show');
+    Route::get('tasks/{task}/edit/delete-document', [TaskController::class, 'destroyDocument'])->name('tasks.destroyDocument');
+
 
     // Team Routes
     Route::view('/team', 'users.team')->name('team.index');

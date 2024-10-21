@@ -47,6 +47,12 @@ class ProjectTypeSeeder extends Seeder
                 'description' => "Site E-commerce, avec un catalogue attrayant, un systeme de filtrage et de recherche avancé, le payement en ligne, et la livraison.",
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s')
             ],
+            [
+                'id' => '6',
+                'name' => "Other",
+                'description' => "",
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s')
+            ],
 
         ]);
     }

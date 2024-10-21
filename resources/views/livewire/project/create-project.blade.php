@@ -11,14 +11,14 @@
                         General Informations
                     </h3>
                     <p class="mt-1 max-w-2xl text-sm text-gray-500">
-                        Provide some general informations about your client.
+                        Provide some general informations about your project.
                     </p>
                 </div>
 
                 <div class="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
                     <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                         <label for="name" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                            Client Name
+                            Project Name
                         </label>
                         <div class="mt-1 sm:mt-0 sm:col-span-2">
                             <div class="mt-1 sm:mt-0 sm:col-span-2">
@@ -45,17 +45,40 @@
                 <div class="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
                     <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                         <label for="type" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
-                            Client Type (*)
+                            Client (*)
                         </label>
                         <div class="mt-1 sm:mt-0 sm:col-span-2">
                             <div class="mt-1 sm:mt-0 sm:col-span-2">
-                                <select wire:model.live="client_type_id" name="client_type_id" id="client_type_id" class="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md" required>
+                                <select wire:model.live="client_id" name="client_id" id="client_id" class="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md" required>
                                     <option value="">-- Please choose --</option>
-                                    @foreach ($client_types as $client_type)
-                                    @if($client_type['id'] == old('document'))
-                                    <option wire:key="{{ $client_type['id']}}" value="{{$client_type->id }}" selected>{{$client_type['name']}}</option>
+                                    @foreach ($clients as $client)
+                                    @if($client['id'] == old('document'))
+                                    <option wire:key="{{ $client['id']}}" value="{{$client->id }}" selected>{{$client['name']}}</option>
                                     @else
-                                    <option wire:key="{{ $client_type['id']}}" value="{{$client_type->id }}">{{$client_type['name']}}</option>
+                                    <option wire:key="{{ $client['id']}}" value="{{$client->id }}">{{$client['name']}}</option>
+                                    @endif
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="mt-6 sm:mt-5 space-y-6 sm:space-y-5">
+                    <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                        <label for="type" class="block text-sm font-medium text-gray-700 sm:mt-px sm:pt-2">
+                            Project Type (*)
+                        </label>
+                        <div class="mt-1 sm:mt-0 sm:col-span-2">
+                            <div class="mt-1 sm:mt-0 sm:col-span-2">
+                                <select wire:model.live="project_type_id" name="project_type_id" id="project_type_id" class="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md" required>
+                                    <option value="">-- Please choose --</option>
+                                    @foreach ($project_types as $project_type)
+                                    @if($project_type['id'] == old('document'))
+                                    <option wire:key="{{ $project_type['id']}}" value="{{$project_type->id }}" selected>{{$project_type['name']}}</option>
+                                    @else
+                                    <option wire:key="{{ $project_type['id']}}" value="{{$project_type->id }}">{{$project_type['name']}}</option>
                                     @endif
                                     @endforeach
                                 </select>
@@ -73,9 +96,10 @@
                             <div class="mt-1 sm:mt-0 sm:col-span-2">
                                 <select wire:model.live="status" name="status" id="status" class="max-w-lg block focus:ring-indigo-500 focus:border-indigo-500 w-full shadow-sm sm:max-w-xs sm:text-sm border-gray-300 rounded-md" required>
                                     <option value="" selected>-- Please choose --</option>
-                                    <option wire:key="0" value="0">Discussion</option>
-                                    <option wire:key="1" value="1">Working for</option>
-                                    <option wire:key="2" value="2">Done</option>
+                                    <option wire:key="0" value="0">New</option>
+                                    <option wire:key="1" value="1">In Developpement</option>
+                                    <option wire:key="2" value="2">Testing</option>
+                                    <option wire:key="3" value="3">Approved</option>
                                 </select>
                             </div>
                         </div>

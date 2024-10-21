@@ -47,6 +47,12 @@ class ClientTypeSeeder extends Seeder
                 'description' => '5000+',
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             ],
+            [
+                'id' => 6,
+                'name' => 'Other',
+                'description' => '',
+                'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
+            ],
         ]);
     }
 }
